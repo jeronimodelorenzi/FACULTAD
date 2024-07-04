@@ -1,0 +1,41 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |Ejercicio 2 Parcial Tomacorriente - Delorenzi Jeronimo|) (read-case-sensitive #t) (teachpacks ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp")) #f)))
+;esMayor5? : String -> Boolean
+;Dado un String, devuelve si tiene cinco caracteres o más.
+
+(check-expect (esMayor5? "Ciencia") #t)
+(check-expect (esMayor5? "computacion") #t)
+(check-expect (esMayor5? "de") #f)
+
+(define (esMayor5? s)
+  (>= (string-length s) 5))
+
+;recortar : String -> String
+;Dada un string, si es mayor a cinco caracteres, nos lo devuelve recortado, si no devuelve el mismo string.
+
+(check-expect (recortar "Ciencia") "Cienc")
+(check-expect (recortar "computacion") "compu")
+(check-expect (recortar "de") "de")
+
+(define (recortar s)
+  (if (esMayor5? s)
+      (substring s 0 5)
+      s))
+
+;truncar : List(String) -> String
+;Dada una lista de cadenas, devuelve una cadena formada por las cadenas de la lista recortada hasta cinco caracteres.
+
+(check-expect (truncar empty) "")
+(check-expect (truncar (list "ciencias" "de" "la" "computación")) "ciencdelacompu")
+(check-expect (truncar (list "Esto" "es" "un" "parcial" "de" "LCC(LicenciaturaEnCienciasDeLaComputacion)")) "EstoesunparcideLCC(L")
+(check-expect (truncar (list "a" "b" "c")) "abc")
+
+(define (truncar l)
+  (cond [(empty? l) ""]
+        [(cons? l) (string-append (recortar(first l)) (truncar (rest l)))]))
+
+
+
+
+                 

@@ -1,0 +1,44 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |Ejercicio 3 Parcial Tomacorrientes - Delorenzi Jeronimo|) (read-case-sensitive #t) (teachpacks ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp")) #f)))
+;Definimos Triang:
+(define-struct Triang [l a])
+; Triang es [Number Number] donde
+; l se interpreta como la longitud de los lados iguales
+; en un triángulo isósceles y
+; a como el ángulo opuesto a la base del triángulo,
+; es decir, el ángulo opuesto al lado de distinta longitud.
+
+;area-t : Triang -> Number
+;Dado un Triang, devuelve el area del triangulo, siendo esta (l*l)/2
+
+(check-expect (area-t (make-Triang 6 90)) 18)
+(check-expect (area-t (make-Triang 4 90)) 8)
+(check-expect (area-t (make-Triang 2 45)) 2)
+
+(define (area-t t)
+  (/ (* (Triang-l t) (Triang-l t)) 2))
+
+;esRectangulo? : Triang -> Boolean
+;Dado un Triang, devuelve si es un triangulo rectangulo.
+
+(check-expect (esRectangulo? (make-Triang 2 45)) #f)
+(check-expect (esRectangulo? (make-Triang 6 90)) #t)
+(check-expect (esRectangulo? (make-Triang 4 90)) #t)
+
+(define (esRectangulo? t)
+  (= (Triang-a t) 90))
+
+;area-triang : List(Triang) -> Number
+;Dada una lista de Triang, devuelve el área del triángulo que sea rectangulo y tenga la mayor
+;de las areas de la lista.
+;La función devuelve 0 si la lista no contiene ningún triángulo rectángulo.
+
+(check-expect (area-triang (list (make-Triang 4 45) (make-Triang 6 90) (make-Triang 1 90))) 18)
+(check-expect (area-triang (list (make-Triang 4 45) (make-Triang 6 45) (make-Triang 1 90) (make-Triang 8 90))) 32)
+(check-expect (area-triang (list (make-Triang 5 100))) 0)
+(check-expect (area-triang empty) 0)
+
+(define (area-triang l)
+  (foldr max 0 (map area-t (filter esRectangulo? l))))
+

@@ -1,0 +1,43 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname |Ejercicio 1 Parcial - Delorenzi Jeronimo|) (read-case-sensitive #t) (teachpacks ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "universe.rkt" "teachpack" "2htdp") (lib "image.rkt" "teachpack" "htdp")) #f)))
+;Definimos la estructura Pedido:
+(define-struct Pedido [monto dni formaPago])
+;Pedido es [Number Number String] donde:
+;- monto representa el monto de la compra en pesos.
+;- dni representa el dni de la persona que efectúa la compra.
+;- formaPago representa el tipo de forma de pago, que puede ser: -contado
+;                                                                -tarjeta de debito
+;                                                                -tarjeta de credito.
+
+;esContado : Pedido -> Boolean
+;Dado un pedido, nos devuelve si se pago al contado.
+
+(check-expect (esContado? (make-Pedido 20000 44064458 "contado")) #t)
+(check-expect (esContado? (make-Pedido 20000 44064458 "tarjeta de debito")) #f)
+(check-expect (esContado? (make-Pedido 20000 44064458 "tarjeta de credito")) #f)
+
+(define (esContado? p)
+  (string=? (Pedido-formaPago p) "contado"))
+
+;caja : List(Pedido) -> Number
+;Dada una lista de pedidos, devuelve la suma de las compras que se realizaron al contado.
+
+(check-expect (caja (list(make-Pedido 20000 44064458 "contado")
+                          (make-Pedido 20000 43689547 "tarjeta de credito")
+                          (make-Pedido 2500 44435678 "contado"))) 22500)
+
+(check-expect (caja (list(make-Pedido 5000 44064458 "tarjeta de debito")
+                          (make-Pedido 2800 43689547 "tarjeta de credito")
+                          (make-Pedido 10000 44435678 "tarjeta de credito"))) 0)
+
+(check-expect (caja (list(make-Pedido 7500 44064458 "contado")
+                          (make-Pedido 9500 43689547 "tarjeta de credito")
+                          (make-Pedido 500 44435678 "tarjeta de credito")
+                          (make-Pedido 1000 44435678 "contado"))) 8500)
+
+(define (caja l)
+  (cond [(empty? l) 0]
+        [(cons? l) (if (esContado? (first l))
+                       (+ (Pedido-monto (first l)) (caja (rest l)))
+                       (caja (rest l)))])) 
