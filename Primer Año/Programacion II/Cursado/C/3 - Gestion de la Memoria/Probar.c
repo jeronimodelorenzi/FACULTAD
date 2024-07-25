@@ -104,14 +104,14 @@ int main(){
     return 0;
 }*/
 
-typedef struct{
+/*typedef struct{
     char* nombre, *direccion, *nacionalidad;
     int edad;
 } Persona;
 
 //Prueba
 
-/*int main(){
+int main(){
     // struct Persona* p1;
     // p1 = malloc(sizeof(struct Persona));
     // p1->nombre = malloc(sizeof(char)* (strlen("Jeronimo")+1));
@@ -420,7 +420,7 @@ int main(){
 // Puedes utilizar punteros para acceder a los elementos de la matriz y para calcular la suma de la diagonal principal. 
 // Asegúrate de manejar correctamente la memoria y validar las entradas del usuario para evitar desbordamientos de buffer.
 
-int** crearMatriz(int tam){
+/*int** crearMatriz(int tam){
     int** matriz;
 
     matriz = (int **) malloc(sizeof(int*)*tam);
@@ -528,7 +528,7 @@ int main(){
     free(matriz);
     
     return 0;
-}
+}*/
 
 /*void cargarDatos(int* arr,int tam){
     for(int i = 0; i<tam ; i++){
@@ -577,3 +577,216 @@ int main(){
 
     return 0;
 }*/
+
+//SIN PUNTEROS
+
+// void cargarDatos(int arr[], int tam);
+// void mostrarDatos(int arr[], int tam);
+// void duplicarDatos(int arr1[], int arr2[], int tam);
+
+// int main(){
+
+//     int tam;
+//     printf("Ingrese el tamaño del arreglo: ");
+//     scanf("%d", &tam);
+
+//     int datos[tam], duplicados[tam];
+
+//     cargarDatos(datos, tam);
+//     mostrarDatos(datos, tam);
+
+//     duplicarDatos(datos, duplicados, tam);
+//     printf("ARREGLO DUPLICADO.\n");
+//     mostrarDatos(duplicados, tam);
+
+//     return 0;
+// }
+
+// void cargarDatos(int arr[], int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Ingrese valor para la posicion %d - ", i);
+//         scanf("%d", &arr[i]);
+//     }
+// }
+
+// void mostrarDatos(int arr[], int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Elemento en la posicion %d - %d.\n", i , arr[i]);
+//     }
+// }
+
+// void duplicarDatos(int arr1[], int arr2[], int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         arr2[i] = 2*arr1[i];
+//     }
+// }
+
+//CON PUNTEROS
+
+// void cargarDatos(int* arr, int tam);
+// void mostrarDatos(int* arr, int tam);
+// void duplicarDatos(int* arr1, int* arr2, int tam);
+
+// int main(){
+
+//     int tam;
+//     printf("Ingrese el tamaño del arreglo: ");
+//     scanf("%d", &tam);
+
+//     int* datos = malloc(sizeof(int)*tam);
+//     int* duplicados = malloc(sizeof(int)*tam);
+
+//     cargarDatos(datos,tam);
+//     mostrarDatos(datos,tam);
+
+//     printf("ARREGLO DUPLICADO.\n");
+//     duplicarDatos(datos,duplicados,tam);
+//     mostrarDatos(duplicados,tam);
+
+//     free(datos);
+//     free(duplicados);
+
+//     return 0;
+// }
+
+// void cargarDatos(int* arr, int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Ingrese un valor para la posicion %d - ",i);
+//         scanf("%d",arr+i);
+//     }
+// }
+
+// void mostrarDatos(int* arr, int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Elemento %d - %d.\n",i, *(arr+i));
+//     }
+// }
+
+// void duplicarDatos(int* arr1, int* arr2, int tam){
+//     for(int i = 0; i < tam ; i++){
+//         *(arr2 + i) = 2 * *(arr1+i);
+//     }
+// }
+
+//CON PUNTEROS (MODIFICADO)
+
+// int* cargarDatos(int tam);
+// void mostrarDatos(int* arr, int tam);
+// void duplicarDatos(int* arr1, int* arr2, int tam);
+
+// int main(){
+
+//     int tam;
+//     printf("Ingrese el tamaño del arreglo: ");
+//     scanf("%d", &tam);
+
+//     int* datos = cargarDatos(tam);
+//     int* duplicados = malloc(sizeof(int)*tam);
+
+//     mostrarDatos(datos,tam);
+
+//     printf("ARREGLO DUPLICADO.\n");
+//     duplicarDatos(datos,duplicados,tam);
+//     mostrarDatos(duplicados,tam);
+
+//     free(datos);
+//     free(duplicados);
+
+//     return 0;
+// }
+
+// int* cargarDatos(int tam){
+
+//     int* arr = malloc(sizeof(int)*tam);
+
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Ingrese un valor para la posicion %d - ",i);
+//         scanf("%d",arr+i);
+//     }
+
+//     return arr;
+// }
+
+// void mostrarDatos(int* arr, int tam){
+//     for(int i = 0 ; i < tam ; i++){
+//         printf("Elemento %d - %d.\n",i, *(arr+i));
+//     }
+// }
+
+// void duplicarDatos(int* arr1, int* arr2, int tam){
+//     for(int i = 0; i < tam ; i++){
+//         *(arr2 + i) = 2 * *(arr1+i);
+//     }
+// }
+
+// void sumar(int n1, int n2, int* suma){
+//     *(suma) = n1 + n2;
+// }
+
+// int main() {
+//     int n1, n2, suma;
+
+//     printf("Ingrese el primer número: ");
+//     scanf("%d", &n1);
+//     printf("Ingrese el segundo número: ");
+//     scanf("%d", &n2);
+
+
+//     sumar(n1,n2,&suma);
+//     printf("%d + %d = %d", n1, n2 , suma);
+
+//     return 0;
+// }
+
+/*void cargarDatos(int arr[], int n){
+    for (int i = 0; i < n; ++i) {
+        printf("Ingrese el número %d: ", i + 1);
+        scanf("%d", &arr[i]);
+    }
+}
+
+void maximoMinimo(int arr[], int n, int* max, int* min){
+    *(max) = arr[0];
+    *(min) = arr[0];
+
+    for(int i = 1 ; i < n ; i++){
+        if(*(max) < arr[i]){
+            *(max) = arr[i];
+        }
+        if(*(min) > arr[i]){
+            *(min) = arr[i];
+        }
+    }
+
+}
+
+int main() {
+    int n, i;
+    printf("Ingrese la cantidad de números: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    cargarDatos(arr,n);
+
+    int min, max;
+    maximoMinimo(arr,n,&max,&min);
+
+    printf("El maximo de la lista es %d y el minimo %d", max,min);
+
+    return 0;
+}*/
+
+int main(){
+
+    for(int i = 0 ; i < 5 ; i++){
+        for(int j = 0 ; j < 3 ; j++){
+            printf("%d\n",i*j);
+        }
+    }
+    printf("--");
+    for(int i = 0, j = 0 ; i < 5 && j < 3 ; i++, j++){
+        printf("%d\n", i*j);
+    }
+
+    return 0;
+}
