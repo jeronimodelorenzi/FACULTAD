@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 
 // Ejercicio 1
 
@@ -776,7 +777,7 @@ int main() {
     return 0;
 }*/
 
-int main(){
+/*int main(){
 
     for(int i = 0 ; i < 5 ; i++){
         for(int j = 0 ; j < 3 ; j++){
@@ -787,6 +788,90 @@ int main(){
     for(int i = 0, j = 0 ; i < 5 && j < 3 ; i++, j++){
         printf("%d\n", i*j);
     }
+
+    return 0;
+}*/
+
+/*#define NUM 16
+
+void funcion1(int arr[]){
+    for(int i = 0 ; i < NUM ; i++){
+        arr[i] = i+1;
+    }
+}
+
+int main(){
+
+    int arr[NUM];
+
+    funcion1(arr);
+
+    for(int i = 0 ; i < NUM ; i++){
+        printf("%d\n",arr[i]);
+    }
+
+
+    return 0;
+}
+
+int* funcion1(){
+
+    int* ptr = (int *) malloc(sizeof(int)*NUM);
+    if(ptr == NULL){
+        printf("La memoria no pudo alocarse");
+    } else {
+        for(int i = 0 ; i < NUM ; i++){
+            *(ptr+i) = i+1;
+        }
+    }
+    return ptr;
+    
+}
+
+int main(){
+
+    int arr[NUM];
+
+    int * puntero = funcion1();
+
+    for(int i = 0 ; i < NUM ; i++){
+        printf("%d\n",*(puntero + i));
+    }
+
+
+    free(puntero);
+
+    return 0;
+}*/
+
+int factorial(int n){
+    int fact = 1;
+    if(n == 0){
+        return 1;
+    } else {
+        fact = n * factorial(n-1);
+        return fact;
+    }
+}
+
+double sumatoria(int n){
+    double suma = 0.0;
+    // for(int i = 0 ; i <= n ; i++){
+    //     suma += pow(-1, i) * (1.0/(3*i+1));
+    // }
+    for(int i = 2 ; i <= n ; i++){
+        suma += 1.0/factorial(i-2);
+    }
+    return suma;
+}
+
+int main(){
+    int n;
+    printf("Ingrese un numero: ");
+    scanf("%d",&n);
+
+    double suma = sumatoria(n);
+    printf("La sumatoria es: %0.11f.\n", suma);
 
     return 0;
 }
