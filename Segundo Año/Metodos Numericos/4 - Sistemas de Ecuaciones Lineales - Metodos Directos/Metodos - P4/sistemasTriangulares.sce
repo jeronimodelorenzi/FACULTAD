@@ -2,7 +2,7 @@ function x = triangularSuperior(A,b)
     
     [nA,mA] = size(A);
 
-    x(n) = b(nA)/A(nA,nA);
+    x(nA) = b(nA)/A(nA,nA);
     
     for i=nA-1:-1:1
         x(i)= (b(i) - A(i,i+1:nA)*x(i+1:nA))/A(i,i); // A(i,i+1:n) fila i columna i+1 a n
