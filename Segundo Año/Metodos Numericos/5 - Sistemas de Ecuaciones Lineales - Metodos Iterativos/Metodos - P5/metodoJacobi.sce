@@ -95,7 +95,7 @@ function converge = corolarioJ(A)
     
 endfunction
 
-function diagonalDominanteJ = esDiagonalDominanteGS(A)
+function diagonalDominante = esDiagonalDominanteJ(A)
     
     [nA,mA] = size(A);
     

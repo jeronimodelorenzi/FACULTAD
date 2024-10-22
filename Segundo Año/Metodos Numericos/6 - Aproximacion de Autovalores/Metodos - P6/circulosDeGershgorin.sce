@@ -1,6 +1,6 @@
 function circ(r,x,y)
     
-    plot2d(0,0,0,rect=[-10,-10,10,10],frameflag=3,axesflag=5);
+    plot2d(0,0,0,rect=[-10,-10,10,10],frameflag=3,axesflag=4);
     xarc(x-r,y+r,r*2,r*2,0,360*64);
     
 endfunction
