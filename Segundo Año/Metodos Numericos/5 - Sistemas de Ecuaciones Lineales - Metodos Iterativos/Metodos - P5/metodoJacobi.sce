@@ -76,6 +76,21 @@ function x = metodoJacobiMatricial(A,b,x0,iter,tol)
     
 endfunction
 
+function converge = condicion_suficienteJ(A)
+    
+    [nA,mA] = size(A);
+    
+    if (nA <> mA) then
+        printf("Error - La matriz A debe ser cuadrada");
+        abort;
+    end
+    
+    invD = diag(1./diag(A));
+    Tj = eye(nA,nA) - invD*A;
+    converge = norm(Tj) < 1;
+    
+endfunction
+
 function converge = corolarioJ(A)
     
     [nA,mA] = size(A);
