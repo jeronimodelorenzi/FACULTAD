@@ -41,37 +41,17 @@ function R = cholesky(A)
     
 endfunction
 
-
-/*A = [16 -12 8 -16 ; -12 18 -6 9 ; 8 -6 5 -10 ; -16 9 -10 46];
-B = [4 1 1 ; 8 2 2 ; 1 2 3];
-C = [1 2 ; 2 4]
-
-R1 = cholesky(A);
-printf("Matriz A factorizada: \n");
-disp(R1);
-R2 = cholesky(B);
-printf("\nMatriz A factorizada: \n");
-disp(R2);
-
-R3 = cholesky(C);
-printf("\nMatriz A factorizada: \n");
-disp(R3);*/
-/*
-A = [16 -12 8 ; -12 18 -6 ; 8 -6 8];
-b = [76;-66;46];
-
-R = cholesky(A);
-printf("Matriz A factorizada:\n");
-disp(R);
-
-//Ahora tenemos un sistema:
-//R^t*y = b
-//R*y = x
-//Entonces:
-
-y = triangularInferior(R',b);
-x = triangularSuperior(R,y);
-
-printf("\nSolucion del sistema:");
-disp(x);
-*/
+a = [0.1;0.1;0.1;0.1;0.1];
+I = eye(5,5);
+A = [1 a' ; a I];
+// factorizacion 1
+R = [0.9949874  -0.0100504  -0.0100504  -0.0100504  -0.0100504;0 0.9949367  -0.0101524  -0.0101524  -0.0101524;0 0 0.9948849  -0.0102565  -0.0102565;0 0 0 0.994832 -0.0103628; 0 0 0 0 0.994778];
+zero = zeros(5,1);
+A1 = [1 zero';a R'];
+A2 = [1 a';zero R];
+F1 = A1*A2;
+// factorizacion 2
+raiz = sqrt(1-a'*a);
+A3 = [I zero;a' raiz];
+A4 = [I a;zero' raiz];
+F2 = A3*A4;
