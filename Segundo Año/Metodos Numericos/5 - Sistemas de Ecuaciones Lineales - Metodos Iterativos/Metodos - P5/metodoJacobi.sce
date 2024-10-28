@@ -25,12 +25,12 @@ function x = metodoJacobi(A,b,x0,iter,tol)
             x(i) = (b(i) - suma)/ A(i,i);
         end
        
+        cont = cont + 1;
+       
         if (norm(x-xk)<tol) then
             break;
         end
-        
-        cont = cont + 1;
-        
+                        
     end
     
     printf("Cantidad de iteraciones: %d\n", cont);

@@ -31,12 +31,12 @@ function x = metodoSOR(A,b,w,x0,iter,tol)
         
         x(nA) = (1-w)*xk(nA) + w*(b(nA)-A(nA,1:nA-1)*x(1:nA-1))/A(nA,nA);
         
+        cont = cont + 1;
+        
         if (norm(x-xk) < tol) then
             break;
         end
-        
-        cont = cont + 1;
-        
+            
     end
     
     printf("Cantidad de iteraciones: %d\n", cont);

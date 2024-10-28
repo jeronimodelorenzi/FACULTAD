@@ -27,13 +27,13 @@ function x = metodoGaussSeidel(A,b,x0,iter,tol)
             x(i) = (b(i) - suma)/A(i,i);
         end
         
+        cont = cont + 1;
+        
         x(nA) = (b(nA) - A(nA,1:nA-1)*x(1:nA-1))/A(nA,nA);
            
         if (norm(x-xk) < tol) then
             break;
         end
-        
-        cont = cont + 1;
         
     end
     
