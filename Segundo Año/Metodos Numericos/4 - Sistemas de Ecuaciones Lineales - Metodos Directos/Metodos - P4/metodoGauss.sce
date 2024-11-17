@@ -40,7 +40,7 @@ function [A_aum,x] = gauss(A,b)
     
 endfunction
 
-/*
+
 A1 = [1 1 0 3 ; 2 1 -1 1 ; 3 -1 -1 2 ; -1 2 3 -1]
 b1 = [4;1;-3;4]
 A2 = [1 -1 2 -1 ; 2 -2 3 -3 ; 1 1 1 0 ; 1 -1 4 3]
@@ -52,11 +52,10 @@ printf("\nSISTEMA 1:\n");
 [a1, x1] = gauss(A1,b1);
 disp(x1);
 
-printf("\nSISTEMA 2:\n");
-[a2, x2] = gauss(A2,b2);
-disp(x2);
-
 printf("\nSISTEMA 3:\n");
 [a3, x3] = gauss(A3,b3);
 disp(x3);
-*/
+
+printf("\nSISTEMA 2:\n");
+[a2, x2] = gauss(A2,b2);
+disp(x2);

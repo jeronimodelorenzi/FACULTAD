@@ -11,7 +11,7 @@ function [autovalor, zn] = metodoPotencia(A,z0,iter,tol)
     zn = w / norm(w,%inf);
     [m, m_indice] = max(abs(w));
     autovalor = w(m_indice) / z0(m_indice);
-    zn = w / autovalor;
+    //zn = w / autovalor;
     delta = norm(zn - z0,%inf);
     i = 1;
     
@@ -22,7 +22,7 @@ function [autovalor, zn] = metodoPotencia(A,z0,iter,tol)
         zn = w / norm(w,%inf);
         [m, m_indice] = max(abs(w));
         autovalor = w(m_indice) / z0(m_indice);
-        zn = w / autovalor;
+        //zn = w / autovalor;
         
         delta = norm(zn - z0,%inf);
         i = i + 1;
@@ -70,7 +70,7 @@ disp("(A - lambda*I)*v = 0");
 disp(verif2);*/
 
 A = [9 1 -2 1 ; 0 8 1 1 ; -1 0 7 0 ; 1 0 0 1];
-z01 = [3;3;3;3];
+z01 = [1;2;3;4];
 z02 = [1;1;1;1];
 iter = 100;
 tol = 1e-5;
