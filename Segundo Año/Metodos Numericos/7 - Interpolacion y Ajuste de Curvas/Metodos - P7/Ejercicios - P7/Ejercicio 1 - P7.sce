@@ -1,6 +1,3 @@
-exec('D:\Importante\FACULTAD\Segundo Año\Metodos Numericos\7 - Interpolacion y Ajuste de Curvas\Metodos - P7\metodoInterpolacionLagrange.sce', -1)
-exec('D:\Importante\FACULTAD\Segundo Año\Metodos Numericos\7 - Interpolacion y Ajuste de Curvas\Metodos - P7\metodoDDNewton.sce', -1)
-
 x = [0,0.2,0.4,0.6];
 y = [1,1.2214,1.4918,1.8221];
 
@@ -51,6 +48,7 @@ a=gca();
 a.x_location = "origin";
 a.y_location = "origin";
 h1 = legend("Lineal", "Cubico","e^x");
+title("Interpolacion Lagrange");
 
 // Grafico Newton
 
@@ -62,6 +60,7 @@ a=gca();
 a.x_location = "origin";
 a.y_location = "origin";
 h1 = legend("Lineal", "Cubico","e^x");
+title("Interpolacion Newton");
 
 // Errores
 
