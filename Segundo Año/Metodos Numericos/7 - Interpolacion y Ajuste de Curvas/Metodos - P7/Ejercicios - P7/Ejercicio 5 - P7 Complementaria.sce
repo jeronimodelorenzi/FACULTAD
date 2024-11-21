@@ -52,23 +52,54 @@ function [A_aum , x] = gaussPivoteo(A,b)
     
 endfunction
 
-function [A,px,err] = minimosCuadrados(x,y,grado)
-    
-    nY = length(y);
-    mX = length(x);
-    
-    if(mX <> nY) then
-        error("Los tamaños de x e y deben ser iguales.");
-    end
-    
-    A = ones(mX,1);
-    
-    for j = 2:grado+1
-        A = [A,(x').^(j-1)];
-    end
-    
+function [px,err] = minimosCuadrados(A,y)
+
     [A_aum,res] = gaussPivoteo(A'*A,A'*y');
     px = poly(res,'x','coeff');
     err = norm(A*res-y');
     
 endfunction
+
+// ------------------------------------------------------------------
+
+tita1 = 13129.3;
+
+/*
+g(t) = tita1*e^(-tita2*e^(-tita3*t)) =>
+ln(g(t)) = ln(tita1*e^(-tita2*e^(-tita3*t))) =>
+ln(g(t)) = ln(tita1)*ln(e^(-tita2*e^(-tita3*t))) =>
+ln(g(t)) = ln(tita1) * (-tita2*e^(-tita3*t)) * ln(e) =>
+ln(g(t)) = ln(tita1) * (-tita2*e^(-tita3*t)) =>
+ln(g(t)) - ln(tita1) = -tita2*e^(-tita3*t) =>
+-ln(g(t)/tita1) = tita2*e^(-tita3*t) =>
+ln(-ln(g(t)/tita1) = ln(tita2*e^(-tita3*t)) =>
+ln(ln(tita1/g(t)) = ln(tita2) + ln(e^(-tita3*t)) =>
+ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)*ln(e) =>
+ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)
+
+Sea a1 = ln(tita2) => e^a1 = tita2 y a2 = -tita3 => -a2 = tita3.
+Definimos phi1 = 1 y phi2 = t;
+*/
+
+x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+y = [35, 23, 47, 59, 82, 113, 143, 179, 233, 269, 303, 335, 371, 404, 434, 446, 457, 470, 481, 482, 476, 465, 454, 436, 424, 397, 385, 359, 340, 322, 303];
+
+function A = crearMatriz(x)
+    
+    nX = length(x);
+    A = ones(nX,1);
+    for i = 1:nX
+        A(i,2) = x(i);
+    end
+    
+endfunction
+
+A = crearMatriz(x);
+
+[px,err] = minimosCuadrados(A,y);
+
+/*
+Obtuvimos a1 = 126.06855 y a2 = 12.51371, luego
+126.06855 = ln(tita2) => e^126.06855 = tita2 => 5.635D+54 = tita2.
+12.51371 = -tita3 => -12.51371 = tita3.
+*/

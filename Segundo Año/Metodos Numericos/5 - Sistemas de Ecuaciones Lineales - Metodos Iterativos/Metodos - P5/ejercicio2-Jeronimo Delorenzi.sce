@@ -77,7 +77,7 @@ condicion = esDefinidaPositiva(A);
 printf("Es definida positiva:");
 disp(condicion);
 /*Es definida positiva: T*/
-/*Para una eleccion optima para el omega, por teorema, se debe cumplir que la matriz sea definida positiva y triangular. La matriz A = [10 5 0 0 ; 5 10 -4 0 ; 0 -4 8 -1 ; 0 0 -1 5] es tridiagonal y si verificamos con el codigo esDefinidaPisitiva vemos que es definida positiva, por lo que existe un valor optimo del omega.
+/*Para una eleccion optima para el omega, por teorema, se debe cumplir que la matriz sea definida positiva y tridiagonal. La matriz A = [10 5 0 0 ; 5 10 -4 0 ; 0 -4 8 -1 ; 0 0 -1 5] es tridiagonal y si verificamos con el codigo esDefinidaPisitiva vemos que es definida positiva, por lo que existe un valor optimo del omega.
 
 */
 

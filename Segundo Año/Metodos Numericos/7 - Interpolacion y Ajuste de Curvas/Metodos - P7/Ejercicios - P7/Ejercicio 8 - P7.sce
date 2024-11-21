@@ -54,6 +54,7 @@ endfunction
 
 function [A,px,err] = minimosCuadrados(x,y,grado)
     
+    
     nY = length(y);
     mX = length(x);
     
@@ -72,3 +73,43 @@ function [A,px,err] = minimosCuadrados(x,y,grado)
     err = norm(A*res-y');
     
 endfunction
+
+x = [4 4.2 4.5 4.7 5.1 5.5 5.9 6.3 6.8 7.1];
+y = [102.56 113.18 130.11 142.05 167.53 195.14 224.87 256.73 299.5 326.72];
+
+// grado 1
+
+// grado = 1
+[A1,px1,err1] = minimosCuadrados(x,y,1);
+
+printf("Grado 1:\n")
+printf("Matriz de minimos cuadrados:");
+disp(A1);
+printf("Polinomio minimos cuadrados:");
+disp(px1);
+printf("Error: %lf\n",err1);
+
+// grado = 2
+[A2,px2,err2] = minimosCuadrados(x,y,2);
+
+printf("\nGrado 2:\n")
+printf("Matriz de minimos cuadrados:");
+disp(A2);
+printf("Polinomio minimos cuadrados:");
+disp(px2);
+printf("Error: %lf\n",err2);
+
+// grado = 3
+[A3,px3,err3] = minimosCuadrados(x,y,3);
+
+printf("\nGrado 3:\n")
+printf("Matriz de minimos cuadrados:");
+disp(A3);
+printf("Polinomio minimos cuadrados:");
+disp(px3);
+printf("Error: %lf\n",err3);
+
+// Ploteo
+rango = 4:0.001:7.2
+plot2d(x',y,-1);
+plot2d(rango,[horner(px1,rango') horner(px2,rango') horner(px3,rango')], [2,3,4],leg=["px1(x)@px2(x)@px3(x)"]);

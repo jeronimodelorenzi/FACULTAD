@@ -72,3 +72,74 @@ function [A,px,err] = minimosCuadrados(x,y,grado)
     err = norm(A*res-y');
     
 endfunction
+
+x = [1 2 3 4 5 6 7 8 9 10 11 12];
+
+y_2021 = [145.61 151.12 157.27 164.72 172.29 182.91 185.12 188.62 190.09 197.99 204.32 207.97]
+
+y_2022 = [209.92 225.82 265.71 295.24 301.62 311.80 327.39 343.10 366.54 385.20 407.77 428.42]
+
+// 2021
+
+[A1,p2_2021,err1_2021] = minimosCuadrados(x,y_2021,2);
+[A2,p3_2021,err2_2021] = minimosCuadrados(x,y_2021,3);
+
+// 2022
+
+[A3,p2_2022,err1_2022] = minimosCuadrados(x,y_2022,2);
+[A4,p3_2022,err2_2022] = minimosCuadrados(x,y_2022,3);
+printf("Polinomios 2021:\n");
+printf("Cuadratico:\n");
+disp(p2_2021);
+printf("Cubico:\n")
+disp(p3_2021);
+printf("Polinomios 2022:\n");
+printf("Cuadratico:\n");
+disp(p2_2022);
+printf("Cubico:\n")
+disp(p3_2022);
+
+// Errores
+
+printf("Errores 2021 | Error cuadratico: %lf | Error cubico: %lf\n",err1_2021,err2_2021);
+printf("Errores 2022 | Error cuadratico: %lf | Error cubico: %lf\n",err1_2022,err2_2022);
+
+// Ploteo
+
+subplot(221);
+rango = 1:0.1:13
+plot2d(rango,[horner(p2_2021,rango')],2);
+plot2d(x,y_2021,-1);
+a = gca();
+a.x_location = "origin";
+a.y_location = "origin";
+title("Polinomio cuadratico 2021");
+
+subplot(222);
+rango = 1:0.1:13
+plot2d(rango,[horner(p3_2021,rango')],3);
+plot2d(x,y_2021,-1);
+a = gca();
+a.x_location = "origin";
+a.y_location = "origin";
+title("Polinomio cubico 2021");
+
+subplot(223);
+rango = 1:0.1:13
+plot2d(rango,[horner(p2_2022,rango')],4);
+plot2d(x,y_2022,-1);
+a = gca();
+a.x_location = "origin";
+a.y_location = "origin";
+title("Polinomio cuadratico 2022");
+
+subplot(224);
+rango = 1:0.1:13
+plot2d(rango,[horner(p3_2022,rango')],2);
+plot2d(x,y_2022,-1);
+a = gca();
+a.x_location = "origin";
+a.y_location = "origin";
+title("Polinomio cubico 2022");
+
+
