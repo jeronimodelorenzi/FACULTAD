@@ -260,7 +260,9 @@ title("Polinomios maxQR");
 La discrepancia que hay entre el los polimios obtenidos entre el item a y el b
 es que los que obtuvimos en el item a son polinomios casi nulos ya que la matri
 de Vandermonde esta mal condicionada, es decir, su determinante tiende a 0,
-entonces, al realizar la inversa, tendremos errores. En cambio con la factorizacion QR...
+entonces, al realizar la inversa, tendremos errores.
+
+Podemos usar el de grado 9 ya que es el que menor error genera en ambas tablas.
 */
 
 

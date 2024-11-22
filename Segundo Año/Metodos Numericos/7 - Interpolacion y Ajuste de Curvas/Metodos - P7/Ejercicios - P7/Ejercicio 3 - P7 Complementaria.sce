@@ -145,8 +145,7 @@ title("Polinomio cubico 2022");
 /*
 En ambos casos la aproximacion que mas se ajusta es la cubica.
 Podemos concluir que el precio del pan tuvo una subida bastante grande de 2021 a 2022.
-Esto lo podemos concluir viendo la relacion que tuvo la mejor aproximacion, es este caso la cubica
-
+Esto lo podemos concluir viendo la relacion que tuvo la mejor aproximacion, es este caso la cubica.
 */
 
 

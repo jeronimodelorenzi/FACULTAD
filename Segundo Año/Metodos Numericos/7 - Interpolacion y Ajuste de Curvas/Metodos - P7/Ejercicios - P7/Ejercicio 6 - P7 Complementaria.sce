@@ -52,77 +52,74 @@ function [A_aum , x] = gaussPivoteo(A,b)
     
 endfunction
 
-function [px,err] = minimosCuadrados(A,y)
+/*
+Sea f(x,v) = a+bx+cv, queremos encotrar las constantes a,b,c.
+Definamos ø1(x,v) = 1 ; ø2(x,v) = x ; ø3(x,v) = v
+Entonces tenemos x = [a b c]' como el vector con las componentes que 
+queremos encontrar. La matriz esta dada por 
+A = [ø1(x0,v0) ø2(x0,v0) ø3(x0,v0)]
+    [ø1(x1,v1) ø2(x1,v1) ø3(x1,v1)]
+    [...         ...         ...  ]
+    [ø1(xn,vn) ø2(xn,vn) ø3(xn,vn)]
+    
+Quedando, A = [ 1   x0  v0 ]
+              [ 1   x1  v1 ]
+              [ ... ... ...]
+              [ 1   xn  vn ]
+*/
 
+x = [0 0 1 2 2 2];
+v = [0 1 0 0 1 2];
+
+// Creemos la matriz
+
+function A = crearMatriz(x,v)
+    
+    nX = length(x);
+    
+    A = ones(nX,1);
+    
+    for i=1:nX
+        A(i,2) = x(i);
+        A(i,3) = v(i);
+    end
+      
+endfunction
+
+A = crearMatriz(x,v);
+
+y = [1.42 1.85 0.78 0.18 0.60 1.05];
+
+function [px,err] = minimosCuadrados(A,y)
+    
     [A_aum,res] = gaussPivoteo(A'*A,A'*y');
     px = poly(res,'x','coeff');
     err = norm(A*res-y');
     
 endfunction
 
-// ------------------------------------------------------------------
-
-tita1 = 13129.3;
+[pxv,err] = minimosCuadrados(A,y);
 
 /*
-g(t) = tita1*e^(-tita2*e^(-tita3*t)) =>
-ln(g(t)) = ln(tita1*e^(-tita2*e^(-tita3*t))) =>
-ln(g(t)) = ln(tita1)*ln(e^(-tita2*e^(-tita3*t))) =>
-ln(g(t)) = ln(tita1) * (-tita2*e^(-tita3*t)) * ln(e) =>
-ln(g(t)) = ln(tita1) * (-tita2*e^(-tita3*t)) =>
-ln(g(t)) - ln(tita1) = -tita2*e^(-tita3*t) =>
--ln(g(t)/tita1) = tita2*e^(-tita3*t) =>
-ln(-ln(g(t)/tita1) = ln(tita2*e^(-tita3*t)) =>
-ln(ln(tita1/g(t)) = ln(tita2) + ln(e^(-tita3*t)) =>
-ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)*ln(e) =>
-ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)
-
-Sea a1 = ln(tita2) => e^a1 = tita2 y a2 = -tita3 => -a2 = tita3.
-Definimos phi1 = 1 y phi2 = t;
+Obtuvimos el polinomio px 1.4132558 -0.6213953x +0.4375581x^2
+donde a = 1.4132558, b = -0.6213953x, c = 0.4375581.
+Luego nos queda f(x,v) = 1.4132558 - 0.6213953*x + 0.4375581*v
 */
 
-x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
-y = [35, 23, 47, 59, 82, 113, 143, 179, 233, 269, 303, 335, 371, 404, 434, 446, 457, 470, 481, 482, 476, 465, 454, 436, 424, 397, 385, 359, 340, 322, 303];
-
-function A = crearMatriz(x)
+function z = f(x,v)
     
-    nX = length(x);
-    A = ones(nX,1);
-    for i = 1:nX
-        A(i,2) = x(i);
-    end
+    z = 1.4132558 - 0.6213953.*x + 0.4375581.*v;
     
 endfunction
 
-A = crearMatriz(x);
+rango = -3:0.1:3
 
-y_2 = log(log(tita1./y));
+set(gca(),"auto_clear","off");
+a = gca();
+a.x_location = "origin";
+a.y_location = "origin";
+[xx, vv] = ndgrid(rango, rango);
 
-[px,err] = minimosCuadrados(A,y_2);
+plot3d(rango, rango, f(xx,vv),flag=[5,6,3]);
 
-
-
-/*
-Obtuvimos el polinomio 1.6001782 -0.0160426x donde
-a1 = 1.6001782 y a2 = -0.0160426, luego
-1.6001782 = ln(tita2) => e^1.6001782 = tita2 => 4.9539151 = tita2.
--0.0160426 = -tita3 => 0.0160426 = tita3.
-*/
-
-//Definimos g(t)
-
-tita2 = 4.9539151
-tita3 = 0.0160426
-
-function z = g(t)
-    
-    z = tita1*%e^(-tita2*%e^(-tita3.*t));
-    
-endfunction
-
-rango = 0:0.001:31
-
-y_3 = g(x);
-
-plot2d(rango', g(rango'), 2);
-plot2d(x,y_3,-1);
+scatter3(x,v,y,'fill');
