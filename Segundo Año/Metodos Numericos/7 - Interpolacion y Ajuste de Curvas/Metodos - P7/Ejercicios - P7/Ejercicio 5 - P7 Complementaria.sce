@@ -52,10 +52,10 @@ function [A_aum , x] = gaussPivoteo(A,b)
     
 endfunction
 
-function [px,err] = minimosCuadrados(A,y)
+function [coef,err] = minimosCuadrados(A,y)
 
     [A_aum,res] = gaussPivoteo(A'*A,A'*y');
-    px = poly(res,'x','coeff');
+    coef = res;
     err = norm(A*res-y');
     
 endfunction
@@ -78,7 +78,7 @@ ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)*ln(e) =>
 ln(ln(tita1/g(t)) = ln(tita2) + (-tita3*t)
 
 Sea a1 = ln(tita2) => e^a1 = tita2 y a2 = -tita3 => -a2 = tita3.
-Definimos phi1 = 1 y phi2 = t;
+Definimos ø1 = 1 y ø2 = t;
 */
 
 x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
@@ -98,8 +98,7 @@ A = crearMatriz(x);
 
 y_2 = log(log(tita1./y));
 
-[px,err] = minimosCuadrados(A,y_2);
-
+[coef,err] = minimosCuadrados(A,y_2);
 
 
 /*

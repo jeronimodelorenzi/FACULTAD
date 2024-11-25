@@ -72,3 +72,71 @@ function [A,px,err] = minimosCuadrados(x,y,grado)
     err = norm(A*res-y');
     
 endfunction
+
+//---------------------------------------
+
+function [Q,R] = factorizacionQR(A)
+    
+    [m,n] = size(A);
+    
+
+    if rank(A) <> n  then
+        error("factorizacionQR - El rango de la matriz no es n");
+    end
+
+    Q = zeros(m,n);
+    R = zeros(n,n);
+    
+    for k = 1 : n // Iteramos por las columnas de la matriz
+        
+        vectorProyectado = A(1:m, k);
+        
+        for i = 1 : k - 1 
+            
+            R(i,k) = A(1:m, k)' * Q(1:m, i);
+            
+            vectorProyectado = vectorProyectado - R(i,k) * Q(1:m, i);
+        end
+        
+        Q(1:m, k) = vectorProyectado / norm(vectorProyectado);
+
+        R(k,k) = norm(vectorProyectado);
+
+        
+    end
+    
+endfunction
+
+function x = triangularSuperior(A,b)
+    
+    [nA,mA] = size(A);
+
+    x(nA) = b(nA)/A(nA,nA);
+    
+    for i=nA-1:-1:1
+        x(i)= (b(i) - A(i,i+1:nA)*x(i+1:nA))/A(i,i); // A(i,i+1:n) fila i columna i+1 a n
+    end
+    
+endfunction
+
+function [A,px,err] = minimosCuadradosQR(x,y,grado)
+    
+    nY = length(y);
+    mX = length(x);
+    
+    if(mX <> nY) then
+        error("Los tamaños de x e y deben ser iguales.");
+    end
+    
+    A = ones(mX,1);
+    
+    for j = 2:grado+1
+        A = [A,(x').^(j-1)];
+    end
+    
+    [Q,R] = factorizacionQR(A);
+    res = triangularSuperior(R,Q'*y');
+    px = poly(res,'x','coeff');
+    err = norm(A*res-y');
+    
+endfunction
