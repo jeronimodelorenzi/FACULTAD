@@ -24,16 +24,3 @@ function I = DobleTrapecio(f, a, b, c, d, n, m)
     // Escalar con hx
     I = I * hx;
 endfunction
-
-
-function z = f(x,y)
-    z = 1;
-endfunction
-
-function y = d(x)
-    y = sqrt(2*x-x^2);
-endfunction
-
-function y = c(x)
-    y = -sqrt(2*x-x^2);
-endfunction
