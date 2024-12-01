@@ -1,7 +1,5 @@
 function s = secante(f,x0,x1,tol,iter)
     
-    deff("y=f(x)", "y="+f);
-    
     x2 = x1 -f(x1)*(x1-x0)/(f(x1)-f(x0));
     
     delta = abs(x2 - x1);

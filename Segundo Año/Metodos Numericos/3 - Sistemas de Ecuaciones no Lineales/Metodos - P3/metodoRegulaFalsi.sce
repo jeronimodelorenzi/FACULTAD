@@ -1,7 +1,5 @@
 function r = regulaFalsi(f,a,b,tol,iter)
     
-    deff("y=f(x)","y="+f);
-    
     if (a>=b) then
         
         r=%nan;

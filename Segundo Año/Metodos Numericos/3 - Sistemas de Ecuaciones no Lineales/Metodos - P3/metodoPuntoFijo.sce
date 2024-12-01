@@ -1,5 +1,4 @@
 function p = puntoFijo(f,x0,tol,iter)
-    deff("y=f(x)","y="+f);
     
     x1 = f(x0);    
     i = 1;    

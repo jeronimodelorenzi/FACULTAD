@@ -1,7 +1,5 @@
 function c = biseccion(f,a,b,tol,iter)
     
-    deff("y=f(x)","y="+f);
-    
     if (a >= b) then 
         
         c = %nan;
@@ -10,7 +8,7 @@ function c = biseccion(f,a,b,tol,iter)
         
     end
     
-    if (f(a)*f(b) > 0) then //
+    if (f(a)*f(b) > 0) then 
         
         c = %nan;
         printf("No es posible aplicar bisección.");

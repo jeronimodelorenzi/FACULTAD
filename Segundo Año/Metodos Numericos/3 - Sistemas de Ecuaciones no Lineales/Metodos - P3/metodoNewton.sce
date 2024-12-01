@@ -1,5 +1,4 @@
 function n = newton(f,x0,tol,iter,h)
-    deff("y=f(x)","y="+f);
     
     dfx0 = f(x0+h) - f(x0);
     
@@ -34,9 +33,6 @@ function n = newton(f,x0,tol,iter,h)
 endfunction
 
 function n = newton_2(f,df,x0,tol,iter) 
-    deff("y=f(x)","y="+f);
-    
-    deff("y=df(x)","y="+df);
     
     x1 = x0 - f(x0)/df(x0);
     
