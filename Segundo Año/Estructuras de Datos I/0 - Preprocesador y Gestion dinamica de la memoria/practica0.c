@@ -77,6 +77,7 @@ int main (){
   char* str = malloc(sizeof(char)*100);
   printf("Ingrese una cadena: ");
   fgets(str,100,stdin);
+  str[strcspn(str, "\n")] = '\0';
   return str;
 }
 
