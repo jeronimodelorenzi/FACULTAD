@@ -19,7 +19,6 @@ function I = metodoTrapecioBidimensional(f, a, b, c, d, n, m)
         I = I + hy * I_y;
     end
 
-    // Escalar con hx
     I = I * hx;
 endfunction
 
