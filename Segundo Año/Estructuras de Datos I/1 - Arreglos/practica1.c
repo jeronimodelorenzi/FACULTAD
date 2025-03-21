@@ -88,10 +88,28 @@ void string_reversa (char* str) {
   }
 }
 
+int string_concat (char* str1, char* str2, int max) {
+  int lenStr1 = string_len(str1);
+  int cont = 0;
+
+  for (cont ; cont < max && str2[cont] != '\0' ; cont++) {
+    *(str1 + lenStr1 + cont) = *(str2 + cont);
+  }
+
+  *(str1 + lenStr1 + cont) = '\0';
+
+  return cont;
+
+}
 int main () {
-  char string[] = "hola";
+  char string[20] = "hola ";
+  char string2[] = "chau";
+  int max = 4;
   printf("Cantidad de elementos: %d\n", string_len(string));
-  string_reversa(string);
-  printf("String reversa: %s\n",string);
+  //string_reversa(string);
+  //printf("String reversa: %s\n",string);
+  int concatenados = string_concat(string,string2,max);
+  printf("Cadena concatenada: %s\n", string);
+  printf("Caracteres concatenados: %d\n",concatenados);
   return 0;
 }
