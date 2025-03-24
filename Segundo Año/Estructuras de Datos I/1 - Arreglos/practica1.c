@@ -101,6 +101,11 @@ int string_concat (char* str1, char* str2, int max) {
   return cont;
 
 }
+
+int string_compare (char* str1, char* str2) {
+  
+}
+
 int main () {
   char string[20] = "hola ";
   char string2[] = "chau";
