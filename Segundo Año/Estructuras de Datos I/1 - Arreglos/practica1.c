@@ -92,7 +92,7 @@ int string_concat (char* str1, char* str2, int max) {
   int lenStr1 = string_len(str1);
   int cont = 0;
 
-  for (cont ; cont < max && str2[cont] != '\0' ; cont++) {
+  for (cont ; cont < max && *(str2+cont) != '\0' ; cont++) {
     *(str1 + lenStr1 + cont) = *(str2 + cont);
   }
 
@@ -104,17 +104,75 @@ int string_concat (char* str1, char* str2, int max) {
 
 int string_compare (char* str1, char* str2) {
   
+  int length1 = string_len(str1);
+  int length2 = string_len(str2);
+  int comparacion = 0;
+
+  for (int i = 0; i < length1 && i < length2 ; i++) {
+    if (*(str1+i) < *(str2+i)) {
+      comparacion = -1;
+    } else if (*(str1 + i) > *(str2 + i)) {
+      comparacion = 1;
+    }
+  }
+
+  if (comparacion == 0) {
+    if (length1 < length2) {
+      return comparacion = -1;
+    } else if (length1 > length2) {
+      return comparacion = 1;
+    }
+  }
+
+  return comparacion;
+}
+
+int string_subcadena (char* str1, char* str2) {
+  
+  int i = 0, j = 1;
+  int condicion = 1;
+
+  for (; *(str1 + i) != '\0' ; i++) {
+    if (*(str1 + i) ==  *(str2)) {
+      for(; *(str2 + j) != '\0' && condicion  ; j++) {
+        if(*(str1+i+j) != *(str2+j)) {
+          condicion = -1;
+        }
+      }
+    }
+  }
+
+  if (condicion) {
+    return i;
+  } else {
+    return condicion;
+  }
+  
 }
 
 int main () {
-  char string[20] = "hola ";
-  char string2[] = "chau";
-  int max = 4;
-  printf("Cantidad de elementos: %d\n", string_len(string));
-  //string_reversa(string);
-  //printf("String reversa: %s\n",string);
-  int concatenados = string_concat(string,string2,max);
-  printf("Cadena concatenada: %s\n", string);
-  printf("Caracteres concatenados: %d\n",concatenados);
+  char string[] = "acaqwdqwb";
+  char string2[] = "ca";
+  // int max = 2;
+  // printf("Cantidad de elementos: %d\n", string_len(string));
+  
+  // string_reversa(string);
+  // printf("String reversa: %s\n",string);
+  
+  // int concatenados = string_concat(string,string2,max);
+  // printf("Cadena concatenada: %s\n", string);
+  // printf("Caracteres concatenados: %d\n",concatenados);
+  
+  // int comparacion = string_compare(string,string2);
+  // if (comparacion == -1){
+  //   printf("%s < %s\n", string, string2);
+  // } else if (comparacion == 1) {
+  //   printf("%s > %s\n", string, string2);
+  // } else {
+  //   printf("%s = %s\n", string, string2);
+  // }
+
+  int subcadena = string_subcadena(string,string2);
+  printf("Ocurrencia: %d",subcadena);
   return 0;
 }
