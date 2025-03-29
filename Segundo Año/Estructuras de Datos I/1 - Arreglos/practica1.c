@@ -70,7 +70,7 @@ int main () {
 
 // Ejercicio 2
 
-int string_len (char *str) {
+/*int string_len (char *str) {
   int contador = 0;
   while (*(str + contador) != '\0'){
     contador++;
@@ -129,30 +129,55 @@ int string_compare (char* str1, char* str2) {
 
 int string_subcadena (char* str1, char* str2) {
   
-  int i = 0, j = 1;
-  int condicion = 1;
+  int len1 = string_len(str1);
+  int len2 = string_len(str2);
+  
+  int condicion = -1;
+  
+  int i = 0 , j = 0;
 
-  for (; *(str1 + i) != '\0' ; i++) {
-    if (*(str1 + i) ==  *(str2)) {
-      for(; *(str2 + j) != '\0' && condicion  ; j++) {
-        if(*(str1+i+j) != *(str2+j)) {
-          condicion = -1;
-        }
-      }
+  for(; i <= len1 - len2 && condicion == -1 ; i++) {
+    for (; j < len2 && *(str1 + i + j) == *(str2 + j) ; j++);
+    if (j == len2) {
+      condicion = i;
     }
   }
-
-  if (condicion) {
-    return i;
-  } else {
-    return condicion;
-  }
+    
+  return condicion;
+}
   
+
+
+void string_unir(char* arregloStrings[], int n, char* sep, char* res) {
+
+  int pos = 0; int op = 0;
+
+  for(int i = 0; i < n ; i++) {
+    for(int j = 0 ; *(arregloStrings[i] + j) != '\0'; j++) {
+      *(res + pos) = *(arregloStrings[i]+j);
+      pos++;
+      op++;
+    }
+
+    
+    for(int k = 0 ; *(sep + k) != '\0' ; k++) {
+      *(res + pos) = *(sep + k);
+      pos++;
+      op++;
+    }
+
+  }
+
+  *(res + pos) = '\0';
+  printf("%d\n",op);
+
 }
 
 int main () {
-  char string[] = "acaqwdqwb";
-  char string2[] = "ca";
+
+  //char string[] = "hola";
+  //char string2[] = "ol";
+  
   // int max = 2;
   // printf("Cantidad de elementos: %d\n", string_len(string));
   
@@ -172,7 +197,132 @@ int main () {
   //   printf("%s = %s\n", string, string2);
   // }
 
-  int subcadena = string_subcadena(string,string2);
-  printf("Ocurrencia: %d",subcadena);
+  //int subcadena = string_subcadena(string,string2);
+  //printf("Ocurrencia: %d",subcadena);
+
+  char* arreglosString[] = {"Hola", "Hello", "Ciao"};
+  char* sep = ", ";
+  int n = 3;
+  char res[500];
+
+  string_unir(arreglosString,n,sep,res);
+  printf("%s\n",res);
+
   return 0;
+}*/
+
+// Ejercicio 3
+
+/*typedef struct {
+  int* direccion;
+  int capacidad;
+} ArregloEnteros;
+
+ArregloEnteros* arreglo_enteros_crear (int capacidad) {
+  ArregloEnteros* ptr = malloc(sizeof(ArregloEnteros));
+
+  ptr->direccion = malloc(sizeof(int) * capacidad);
+
+  ptr->capacidad = capacidad;
+
+  return ptr;
 }
+
+void arreglo_enteros_destruir (ArregloEnteros* arreglo) {
+  free(arreglo->direccion);
+  free(arreglo);
+}
+
+int arreglo_enteros_leer (ArregloEnteros* arreglo, int pos) {
+  if(pos < 0 || pos > arreglo->capacidad){
+    perror("ERROR");
+  }
+  return *(arreglo->direccion + pos);
+}
+
+void arreglo_enteros_escribir (ArregloEnteros* arreglo, int pos, int dato) {
+  if(pos < 0 || pos > arreglo->capacidad){
+    perror("ERROR");
+  }
+  *(arreglo->direccion + pos) = dato;
+}
+
+int arreglo_enteros_capacidad (ArregloEnteros* arreglo) {
+  return arreglo->capacidad;
+}
+
+void arreglo_enteros_imprimir (ArregloEnteros* arreglo) {
+  for (int i = 0 ; i < arreglo->capacidad ; i++) {
+    printf("%d ", *(arreglo->direccion + i));
+  }
+  printf("\n");
+}
+
+void arreglo_enteros_ajustar (ArregloEnteros* arreglo, int capacidad) {  
+  arreglo->direccion = realloc(arreglo->direccion,sizeof(int)*capacidad);
+  arreglo->capacidad = capacidad;
+}
+
+void arreglo_enteros_insertar(ArregloEnteros* arreglo, int pos, int dato) {
+  
+  if (pos > arreglo->capacidad || pos < 0) {
+    perror("Error");
+  }
+  
+  int capacidad = arreglo_enteros_capacidad(arreglo);
+  arreglo_enteros_ajustar(arreglo,capacidad+1);
+
+  for(int i = arreglo->capacidad - 1 ; i >= pos;i--) {
+    *(arreglo->direccion + i) = *(arreglo->direccion+i-1);
+    arreglo_enteros_imprimir(arreglo);
+  }
+
+  *(arreglo->direccion + pos) = dato;
+}
+
+void arreglo_enteros_eliminar (ArregloEnteros* arreglo, int pos) {
+  if (pos > arreglo->capacidad || pos < 0) {
+    perror("Error");
+  }
+
+  // int capacidad = arreglo_enteros_capacidad(arreglo);
+  // arreglo_enteros_ajustar(arreglo,capacidad-1);
+
+  for(int i = pos; i < arreglo->capacidad ; i++) {
+    *(arreglo->direccion + i) = *(arreglo->direccion+i+1);
+    arreglo_enteros_imprimir(arreglo);
+  }
+  
+  int capacidad = arreglo_enteros_capacidad(arreglo);
+  arreglo_enteros_ajustar(arreglo,capacidad-1);
+  
+}
+
+int main () {
+
+  ArregloEnteros* arr = arreglo_enteros_crear(6);
+  for(int i = 0; i < arr->capacidad ; i++) {
+    arreglo_enteros_escribir(arr, i, i+1);
+  }
+
+  printf("Arreglo completo:\n");
+  arreglo_enteros_imprimir(arr);
+  
+  for(int i = 0 ; i < arr->capacidad ; i++) {
+    printf("Posicion %d del arreglo: %d\n", i+1, *(arr->direccion+i));
+  }
+
+  printf("Agregamos 55 en la pos 2\n");
+  arreglo_enteros_insertar(arr,1,55);
+  
+  arreglo_enteros_imprimir(arr);
+  
+  printf("Eliminamos 55 en la pos 2\n");
+  arreglo_enteros_eliminar(arr,1);
+
+  arreglo_enteros_imprimir(arr);
+
+  arreglo_enteros_destruir(arr);
+
+  return 0;
+}*/
