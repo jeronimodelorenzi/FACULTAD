@@ -213,7 +213,7 @@ int main () {
 
 // Ejercicio 3
 
-/*typedef struct {
+typedef struct {
   int* direccion;
   int capacidad;
 } ArregloEnteros;
@@ -325,4 +325,4 @@ int main () {
   arreglo_enteros_destruir(arr);
 
   return 0;
-}*/
+}

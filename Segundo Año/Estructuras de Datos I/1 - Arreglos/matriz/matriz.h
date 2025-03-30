@@ -35,4 +35,14 @@ size_t matriz_num_filas(Matriz* matriz);
 */
 size_t matriz_num_columnas(Matriz* matriz);
 
+/*
+** Intercambia dos filas de la matriz
+*/
+void matriz_intercambiar_filas(Matriz* matriz, size_t fil1, size_t fil2);
+
+/*
+** Inserta una fila en la matriz en la posicion dada.
+*/
+void matriz_insertar_fila(Matriz* matriz, size_t pos);
+
 #endif /* __MATRIZ_H__ */
