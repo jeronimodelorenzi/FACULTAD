@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 
 /*
@@ -46,29 +47,83 @@ no mostrará nada en la salida pues se cerró previamente
   printf("%s", buff);
 
   if (fgets(buff,100,stdin) == NULL) {
-    perror("Error\n");
+    perror("Se cerro la entrada estandar\n");
   }
 
   return 0;
 }*/
 
 /*
-Al cerrar el file descriptor de la entrada estar se imposibilita escribir en ella, por lo que fgets no podrá leer el buffer y
+Al cerrar el file descriptor de la entrada estandar es imposible escribir en ella, por lo que fgets no podrá leer el buffer y
 se devolverá NULL.
 */
 
 // c
 
-int main () {
+/*int main () {
 
-  int stdincopy = dup(stdin);
-  close(stdin);
+  int fd = open("archivo.txt", O_RDWR | O_CREAT);
+  int fdDup = dup(fd); // duplicamos el fd, devolviendo un fd al mismo archivo que apunta el que se duplica.
 
-  printf();
+  char buff1[] = "Hola Mundo_fd\n";
+  char buff2[] = "Hola Mundo_fdDup\n";
+
+  write(fd, buff1, 14); // usando fd escribimos.
+  close(fd);  // cerramos fd.
+  
+  write(fdDup, buff2,17); // usando fdDup escribimos.
+  close(fdDup); // cerramos fdDup.
 
   return 0;
-}
+}*/
 
 /* 
-
+Se escribio en el archivo Hola Mundo_fd\n y Hola Mundo_fdDup\n. Esto quiere decir que igualmente al cerrar uno de las copias, sigue funcionando ya que
+en este caso ambas apuntan a "archivo.txt"
 */
+
+// d
+
+/*int main () {
+  printf("Iniciando proceso.\n");
+
+  pid_t pid = fork();
+  if (pid == 0) {
+    printf("PID child: %d\n",getpid());
+  } else {
+    printf("PID parent: %d\n", getpid());
+
+  }
+
+  return 0;
+}*/
+
+/*
+Cuando realizamos un fork se crea un nuevo proceso, tenemos padre e hijo, donde cada uno tiene su pid.asm
+Al realizar exec el pid se mantiene pero el proceso es reemplazado.
+*/
+
+// e
+
+/*int main () {
+  pid_t pid = fork();
+  if (pid == 0) {
+      printf("Child termina\n");
+      exit(0);
+  }
+  sleep(10);
+  
+  return 0;
+}*/
+
+/* 
+Lo que ocurre con el hijo sin que el padre espere a que termine es que su estado pasa a ser zombie. Este hijo es adoptado por init terminando su proceso.
+*/
+
+// f 
+
+int main () {
+  void* p = malloc(1024*1024*1024);
+  sleep(100);
+  return 0;
+}
