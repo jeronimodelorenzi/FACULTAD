@@ -122,8 +122,16 @@ Lo que ocurre con el hijo sin que el padre espere a que termine es que su estado
 
 // f 
 
-int main () {
+/*int main () {
   void* p = malloc(1024*1024*1024);
   sleep(100);
   return 0;
-}
+}*/
+
+/*
+PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+245 jero      20   0 1059396    584    440 S   0.0   0.0   0:00.00 resp.out
+Vemos que VIRT = 1059396 es la memoria virtual reservada y RES = 584 memoria usada. Estas son muy diferentes.
+*/
+
+// g
