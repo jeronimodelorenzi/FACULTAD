@@ -1,0 +1,9 @@
+Ejercicio - Eliseo Vallejos - Jeronimo Delorenzi.c
+Practica 1.pdf
+archivo.txt
+ejercicio.out
+hola.txt
+resp.out
+respuestas.c
+shell.c
+shell.out
