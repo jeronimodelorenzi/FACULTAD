@@ -8,7 +8,7 @@ int main() {
   GList lista = glist_crear();
   Contacto *contactos[6];
   contactos[0] = contacto_crear("Pepe Argento", "3412695452", 61);
-  contactos[1] = contacto_crear("Moni Argento", "3412684759", 60);
+  contactos[1] = contacto_crear("Moni Argento", "3412684759", 60); 
   contactos[2] = contacto_crear("Coqui Argento", "3415694286", 32);
   contactos[3] = contacto_crear("Paola Argento", "3416259862", 29);
   contactos[4] = contacto_crear("Maria Elena Fuseneco", "3416874594", 59);
@@ -23,7 +23,13 @@ int main() {
   printf("Lista:\n");
   glist_recorrer(lista, (FuncionVisitante)contacto_imprimir);
 
+  
+  GList listaMayores60 =  glist_filtrar(lista, (FuncionCopia)contacto_copia, (Predicado)f_esMayor60);
+  printf("Lista mayores de 60:\n");
+  glist_recorrer(listaMayores60, (FuncionVisitante)contacto_imprimir);
+
   glist_destruir(lista, (FuncionDestructora)contacto_destruir);
+  glist_destruir(listaMayores60, (FuncionDestructora)contacto_destruir);
 
   return 0;
 }

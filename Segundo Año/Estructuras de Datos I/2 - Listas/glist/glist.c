@@ -45,3 +45,13 @@ void glist_recorrer(GList list, FuncionVisitante visit) {
   for (GNode *node = list; node != NULL; node = node->next)
     visit(node->data);
 }
+
+GList glist_filtrar(GList lista, FuncionCopia c, Predicado p) {
+  GList nuevaLista = glist_crear();
+  
+  for(GNode* node = lista; node != NULL ; node = node->next)
+    if (p(node->data))
+      nuevaLista = glist_agregar_inicio(nuevaLista, node->data, c);
+
+  return nuevaLista;
+}

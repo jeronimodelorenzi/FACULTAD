@@ -37,4 +37,9 @@ void contacto_destruir(Contacto *contacto);
  */
 void contacto_imprimir(Contacto *contacto);
 
+/**
+ * Devuelve 1 si la edad del contacto es mayor a 60. 0 sino.
+ */
+int f_esMayor60(Contacto* contacto);
+
 #endif /* __CONTACTO_H__ */

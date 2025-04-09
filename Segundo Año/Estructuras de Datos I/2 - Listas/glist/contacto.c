@@ -53,3 +53,14 @@ void contacto_destruir(Contacto *contacto) {
 void contacto_imprimir(Contacto *contacto) {
   printf("%s, %s, %d.\n", contacto->nombre, contacto->tel, contacto->edad);
 }
+
+int f_esMayor60 (Contacto* contacto) { 
+  return contacto->edad > 60;
+}
+
+/*
+int f_esMayor60 (void* dato) {
+  Contacto* contactos = (Contactos*)dato;
+  return contactos->edad > 60;  
+}
+*/

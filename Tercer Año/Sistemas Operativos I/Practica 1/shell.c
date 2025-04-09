@@ -25,16 +25,16 @@ int buscar_indice (char* args[], const char* elemento) {
   return bandera;
 }
 
-int buscar_pipes (char* args[], int pos[], int tam) {
-  int cantidad = 0;
-  for (int i = 0 ; i < tam ; i++) {
-    if (args[i] != NULL && strcmp(args[i], "|") == 0) {
-      pos[cantidad] = i;
-      cantidad++;
-      args[i] = NULL;
-    }
+int dividir_comandos (char* cadena, char* comandos) {
+  int contador = 0;
+  char* token = strtok(cadena, "|");
+  while (token != NULL) {
+    comandos[contador] = token;
+    contador++;
+    token = strtok(NULL,"|");
   }
-  return cantidad;
+
+  return contador;
 }
 
 int main (){

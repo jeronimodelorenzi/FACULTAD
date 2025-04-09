@@ -83,21 +83,25 @@ void wait_for_clients(int lsock)
 	int csock;
 
 	/* Esperamos una conexión, no nos interesa de donde viene */
+	while(1) {
 	csock = accept(lsock, NULL, NULL);
 	if (csock < 0)
 		quit("accept");
 
 	/* Atendemos al cliente */
-	pid_t pid = fork();
-	if (pid < 0){
-		quit("fork");
-	} else if (pid == 0){
-	    handle_conn(csock);
-		exiT(0)
-	}
+	
 
+	  pid_t pid = fork();
+	  if (pid < 0){
+	  	quit("fork");
+	  } else if (pid == 0){
+	    handle_conn(csock);
+	  	exit(0);
+	  } else {
+		close(csock);
+	  }
+	}
 	/* Volvemos a esperar conexiones */
-	wait_for_clients(lsock);
 }
 
 /* Crea un socket de escucha en puerto 4040 TCP */
@@ -118,7 +122,7 @@ int mk_lsock()
 		quit("setsockopt");
 
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(4040);
+	sa.sin_port = htons(4030);
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	/* Bindear al puerto 4040 TCP, en todas las direcciones disponibles */
