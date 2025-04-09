@@ -4,7 +4,7 @@
 
 // Función para imprimir enteros
 void imprimir_entero(void *dato) {
-    int *entero = dato;
+    int* entero = (int*)dato;
     printf("%d ", *entero);
 }
 
@@ -15,7 +15,7 @@ void destruir_entero(void *dato) {
 
 // Función para copiar enteros
 void* copiar_entero(void *dato) {
-    int *origen = dato;
+    int *origen = (int*)dato;
     int *copia = malloc(sizeof(int));
     *copia = *origen;
     return copia;
@@ -23,9 +23,9 @@ void* copiar_entero(void *dato) {
 
 // Función comparadora para enteros
 int comparar_enteros(void *a, void *b) {
-    int *x = a;
-    int *y = b;
-    return *x - *y;  // orden ascendente
+    int *x = (int*)a;
+    int *y = (int*)b;
+    return *x - *y; 
 }
 
 int main() {
@@ -33,19 +33,18 @@ int main() {
 
     int datos[] = {5, 2, 8, 3, 1};
 
-    for (int i = 0; i < 5; i++) {
-        sglist_insertar(lista, &datos[i], copiar_entero, comparar_enteros);
-    }
+    //lista = sglist_arr(datos,5,copiar_entero,comparar_enteros);
 
     printf("Lista ordenada: ");
-    sglist_recorrer(lista, imprimir_entero);
+    sglist_recorrer(lista, (FuncionVisitante)imprimir_entero);
     puts("");
 
-    int encontrado = sglist_buscar(lista, 2, comparar_enteros);
+    int buscado = 2;
+    int encontrado = sglist_buscar(lista, &buscado, comparar_enteros);
     if (encontrado) {
-        printf("El número 2 está en la lista.\n");
+        printf("El número %d está en la lista.\n", buscado);
     } else {
-        printf("El número 2 no está en la lista.\n");
+        printf("El número %d no está en la lista.\n", buscado);
     }
 
     sglist_destruir(lista, destruir_entero);

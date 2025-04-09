@@ -26,7 +26,7 @@ int sglist_vacia (SGList* lista) {
 }
 
 void sglist_recorrer (SGList* lista, FuncionVisitante visitante) {
-  for (SGNode* nodo = lista->inicio ; nodo != NULL; nodo = nodo->next)
+  for (SGNode* nodo = lista->inicio ; nodo != NULL ; nodo = nodo->next)
     visitante(nodo->data);
 }
 
@@ -50,7 +50,7 @@ void sglist_insertar (SGList* lista, void *data, FuncionCopia copia, FuncionComp
     
   }
 
-  for (; nodo->next != NULL && comparadora(data, nodo->next->data) > 0; nodo = nodo->next);
+  for (; nodo->next != NULL && comparadora(data, nodo->next->data) > 0 ; nodo = nodo->next);
 
   nuevoNodo->next = nodo->next;
   nodo->next = nuevoNodo;
@@ -69,7 +69,7 @@ int sglist_buscar (SGList *lista, void *data, FuncionComparadora comparadora) {
     return encontrado;
   }
   
-  for(SGNode *nodo = lista->inicio; nodo->next != NULL && encontrado != 0 ; nodo = nodo->next) {
+  for(SGNode *nodo = lista->inicio ; nodo->next != NULL && !encontrado ; nodo = nodo->next) {
     if (comparadora(data, nodo->data) == 0) {
       encontrado = 1;
     }
@@ -81,4 +81,11 @@ int sglist_buscar (SGList *lista, void *data, FuncionComparadora comparadora) {
   return encontrado;
 }
 
+SGList sglist_arr (void **arr, int longitud, FuncionCopia copia, FuncionComparadora comparadora) {
+  SGList* lista = sglist_crear();
+
+  for (int i = 0 ; i < longitud ; i++) {
+    sglist_insertar(lista, arr[i], copia, comparadora);
+  }
+}
 
