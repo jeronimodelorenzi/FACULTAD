@@ -50,6 +50,6 @@ int sglist_buscar(SGList* lista, void *data, FuncionComparadora comparadora);
 /**
  * Construye una lista ordenada a partir de un arreglo de elementos y su longitud.
  */
-SGList sglist_arr(void **arr, int longitud, FuncionCopia copia, FuncionComparadora comparadora);
+SGList* sglist_arr(void **arr, int longitud, FuncionCopia copia, FuncionComparadora comparadora);
 
 #endif

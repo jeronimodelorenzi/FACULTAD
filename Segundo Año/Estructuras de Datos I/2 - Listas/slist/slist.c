@@ -104,7 +104,7 @@ void slist_eliminar(SList* lista, int pos) {
   SNodo* temp = *lista;
   for (; i < pos - 1 && temp->sig != NULL; i++, temp = temp->sig);
   
-  if (i == pos - 1  && temp->sig != NULL){
+  if (i == pos - 1 && temp->sig != NULL){
     SNodo* elim = temp->sig;
     temp->sig = elim->sig;
     free(elim);

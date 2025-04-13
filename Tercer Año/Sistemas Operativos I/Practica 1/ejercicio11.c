@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+
+#define NAME "/shMemEx"
+#define SIZE 4
 
 /*
  * Para probar, usar netcat. Ej:
@@ -26,6 +32,8 @@ void quit(char *s)
 }
 
 int U = 0;
+int* memptr;
+int fd;
 
 int fd_readline(int fd, char *buf)
 {
@@ -68,8 +76,10 @@ void handle_conn(int csock)
 
 		if (!strcmp(buf, "NUEVO")) {
 			char reply[20];
+			U = *memptr;
 			sprintf(reply, "%d\n", U);
 			U++;
+			*memptr = U;
 			write(csock, reply, strlen(reply));
 		} else if (!strcmp(buf, "CHAU")) {
 			close(csock);
@@ -83,7 +93,7 @@ void wait_for_clients(int lsock)
 	int csock;
 
 	/* Esperamos una conexión, no nos interesa de donde viene */
-	while(1) {
+	
 	csock = accept(lsock, NULL, NULL);
 	if (csock < 0)
 		quit("accept");
@@ -95,12 +105,14 @@ void wait_for_clients(int lsock)
 	  if (pid < 0){
 	  	quit("fork");
 	  } else if (pid == 0){
-	    handle_conn(csock);
-	  	exit(0);
-	  } else {
 		close(csock);
+		wait(NULL);
+		wait_for_clients(lsock);
+	} else {
+		handle_conn(csock);
+		exit(0);
 	  }
-	}
+	
 	/* Volvemos a esperar conexiones */
 }
 
@@ -122,7 +134,7 @@ int mk_lsock()
 		quit("setsockopt");
 
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(4030);
+	sa.sin_port = htons(4020);
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	/* Bindear al puerto 4040 TCP, en todas las direcciones disponibles */
@@ -138,9 +150,22 @@ int mk_lsock()
 	return lsock;
 }
 
+void create_mem() {
+	fd = shm_open(NAME, O_CREAT | O_RDWR, 0666);
+	ftruncate(fd, SIZE);
+	memptr = (int *)mmap(0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	U = *memptr;
+	*memptr = 0;
+	return;
+}
+
 int main()
 {
 	int lsock;
 	lsock = mk_lsock();
+	create_mem();
 	wait_for_clients(lsock);
+	munmap(memptr, SIZE);
+	close(fd);
+	shm_unlink(NAME);
 }

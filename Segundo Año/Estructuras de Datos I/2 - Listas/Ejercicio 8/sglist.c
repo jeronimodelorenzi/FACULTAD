@@ -81,11 +81,12 @@ int sglist_buscar (SGList *lista, void *data, FuncionComparadora comparadora) {
   return encontrado;
 }
 
-SGList sglist_arr (void **arr, int longitud, FuncionCopia copia, FuncionComparadora comparadora) {
+SGList* sglist_arr (void **arr, int longitud, FuncionCopia copia, FuncionComparadora comparadora) {
   SGList* lista = sglist_crear();
-
-  for (int i = 0 ; i < longitud ; i++) {
+  
+  for (int i = 0 ; i < longitud ; i++)
     sglist_insertar(lista, arr[i], copia, comparadora);
-  }
+
+  return lista;
 }
 
