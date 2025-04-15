@@ -1,6 +1,6 @@
 #include "arregloEnteros.h"
 #include <stdio.h>
-#include <stdlib>
+#include <stdlib.h>
 
 ArregloEnteros* arreglo_enteros_crear (int capacidad) {
   ArregloEnteros* ptr = malloc(sizeof(ArregloEnteros));

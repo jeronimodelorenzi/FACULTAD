@@ -1,3 +1,6 @@
+#ifndef ARREGLO_ENTEROS_H
+#define ARREGLO_ENTEROS_H
+
 typedef struct _ArregloEnteros{
   int* direccion;
   int capacidad;
@@ -20,3 +23,5 @@ void arreglo_enteros_ajustar (ArregloEnteros* arreglo, int capacidad);
 void arreglo_enteros_insertar(ArregloEnteros* arreglo, int pos, int dato);
 
 void arreglo_enteros_eliminar (ArregloEnteros* arreglo, int pos);
+
+#endif
