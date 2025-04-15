@@ -37,6 +37,6 @@ void pila_apilar(Pila pila, int elemento);
 void pila_desapilar(Pila pila);
 
 /**
- * Imprime en orden los elementos de la pila
+ * Imprime en orden los elementos de la pila.
  */
 void pila_imprimir(Pila pila);
