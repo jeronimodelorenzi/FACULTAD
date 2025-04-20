@@ -4,7 +4,7 @@
 
 Pila pila_crear (int capacidad) {
   Pila pila = malloc(sizeof(Pila));
-  pila->arr = arreglo_enteros_crear(capacidad);;
+  pila->arr = arreglo_enteros_crear(capacidad);
   pila->ultimo = -1;
   return pila; 
 }
@@ -23,18 +23,22 @@ int pila_tope (Pila pila) {
 }
 
 void pila_apilar(Pila pila, int elemento) {
+  if (pila->ultimo + 1 >= arreglo_enteros_capacidad(pila->arr))
+    arreglo_enteros_ajustar(pila->arr, (pila->ultimo + 1) * 2);
   pila->ultimo++;
-  if (arreglo_enteros_capacidad(pila->arr) <= pila->ultimo+1)
-    arreglo_enteros_ajustar(pila->arr, pila->ultimo * 2);
-  arreglo_enteros_escribir(pila->arr,pila->ultimo,elemento);
+  arreglo_enteros_escribir(pila->arr, pila->ultimo, elemento);
+
 }
 
 void pila_desapilar(Pila pila) {
-  arreglo_enteros_eliminar(pila->arr,pila->ultimo);
-  pila->ultimo--;
+  if(!pila_es_vacia(pila))
+    pila->ultimo = pila->ultimo-1;
 }
 
 void pila_imprimir(Pila pila) {
-  for(int i = 0 ; i < pila->ultimo+1 ; i++)
-    arreglo_enteros_leer(pila->arr,i);
+  for (int i = 0; i <= pila->ultimo; i++) {
+    printf("%d ", arreglo_enteros_leer(pila->arr, i));
+  }
+  printf("\n");
 }
+

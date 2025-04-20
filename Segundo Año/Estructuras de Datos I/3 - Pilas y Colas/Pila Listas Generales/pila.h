@@ -1,8 +1,10 @@
-#include "arregloEnteros.h"
+#ifndef __PILA_H__
+#define __PILA_H__
+
+#include "glist.h"
 
 struct _Pila {
-  ArregloEnteros *arr;
-  int ultimo;
+  GList lista;
 };
 
 typedef struct _Pila *Pila;
@@ -14,7 +16,7 @@ Pila pila_crear(int capacidad);
 /**
  * Libera la memoria requerida para la pila.
  */
-void pila_destruir(Pila pila);
+void pila_destruir(Pila pila, FuncionDestructora destroy);
 
 /**
  * Retorna 1 si la pila está vacía, y 0 en caso contrario.
@@ -24,19 +26,21 @@ int pila_es_vacia(Pila pila);
 /**
  * Retorna el elemento que se encuentra en el tope de la pila sin eliminarlo.
  */
-int pila_tope(Pila pila);
+void *pila_tope(Pila pila);
 
 /**
  * Inserta un elemento en el tope de la pila, en caso de estar llena, se aumenta el doble la capacidad.
  */
-void pila_apilar(Pila pila, int elemento);
+void pila_apilar(Pila pila, void *elemento);
 
 /**
  * Elimina el elemento que se encuentra en el tope de la pila.
  */
-void pila_desapilar(Pila pila);
+void pila_desapilar(Pila pila, FuncionDestructora destroy);
 
 /**
  * Imprime en orden los elementos de la pila.
  */
-void pila_imprimir(Pila pila);
+void pila_imprimir(Pila pila, FuncionVisitante visit);
+
+#endif
