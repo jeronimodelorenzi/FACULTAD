@@ -1,5 +1,4 @@
 #include "contacto.h"
-#include "glist.h"
 #include "pila.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,24 +16,36 @@ int main() {
 
   // Apilamos los contactos
   for (int i = 0; i < 6; ++i) {
-    pila_apilar(pila, contactos[i], (FuncionCopia)contacto_copia);
-    contacto_destruir(contactos[i]); // liberamos el original
+    pila_apilar(&pila, contactos[i], (FuncionCopia)contacto_copia);
+    contacto_destruir(contactos[i]);
   }
+
+  printf("\nContenido de la pila:\n");
+  pila_imprimir(pila, (FuncionVisitante)contacto_imprimir);
+  puts("");
 
   // Mostramos el tope de la pila
   Contacto *tope = (Contacto *)pila_tope(pila);
   printf("Tope de la pila:\n");
   contacto_imprimir(tope);
-
+  
   // Desapilamos 2 elementos
-  pila_desapilar(pila, (FuncionDestructora)contacto_destruir);
-  pila_desapilar(pila, (FuncionDestructora)contacto_destruir);
+  pila_desapilar(&pila, (FuncionDestructora)contacto_destruir);
+  pila_desapilar(&pila, (FuncionDestructora)contacto_destruir);
 
   // Imprimimos el contenido actual de la pila
   printf("\nContenido de la pila:\n");
-  glist_recorrer(pila->lista, (FuncionVisitante)contacto_imprimir);
+  pila_imprimir(pila, (FuncionVisitante)contacto_imprimir);
+
+  // Revertimos pila
+  printf("\nContenido de la pila revertido:\n");
+  Pila pila_revertir = pila_crear();
+  pila_revertir = pila_revertir_orden(pila, (FuncionCopia)contacto_copia);
+  pila_imprimir(pila_revertir, (FuncionVisitante)contacto_imprimir);
+
 
   // Destruimos la pila
+  pila_destruir(pila_revertir, (FuncionDestructora)contacto_destruir);
   pila_destruir(pila, (FuncionDestructora)contacto_destruir);
 
   return 0;

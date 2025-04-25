@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 Pila pila_crear (int capacidad) {
-  Pila pila = malloc(sizeof(Pila));
+  Pila pila = malloc(sizeof(struct _Pila));
   pila->arr = arreglo_enteros_crear(capacidad);
   pila->ultimo = -1;
   return pila; 

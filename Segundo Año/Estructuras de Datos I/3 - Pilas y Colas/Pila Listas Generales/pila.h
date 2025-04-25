@@ -3,16 +3,13 @@
 
 #include "glist.h"
 
-struct _Pila {
-  GList lista;
-};
-
-typedef struct _Pila *Pila;
+typedef GList Pila;
 
 /**
- * Crea e inicializa una pila vacía con la capacidad dada.
+ * Crea e inicializa una pila vacía.
  */
-Pila pila_crear(int capacidad);
+Pila pila_crear();
+
 /**
  * Libera la memoria requerida para la pila.
  */
@@ -31,16 +28,22 @@ void *pila_tope(Pila pila);
 /**
  * Inserta un elemento en el tope de la pila, en caso de estar llena, se aumenta el doble la capacidad.
  */
-void pila_apilar(Pila pila, void *elemento);
+void pila_apilar(Pila* pila, void *elemento, FuncionCopia copy);
 
 /**
  * Elimina el elemento que se encuentra en el tope de la pila.
  */
-void pila_desapilar(Pila pila, FuncionDestructora destroy);
+void pila_desapilar(Pila* pila, FuncionDestructora destroy);
 
 /**
  * Imprime en orden los elementos de la pila.
  */
 void pila_imprimir(Pila pila, FuncionVisitante visit);
+
+/**
+ * Revierte el orden de la pila.
+ */
+GList pila_revertir_orden(GList lista, FuncionCopia copy);
+
 
 #endif
