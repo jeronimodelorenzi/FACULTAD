@@ -56,9 +56,9 @@ int personaMayorConA(void *data){
 
 GList personaCopia (Persona *persona) {
   Persona *copiaPersona = malloc(sizeof(Persona));
-  strcpy(copiaPersona->direccion,persona->direccion);
-  strcpy(copiaPersona->nombre,persona->nombre);
-  strcpy(copiaPersona->dni,persona->dni);
+  strcpy(copiaPersona->direccion, persona->direccion);
+  strcpy(copiaPersona->nombre, persona->nombre);
+  strcpy(copiaPersona->dni, persona->dni);
   copiaPersona->edad = persona->edad;
 
   return copiaPersona;
