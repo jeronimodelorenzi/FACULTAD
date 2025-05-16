@@ -48,11 +48,11 @@ void tomar_tenedores(int i) { // supongamos que el filósofo 0 es zurdo.
     printf("Filósofo %d agarró el tenedor izquierdo.\n",i);
 
     printf("Filósofo %d intenta agarrar el tenedor derecho.\n",i);
-    pthread_mutex_unlock(der(i));
+    pthread_mutex_lock(der(i));
     printf("Filósofo %d agarró el tenedor derecho.\n",i);
   } else {
     printf("Filósofo %d intenta agarrar el tenedor derecho.\n",i);
-    pthread_mutex_unlock(der(i));
+    pthread_mutex_lock(der(i));
     printf("Filósofo %d agarró el tenedor derecho.\n",i);
 
     printf("Filósofo %d intenta agarrar el tenedor izquierdo.\n",i);
@@ -67,7 +67,7 @@ void dejar_tenedores(int i) {
   printf("Filósofo %d agarró el tenedor derecho.\n",i);
 
   printf("Filósofo %d intenta soltar el tenedor izquierdo.\n",i);
-  pthread_mutex_lock(izq(i));
+  pthread_mutex_unlock(izq(i));
   printf("Filósofo %d soltó el tenedor izquierdo.\n",i);
 }
 
