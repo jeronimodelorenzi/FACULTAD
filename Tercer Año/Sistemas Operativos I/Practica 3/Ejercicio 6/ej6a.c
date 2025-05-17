@@ -17,11 +17,13 @@ crearse nuevos sem´aforos, mutexes, y threads.
 // a) ¿C´omo puede ocurrir un deadlock en esta implementaci´on ingenua?
 
 /*
-Puede ocurrir un deadlock si ocurre por ejemplo lo siguiente:
-Supongamos que el agente pone a tabaco y papel. El fumador con fósforos está esperando el tabaco,
-por lo que podría despertarse. A su vez, el fumador con tabaco está esperando el papel, por lo que
-podría despertarse primero y que esto haga que el fumador con fósforos se bloquee esperando el papel 
-y el de tabaco esperando fósforos.
+Puede ocurrir un deadlock si varios fumadores toman un ingrediente que no les corresponden.
+Por ejemplo, supongamos que el agente pone tabaco y papel. El fumador con fósforos es el
+único que debería tomar los ingredientes, ya que son los dos ingredientes que le faltan.
+Puede ocurrir que uno de los otros dos fumadores tomen uno de los ingredientes que da el agente,
+aunque no puedan hacer un cigarrillo.
+Entonces todos estan esperando un ingrediente que no está disponible y no pueden continuar.
+Luego el agente se queda boqueado esperando a que alguno termine de fumar.
 */
 
 #include <stdio.h>
