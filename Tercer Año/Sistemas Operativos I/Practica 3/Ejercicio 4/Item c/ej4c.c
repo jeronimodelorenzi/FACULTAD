@@ -15,14 +15,16 @@ ser similar a la ofrecida por los mutex de pthread.
 */
 
 /*
-a) Implemente una soluci´on y expl´ıquela. Para este apartado, siempre que el lock est´e tomado por un
-lector y aparezca un segundo lector, el segundo debe poder entrar inmediatamente (read-preferring). 
+c) Ahora, podemos tener el problema inverso: si muchos escritores intentan entrar, pueden dejar fuera
+a los lectores. Implemente una variante justa que respete el orden en el que los threads pidieron
+entrar a la RC.
 */
 
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "rwlock_vc.h"
 
 #define M 5
 #define N 5
@@ -30,17 +32,23 @@ lector y aparezca un segundo lector, el segundo debe poder entrar inmediatamente
 
 int arr[ARRLEN];
 
+rwlock_t rw;
+
 void *escritor(void *arg) {
   int i;
   int num = arg - (void *)0;
 
   while (1) {
-    sleep(random() % 3);
+    sleep(rand() % 3);
 
+    rwlock_wlock(&rw);
     printf("Escritor %d escribiendo\n", num);
     for (i = 0; i < ARRLEN; i++)
       arr[i] = num;
+    printf("Escritor %d termino\n", num);
+    rwlock_wunlock(&rw);
   }
+  
   return NULL;
 }
 
@@ -49,8 +57,9 @@ void *lector(void *arg) {
   int num = arg - (void *)0;
 
   while (1) {
-    sleep(random() % 3);
+    sleep(rand() % 3);
 
+    rwlock_rlock(&rw);
     v = arr[0];
     for (i = 1; i < ARRLEN; i++) {
       if (arr[i] != v)
@@ -60,6 +69,7 @@ void *lector(void *arg) {
       printf("Lector %d, error de lectura\n", num);
     else
       printf("Lector %d, dato %d\n", num, v);
+    rwlock_runlock(&rw);
   }
   return NULL;
 }
@@ -68,12 +78,15 @@ int main() {
   pthread_t lectores[M], escritores[N];
   int i;
 
+  rwlock_init(&rw);
+
   for (i = 0; i < M; i++)
     pthread_create(&lectores[i], NULL, lector, i + (void *)0);
   for (i = 0; i < N; i++)
     pthread_create(&escritores[i], NULL, escritor, i + (void *)0);
 
   pthread_join(lectores[0], NULL); /* Espera para siempre */
+  rwlock_destroy(&rw);
   
   return 0;
 }
