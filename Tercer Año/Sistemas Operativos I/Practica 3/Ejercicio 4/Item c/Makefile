@@ -1,4 +1,4 @@
-FLAGS = -Wall -Wextra -Werror -std=c99
+FLAGS = -Wall -Wextra -Werror -lpthread -std=c99 
 
 programa: ej4c.o rwlock_vc.o
 			$(CC) -o $@ $^ $(FLAGS)

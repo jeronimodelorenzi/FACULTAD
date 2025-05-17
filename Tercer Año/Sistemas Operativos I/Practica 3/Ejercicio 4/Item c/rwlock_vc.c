@@ -25,10 +25,8 @@ void rwlock_rlock (rwlock_t *rw) {
 void rwlock_runlock (rwlock_t *rw) {
   pthread_mutex_lock(&rw->mutex);
   rw->cant_lectores--;
-  if (rw->cant_lectores == 0) {
-    if(rw->escritores_esperando)
+  if (rw->cant_lectores == 0 && rw->escritores_esperando)
       pthread_cond_signal(&rw->escritores);
-  }
 
   pthread_mutex_unlock(&rw->mutex);
 }
@@ -36,7 +34,7 @@ void rwlock_runlock (rwlock_t *rw) {
 void rwlock_wlock (rwlock_t *rw) {
   pthread_mutex_lock(&rw->mutex);
   rw->escritores_esperando++;
-  while(rw->cant_lectores || rw->cant_escritores || rw->lectores_esperando)
+  while(rw->cant_lectores || rw->cant_escritores)
     pthread_cond_wait(&rw->escritores, &rw->mutex);
   rw->escritores_esperando--;
   rw->cant_escritores = 1;
