@@ -21,6 +21,9 @@ sem_t atendido;
 sem_t durmiendo;
 sem_t ocupado;
 
+pthread_barrier_t barrera_corte;
+pthread_barrier_t barrera_pago;
+
 pthread_t barbero;
 pthread_t clientes[CLIENTES];
 
@@ -28,8 +31,8 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int sillas = SILLAS;
 
-void cortando(int i) {
-  printf("Barbero cortando al cliente %d\n", i);
+void cortando() {
+  printf("Barbero cortando\n");
 }
 
 void pagando(int i) {
@@ -40,21 +43,22 @@ void me_cortan(int i){
   printf("Cliente %i recibiendo corte de pelo\n", i);
 }
 
-void me_pagan(int i){
-  printf("Barbero recibiendo pago del cliente %d\n", i);
+void me_pagan(){
+  printf("Barbero recibiendo pago\n");
 }
 
 void *barbero_func(void *arg) {
-  int num = arg - (void*)0;
-
   while (1) {
-    sleep(rand()% 3);
-
     sem_wait(&durmiendo);
-    cortando(num);
-    sem_post(&atendido);
-    me_pagan(num);
+
+    pthread_barrier_wait(&barrera_corte);
+    cortando();
+
+    pthread_barrier_wait(&barrera_pago);
+    me_pagan();
     
+    sem_post(&atendido);
+    sem_post(&ocupado);
   }
   return NULL;
 }
@@ -64,7 +68,6 @@ void *cliente_func(void *arg) {
   while(1) {
     sleep(rand() % 3);
 
-    
     pthread_mutex_lock(&mutex);
     if (sillas > 0) {
       
@@ -74,11 +77,20 @@ void *cliente_func(void *arg) {
 
       sem_wait(&ocupado);
       sem_post(&durmiendo);
+
+      pthread_barrier_wait(&barrera_corte);
       me_cortan(num);
-      sem_wait(&atendido);
+  
+      pthread_barrier_wait(&barrera_pago);
       pagando(num);
+
+      sem_wait(&atendido);
+
+      pthread_mutex_lock(&mutex);
       sillas++;
-      sem_post(&ocupado);
+      printf("Cliente %d se fue\n", num);
+      pthread_mutex_unlock(&mutex);
+
 
     } else {
       pthread_mutex_unlock(&mutex);
@@ -92,12 +104,22 @@ int main() {
   sem_init(&durmiendo, 0, 0);
   sem_init(&ocupado, 0, 1);
 
+  pthread_barrier_init(&barrera_corte, NULL, 2);
+  pthread_barrier_init(&barrera_pago, NULL, 2);
+
   pthread_create(&barbero, NULL, barbero_func, NULL);
   
   for(int i = 0 ; i < CLIENTES ; i++)
     pthread_create(&clientes[i], NULL, cliente_func, i+(void*)0);
 
   pthread_join(barbero, NULL);
+
+  sem_destroy(&ocupado);
+  sem_destroy(&durmiendo);
+  sem_destroy(&atendido);
+
+  pthread_barrier_destroy(&barrera_corte);
+  pthread_barrier_destroy(&barrera_pago);
 
   return 0;
 }

@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "bit": "cpp",
+        "compare": "cpp",
+        "cstddef": "cpp",
+        "cwchar": "cpp",
+        "type_traits": "cpp",
+        "cmath": "cpp",
+        "limits": "cpp",
+        "utility": "cpp",
+        "pthread.h": "c"
+    }
+}

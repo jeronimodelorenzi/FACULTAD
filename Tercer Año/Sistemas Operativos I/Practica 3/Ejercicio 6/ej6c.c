@@ -14,17 +14,7 @@ fumadores deben sincronizar entre ellos; no debe modificarse al agente en lo m´
 crearse nuevos sem´aforos, mutexes, y threads.
 */
 
-// a) ¿C´omo puede ocurrir un deadlock en esta implementaci´on ingenua?
-
-/*
-Puede ocurrir un deadlock si varios fumadores toman un ingrediente que no les corresponden.
-Por ejemplo, supongamos que el agente pone tabaco y papel. El fumador con fósforos es el
-único que debería tomar los ingredientes, ya que son los dos ingredientes que le faltan.
-Puede ocurrir que uno de los otros dos fumadores tomen uno de los ingredientes que da el agente,
-aunque no puedan hacer un cigarrillo.
-Entonces todos estan esperando un ingrediente que no está disponible y no pueden continuar.
-Luego el agente se queda boqueado esperando a que alguno termine de fumar.
-*/
+// c) Implemente una soluci´on (recuerde: sin modificar al agente) y expl´ıquela
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +44,8 @@ void fumar(int fumador) {
 void *fumador1(void *arg) {
   while (1) {
     sem_wait(&tabaco);
-    sem_wait(&papel);
+    if(sem_trywait(&papel) < 0)
+      sem_post(&tabaco);
     fumar(1);
     sem_post(&otra_vez);
   }
@@ -63,7 +54,8 @@ void *fumador1(void *arg) {
 void *fumador2(void *arg) {
   while (1) {
     sem_wait(&fosforos);
-    sem_wait(&tabaco);
+    if(sem_trywait(&tabaco) < 0)
+      sem_post(&fosforos);
     fumar(2);
     sem_post(&otra_vez);
   }
@@ -72,7 +64,8 @@ void *fumador2(void *arg) {
 void *fumador3(void *arg) {
   while (1) {
     sem_wait(&papel);
-    sem_wait(&fosforos);
+    if(sem_trywait(&fosforos) < 0)
+      sem_post(&papel);
     fumar(3);
     sem_post(&otra_vez);
   }
@@ -94,3 +87,10 @@ int main() {
 
   return 0;
 }
+
+/*
+La solución propuesta es la siguiente:
+El agente pone sobre la mesa los ingredientes, entonces los fumadores intentan agarrarlos. 
+Si un fumador agarra un ingrediente e intenta agarrar otro y no puede, entonces lo suelta, dejando así
+la opción de que si otro necesita ese ingrediente lo pueda agarrar.
+*/
