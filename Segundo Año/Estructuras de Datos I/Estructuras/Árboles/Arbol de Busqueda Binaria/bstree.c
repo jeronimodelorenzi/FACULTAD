@@ -150,9 +150,9 @@ void* bstree_k_esimo_menor(BSTree arbol, int k) {
 // }
 
 BSTree bstree_validar_aux (BSTree arbol, FuncionComparadora comp, void* ant, int* validar) {
+  if(arbol == NULL || *validar == 0) return NULL;
+  
   arbol->izq = bstree_validar_aux(arbol->izq, comp, ant, validar);
-
-  if(arbol == NULL) return NULL;
 
   if (comp(ant, arbol->dato) > 0)
     *validar = 0;
