@@ -50,9 +50,6 @@ BSTree bstree_insertar(BSTree raiz, void *dato, FuncionCopiadora copia, FuncionC
   return raiz;
 }
 
-/**
- * bstree_recorrer: Recorrido DSF del arbol
- */
 void bstree_recorrer (BSTree arbol, BSTreeRecorrido orden, FuncionVisitanteExtra visit, void *extra) {
   if (arbol == NULL)
     return;
@@ -60,29 +57,113 @@ void bstree_recorrer (BSTree arbol, BSTreeRecorrido orden, FuncionVisitanteExtra
   if (orden == BTREE_RECORRIDO_PRE)
     visit(arbol->dato, extra);
 
-  bstree_recorrer_extra(arbol->izq, orden, visit, extra);
+  bstree_recorrer(arbol->izq, orden, visit, extra);
 
   if (orden == BTREE_RECORRIDO_IN)
   visit(arbol->dato, extra);
 
-  bstree_recorrer_extra(arbol->der, orden, visit, extra);
+  bstree_recorrer(arbol->der, orden, visit, extra);
 
   if (orden == BTREE_RECORRIDO_POST)
     visit(arbol->dato, extra);
 }
+
 BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora comp, FuncionDestructora destroy) {
   if (arbol == NULL) return NULL;
 
-  if (comp(arbol->dato, dato) == 0) {
+  int comparacion = comp(dato, arbol->dato);
 
-    if (arbol->izq == NULL && arbol->dato == NULL ){
+  if (comparacion < 0) 
+    bstree_eliminar(arbol->izq, dato, comp, destroy);
+  else if (comparacion > 0)
+    bstree_eliminar(arbol->der, dato, comp, destroy);
+  else if (comparacion == 0) {
+    // Sin hijos.
+    if (arbol->izq == NULL && arbol->der == NULL ){
       destroy(arbol->dato);
       free(arbol);
       return NULL;
     }
+    // Un solo hijo.
     if (arbol->izq == NULL) {
+      BSTree temp = arbol->der;
       destroy(arbol->dato);
-      return 
+      free(arbol);
+      return temp;
     }
+    if (arbol->der == NULL) {
+      BSTree temp = arbol->izq;
+      destroy(arbol->dato);
+      free(arbol);
+      return temp;
+    }
+
+    // Dos hijos.
+    BSTree suc = arbol->der;
+    while(suc->izq != NULL)
+      suc = suc->izq;
+
+    arbol->dato = suc->dato;
+
+    arbol->der = bstree_eliminar(arbol->dato, suc->dato, comp, destroy);
   }
+
+  return arbol;
+}
+
+typedef struct {
+  int k;
+  void *dato;
+} K_esimo;
+
+void visitar_k_esimo(void* dato, void *extra) {
+  K_esimo *info = (K_esimo*)extra;
+  if(info->dato != NULL) return;
+
+  info->k--;
+  if (info->k == 0)
+    info->dato = dato;
+}
+
+void* bstree_k_esimo_menor(BSTree arbol, int k) {
+  K_esimo info;
+  info.dato = NULL;
+  info.k = k;
+  bstree_recorrer(arbol, BTREE_RECORRIDO_IN, visitar_k_esimo, &info);
+  return info.dato;
+}
+
+// void* bstree_k_esimo_menor_aux (BSTree arbol, int *k) {
+//   if (arbol == NULL) return NULL;
+
+//   void *izq = bstree_k_esimo_menor_aux(arbol->izq, k);
+//   if (izq != NULL) return izq;
+
+//   (*k)--;
+//   if (*k == 0) return arbol->dato;
+
+//   return bstree_k_esimo_menor_aux(arbol->der, k);
+// }
+
+// void *bstree_k_esimo_menor(BSTree arbol, int k) {
+//   return bstree_k_esimo_menor_aux(arbol, &k);
+// }
+
+BSTree bstree_validar_aux (BSTree arbol, FuncionComparadora comp, void* ant, int* validar) {
+  arbol->izq = bstree_validar_aux(arbol->izq, comp, ant, validar);
+
+  if(arbol == NULL) return NULL;
+
+  if (comp(ant, arbol->dato) > 0)
+    *validar = 0;
+  
+  ant = arbol->dato;
+
+  arbol->der = bstree_validar_aux(arbol->der, comp, ant, validar);
+}
+
+int bstree_validar (BSTree arbol, FuncionComparadora comp) {
+  int validar = 1;
+  bstree_validar_aux(arbol, comp, NULL, &validar);
+  return validar;
 }
