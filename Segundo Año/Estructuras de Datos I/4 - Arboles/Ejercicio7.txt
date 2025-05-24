@@ -1,0 +1,51 @@
+Dibuje el resultado de insertar en un ABB vac´ıo la siguiente secuencia de n´umeros:
+10, 20, 15, 25, 30, 16, 18, 19.
+Dibuje adem´as el resultado de eliminar del mismo el n´umero 20.
+
+Insertar:
+
+1)				10
+
+2)				10
+				   20
+
+3)				10
+				   20
+				15
+
+4)				10
+				   20
+				15    25
+
+5)				10
+				   20
+				15    25
+				  	30
+
+6)				10
+				   20
+				15    25
+				  16	30
+
+7)				10
+				   20
+				15    25
+				  16	30
+				    18
+
+8)				10
+				   20
+				15    25
+				  16	30
+				    18
+				      19
+
+Eliminar:
+
+  				10
+				   25
+				15    30
+				  16	
+				    18
+				      19
+

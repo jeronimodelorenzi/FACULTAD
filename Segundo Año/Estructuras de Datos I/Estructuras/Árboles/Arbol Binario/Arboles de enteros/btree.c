@@ -47,6 +47,24 @@ void btree_recorrer (BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitante 
     visit(arbol->dato);
 }
 
+void btree_recorrer_extra (BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitanteExtra visit, void *extra) {
+  if (arbol == NULL)
+    return;
+
+  if (orden == BTREE_RECORRIDO_PRE)
+    visit(arbol->dato, extra);
+
+  btree_recorrer_extra(arbol->left, orden, visit, extra);
+
+  if (orden == BTREE_RECORRIDO_IN)
+  visit(arbol->dato, extra);
+
+  btree_recorrer_extra(arbol->right, orden, visit, extra);
+
+  if (orden == BTREE_RECORRIDO_POST)
+    visit(arbol->dato, extra);
+}
+
 int btree_nnodos (BTree arbol) {
   if (arbol == NULL) return 0;
 
@@ -62,6 +80,23 @@ int btree_buscar (BTree arbol, int dato) {
   int estaDer = btree_buscar(arbol->right, dato);
 
   return estaIzq || estaDer;
+}
+
+void btree_recorrer_bfs_aux (BTree arbol, int profundidad, FuncionVisitante visit) {
+  if (arbol == NULL) return;
+
+  if (profundidad == 0) 
+    visit(arbol->dato);
+  else {
+    btree_recorrer_bfs_aux (arbol->left, profundidad-1, visit);
+    btree_recorrer_bfs_aux (arbol->right, profundidad-1, visit);
+  }
+}
+
+void btree_recorrer_bfs (BTree arbol, FuncionVisitante visit) {
+  int altura = btree_altura(arbol);
+  for (int i = 0 ; i < altura ; i++)
+    btree_recorrer_bfs_aux(arbol, i, visit);
 }
 
 BTree btree_copia (BTree arbol) {
@@ -97,15 +132,17 @@ int btree_nnodos_profundidad (BTree arbol, int profundidad) {
 }
 
 int btree_profundidad_aux(BTree arbol, int dato, int profundidad) {
-  if (arbol == NULL) return 0;
+  if (arbol == NULL) return -1;
   if (arbol->dato == dato) return profundidad;
 
-  return btree_profundidad_aux(arbol->left, dato, profundidad+1) + btree_profundidad_aux(arbol->right, dato, profundidad+1);
+  int izq = btree_profundidad_aux(arbol->left, dato, profundidad+1);
+  if (izq != -1) return izq;
+
+  return btree_profundidad_aux(arbol->right, dato, profundidad+1);
 }
 
 int btree_profundidad (BTree arbol, int dato) {
-  int profundidad = btree_profundidad_aux(arbol, dato, 0);
-  return btree_profundidad(arbol, profundidad);
+  return btree_profundidad_aux(arbol, dato, 0);
 }
 
 int btree_suma(BTree arbol) {

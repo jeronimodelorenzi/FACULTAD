@@ -2,6 +2,7 @@
 #define __BTREE_H__
 
 typedef void (*FuncionVisitante)(int dato);
+typedef void (*FuncionVisitanteExtra)(int dato, void *extra);
 
 typedef enum {
   BTREE_RECORRIDO_IN,
@@ -12,12 +13,12 @@ typedef enum {
 typedef struct _BTNodo *BTree;
 
 /**
- * Devuelve un arbol vacío.
+ * Devuelve un árbol vacío.
  */
 BTree btree_crear();
 
 /**
- * Destruccion del árbol.
+ * Destrucción del árbol.
  */
 void btree_destruir(BTree nodo);
 
@@ -27,23 +28,33 @@ void btree_destruir(BTree nodo);
 int btree_empty(BTree nodo);
 
 /**
- * Crea un nuevo arbol, con el dato dado en el nodo raiz, y los subarboles dados
+ * Crea un nuevo árbol, con el dato dado en el nodo raíz, y los subárboles dados
  * a izquierda y derecha.
  */
 BTree btree_unir(int dato, BTree left, BTree right);
 
 /**
- * Recorrido del arbol, utilizando la funcion pasada.
+ * Recorrido del árbol, utilizando la función pasada.
  */
 void btree_recorrer(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitante visit);
 
 /**
- * Retorna el número de nodos del arbol.
+ * Recorrido del árbol, utilizando la función extra.
+ */
+void btree_recorrer_extra(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisitanteExtra visit, void *extra);
+
+/**
+ * Recorrido del árbol, utilizando la función pasada. Utiliza busqueda por extensión.
+ */
+int btree_recorrer_bfs(BTree arbol, FuncionVisitante visit);
+
+/**
+ * Retorna el número de nodos del árbol.
  */
 int btree_nnodos(BTree arbol);
 
 /**
- * Retorna 1 si el número está en el arbol, 0 en caso contrario.
+ * Retorna 1 si el número está en el árbol, 0 en caso contrario.
  */
 int btree_buscar(BTree arbol, int dato);
 
@@ -73,4 +84,4 @@ int btree_profundidad(BTree arbol, int dato);
  */
 int btree_suma(BTree arbol);
 
-#endif /* __BTREE_H__ */
+#endif 
