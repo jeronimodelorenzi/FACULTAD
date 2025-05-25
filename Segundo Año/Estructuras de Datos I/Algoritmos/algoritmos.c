@@ -1,6 +1,9 @@
 #include "algoritmos.h"
 #include <stdlib.h>
 
+/*
+BÚSQUEDA BINARIA.
+*/
 int binsearch (int a[], int len, int v) {
   int inicio = 0, final = len-1, posicion = -1, medio;
   while (inicio <= final && posicion == -1) {
@@ -24,6 +27,9 @@ int binsearch_rec (int a[], int inicio, int final, int v) {
   return -1;
 }
 
+/*
+INSERTION SORT.
+*/
 void insertion_sort (int a[], int len) {
   for (int i =  1 ; i < len ; i++) {
     int valor = a[i];
@@ -35,7 +41,9 @@ void insertion_sort (int a[], int len) {
     a[j+1] = valor;
   }
 }
-
+/*
+MERGE SORT.
+*/
 int* merge (int a[], int len_a, int b[], int len_b) {
   int *resultado = malloc(sizeof(int) * (len_a + len_b));
   int i = 0, j = 0, k = 0;
@@ -82,4 +90,37 @@ int* merge_sort (int a[], int len) {
   free(b2);
   
   return resultado;
+}
+
+/*
+QUICK SORT
+*/
+
+int particion_de_lomuto (int a[], int len, int pvt) {
+  int j = 0;
+
+  for (int i = 0; i < len ; i++)
+    if (a[i] <= pvt) {
+      int temp = a[i];
+      a[i] = a[j];
+      a[j] = temp;
+      j++;
+    }
+
+  return j;
+}
+
+void quick_sort (int a[], int len) {
+  if (len < 2) return;
+
+  int pvt = a[0];
+
+  int n_izq = particion_de_lomuto(a + 1, len-1, pvt);
+  
+  int temp = a[0];
+  a[0] = a[n_izq];
+  a[n_izq] = temp;
+
+  quick_sort(a, n_izq);
+  quick_sort(a+n_izq+1, len-n_izq-1);
 }
