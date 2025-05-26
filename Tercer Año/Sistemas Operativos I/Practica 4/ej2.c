@@ -24,8 +24,6 @@ void sumar_arreglo_omp() {
   printf("Suma total: %ld", suma);
 }
 
-void sumar_arreglo
-
 int main () {
 
   for ( int i = 0 ; i < SIZE ; i++)

@@ -6,17 +6,13 @@ distinto n´umero de hilos.
 
 #include <stdio.h>
 #include <omp.h>
+#include "timing.h"
 
 #define SIZE 500000000
 
 int arr[SIZE];
 
-int main () {
-  for (int i = 0 ; i < SIZE ; i++)
-    arr[i] = 100;
-
-  arr[8000] = 50;
-
+void fun() {
   int min = arr[0];
   #pragma omp parallel for shared(min)
   for (int i = 1 ; i < SIZE ; i++)
@@ -25,6 +21,19 @@ int main () {
       if (arr[i] < min)
       min = arr[i];
     }
+     printf("Minimo del arreglo: %d\n", min);
+}
+
+int main () {
+  for (int i = 0 ; i < SIZE ; i++)
+    arr[i] = 100;
+
+  arr[8000] = 50;
+
+  
+
+  float fv;
+  TIME_void(fun(), &fv);
     
-  printf("Minimo del arreglo: %d\n", min);
+ return 0;
 }
