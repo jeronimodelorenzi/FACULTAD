@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include <omp.h>
 #include "timing.h"
-#define N 4
+#define N 1000
 
 int A[N][N], B[N][N], C[N][N];
 int BT[N][N];
+
+void trasponer(int B[N][N], int BT[N][N]) {
+  for (int i = 0 ; i < N ; i++)
+    for (int j = 0 ; j < N ; j++)
+      BT[j][i] = B[i][j];
+}
 
 void mult(int A[N][N], int B[N][N], int C[N][N]) {
   
@@ -25,12 +31,14 @@ void mult(int A[N][N], int B[N][N], int C[N][N]) {
 void mult_traspuesta(int A[N][N], int B[N][N], int C[N][N]) {
   int i, j, k;
 
+  trasponer(B,BT);
+
   #pragma omp parallel for private(i,j,k)
     for (i = 0; i < N; i++) {
       for (j = 0; j < N; j++) {
         int sum = 0;
         for (k = 0; k < N; k++) {
-          sum += A[i][k] * B[j][k];
+          sum += A[i][k] * BT[j][k];
         }
         C[i][j] = sum;
       }
@@ -59,11 +67,11 @@ int main() {
   float fv;
   TIME_void(mult_traspuesta(A,B,C), &fv);
 
-  for (i = 0 ; i < N ; i++) {
-    for (j = 0 ; j < N ; j++) {
-      printf("C[%d][%d] = %d\n", i, j, C[i][j]);
-    }
-  }
+  // for (i = 0 ; i < N ; i++) {
+  //   for (j = 0 ; j < N ; j++) {
+  //     printf("C[%d][%d] = %d\n", i, j, C[i][j]);
+  //   }
+  // }
 
   return 0;
 }

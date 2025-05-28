@@ -82,6 +82,8 @@ int main()
         A[i] = random() % 1000;
     }
 
+    omp_set_num_threads(4);
+
     // for (long int j = 0 ; j < N ; j++)
     //     printf("A[%ld] = %d\n", j, A[j]);
 
