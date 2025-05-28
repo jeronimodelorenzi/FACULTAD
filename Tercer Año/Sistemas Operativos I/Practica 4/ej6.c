@@ -14,84 +14,92 @@ Escriba una versi´on usando tasks de OpenMP y mida el cambio en rendimiento.
 #include <stdlib.h>
 #include "timing.h"
 
-/* Particion de Lomuto, tomando el primer elemento como pivote */
-
-#define N 500
+#define N 1000000
 int A[N];
 
-void swap(int *a, int *b)
-{
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+void swap(int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
 }
 
-int particionar(int a[], int n)
-{
-    int i, j = 0;
-    int p = a[0];
+int particionar(int a[], int n) {
+  int i, j = 0;
+  int p = a[0];
 
-    swap(&a[0], &a[n - 1]);
-    for (i = 0; i < n - 1; i++)
-    {
-        if (a[i] <= p)
-            swap(&a[i], &a[j++]);
-    }
-    swap(&a[j], &a[n - 1]);
-    return j;
+  swap(&a[0], &a[n - 1]);
+  for (i = 0; i < n - 1; i++) {
+    if (a[i] <= p)
+      swap(&a[i], &a[j++]);
+  }
+  swap(&a[j], &a[n - 1]);
+  return j;
 }
-void quicksort(int a[], int n)
-{
-    if (n < 2)
-        return;
-    int p = particionar(a, n);
+
+void quicksort_par(int a[], int n) {
+  if (n < 2)
+    return;
+  int p = particionar(a, n);
     
-    
+  #pragma omp parallel sections
+  {
     #pragma omp section
-    
-    quicksort(a, p);
+    quicksort_par(a, p);
+
     #pragma omp section
-    quicksort(a + p + 1, n - p - 1);
-    
+    quicksort_par(a + p + 1, n - p - 1);
+  }
 }
 
-/* Particion de Lomuto, tomando el primer elemento como pivote */
-
-void qsort_sec(int a[], int n)
-{
-    if (n < 2)
-        return;
-    int p = particionar(a, n);
-    qsort_sec(a, p);
-    qsort_sec(a + p + 1, n - p - 1);
+void quicksort_sec(int a[], int n) {
+  if (n < 2)
+    return;
+  int p = particionar(a, n);
+  quicksort_sec(a, p);
+  quicksort_sec(a + p + 1, n - p - 1);
 }
 
-void fun(){
-    #pragma omp parallel 
+void quicksort_task(int a[], int n) {
+  if (n < 2)
+    return;
+  int p = particionar(a,n);
+
+  #pragma omp task
+  quicksort_task(a,p);
+
+  #pragma omp task
+  quicksort_task(a+p+1, n-p-1);
+
+  #pragma omp taskwait    
+}
+
+void fun() {
+  #pragma omp parallel
+  {
+    #pragma omp single
     {
-        quicksort(A,N);
-    }
+      quicksort_task(A,N);
+    }    
+  }
 }
 
-int main()
-{
+int main() {
 
-    long int i;
-    for (i = 0; i < N; i++)
-    {
-        A[i] = random() % 1000;
-    }
+  long int i;
+  for (i = 0; i < N; i++) {
+    A[i] = random() % 1000;
+  }
 
-    omp_set_num_threads(4);
+  omp_set_num_threads(4);
 
-    // for (long int j = 0 ; j < N ; j++)
-    //     printf("A[%ld] = %d\n", j, A[j]);
+  // for (long int j = 0 ; j < N ; j++)
+  //     printf("A[%ld] = %d\n", j, A[j]);
 
-    float fv;
-    TIME_void(quicksort(A, N), &fv);
+  float fv;
+  TIME_void(fun(), &fv);
 
-    //for (long int j = 0 ; j < N ; j++)
-    //     printf("A[%ld] = %d\n", j, A[j]);
+  //for (long int j = 0 ; j < N ; j++)
+  //     printf("A[%ld] = %d\n", j, A[j]);
 
-    return 0;
+  return 0;
 }

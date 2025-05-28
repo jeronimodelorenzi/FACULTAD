@@ -15,7 +15,7 @@ int arr[SIZE];
 void fun() {
   int min = arr[0];
   #pragma omp parallel for shared(min)
-  for (int i = 1 ; i < SIZE ; i++)
+  for (long int i = 1 ; i < SIZE ; i++)
     #pragma omp critical
     {
       if (arr[i] < min)
@@ -25,13 +25,11 @@ void fun() {
 }
 
 int main () {
-  for (int i = 0 ; i < SIZE ; i++)
+  for (int long i = 0 ; i < SIZE ; i++)
     arr[i] = 100;
 
   arr[8000] = 50;
-
   
-
   float fv;
   TIME_void(fun(), &fv);
     
