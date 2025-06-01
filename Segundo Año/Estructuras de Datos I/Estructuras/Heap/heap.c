@@ -20,12 +20,12 @@ int bheap_es_vacio (BHeap heap) {
 }
 
 void bheap_recorrer (BHeap heap, FuncionVisitante visit) {
-  for (int i = 0 ; i < heap->ultimo ; i++)
+  for (int i = 0 ; i <= heap->ultimo ; i++)
     visit(heap->arr[i]);
 }
 
 static int padre (int nodo) {
-  return nodo/2;
+  return (nodo-1)/2;
 }
 
 BHeap bheap_insertar (BHeap heap, void *dato) {
@@ -37,7 +37,7 @@ BHeap bheap_insertar (BHeap heap, void *dato) {
   heap->ultimo++;
   heap->arr[heap->ultimo] = dato;
 
-  for (int nodo = heap->ultimo; nodo > 1 && heap->comp(heap->arr[nodo], heap->arr[padre(nodo)] > 0); nodo = padre(nodo)) {
+  for (int nodo = heap->ultimo; nodo > 1 && heap->comp(heap->arr[nodo], heap->arr[padre(nodo)]) > 0; nodo = padre(nodo)) {
     void* temp = heap->arr[nodo];
     heap->arr[nodo] = heap->arr[padre(nodo)];
     heap->arr[padre(nodo)] = temp;
@@ -46,6 +46,39 @@ BHeap bheap_insertar (BHeap heap, void *dato) {
   return heap;
 }
 
-BHeap bheap_eliminar (BHeap heap, void* dato) {
+static int izquierda (int nodo) {
+  return 2*(nodo-1);
+}
+
+static int derecha (int nodo) {
+  return 2*(nodo-1) + 1;
+}
+
+BHeap bheap_eliminar (BHeap heap, int index) {
+  if (bheap_es_vacio(heap)) return NULL;
   
+  int esMayor = 1;
+  int hijoMayor;
+
+  heap->arr[index] = heap->arr[heap->ultimo-1];
+  heap->ultimo--;
+
+  int nodo = index;
+  while (izquierda(nodo) <= heap->ultimo && esMayor) {
+    hijoMayor = izquierda(nodo);
+
+    if(derecha(nodo) <= heap->ultimo && heap->comp(heap->arr[derecha(nodo)], heap->arr[izquierda(nodo)])>0)
+      hijoMayor = derecha(nodo);
+
+    if(heap->comp(heap->arr[nodo], heap->arr[hijoMayor])>0)
+      esMayor = 0;
+    else {
+      void *temp = heap->arr[nodo];
+      heap->arr[nodo] = heap->arr[hijoMayor];
+      heap->arr[hijoMayor] = temp;
+      nodo = hijoMayor;
+    }
+  }
+  
+  return heap;
 }
