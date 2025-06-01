@@ -22,37 +22,37 @@ BSTree bstee_crear();
 /**
  * Destruye el árbol y sus datos.
  */
-void bstree_destruir(BSTree arbol, FuncionDestructora destroy);
+void bstree_destruir(BSTree, FuncionDestructora);
 
 /**
  * Retorna 1 si el dato se encuentra y 0 en caso contrario.
  */
-int bstree_buscar(BSTree arbol, void *dato, FuncionComparadora comp);
+int bstree_buscar(BSTree, void *, FuncionComparadora);
 
 /**
  * Inserta un dato no repetido en el árbol, manteniendo la propiedad del árbol
  * de busqueda binaria.
  */
-BSTree bstree_insertar(BSTree arbol, void *dato, FuncionCopiadora copy, FuncionComparadora comp);
+BSTree bstree_insertar(BSTree, void *, FuncionCopiadora, FuncionComparadora);
 
 /**
  * Elimina un dato del árbol, manteniendo la propiedad del árbol de busqueda binaria.
  */
-BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora comp, FuncionDestructora destroy, FuncionCopiadora copy);
+BSTree bstree_eliminar(BSTree, void *, FuncionComparadora, FuncionDestructora);
 
 /**
  * Recorrido DSF del árbol
  */
-void bstree_recorrer(BSTree arbol, BSTreeRecorrido recorriod, FuncionVisitanteExtra visitextra, void *extra);
+void bstree_recorrer(BSTree, BSTreeRecorrido, FuncionVisitanteExtra, void *extra);
 
 /**
  * Retorna el k-ésimo menor elemento del árbol.
  */
-void* bstree_k_esimo_menor(BSTree arbol, int k);
+void* bstree_k_esimo_menor(BSTree, int);
 
 /**
  * Retorna 1 si el árbol cumple con la propiedad de ABB, en caso contrario retorna 0.
  */
-int bstree_validar(BSTree arbol, FuncionComparadora comp);
+int bstree_validar(BSTree, FuncionComparadora);
 
 #endif //__BSTREE_H__
