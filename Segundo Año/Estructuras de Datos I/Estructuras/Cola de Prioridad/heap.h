@@ -39,5 +39,5 @@ BHeap bheap_insertar(BHeap heap, void *dato);
 /**
  * Elimina un elemento del heap.
  */
-BHeap bheap_eliminar(BHeap heap, int dato);
+BHeap bheap_eliminar(BHeap heap, int index);
 #endif 

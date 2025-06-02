@@ -37,7 +37,7 @@ BHeap bheap_insertar (BHeap heap, void *dato) {
   heap->ultimo++;
   heap->arr[heap->ultimo] = dato;
 
-  for (int nodo = heap->ultimo; nodo > 1 && heap->comp(heap->arr[nodo], heap->arr[padre(nodo)]) > 0; nodo = padre(nodo)) {
+  for (int nodo = heap->ultimo; nodo > 0 && heap->comp(heap->arr[nodo], heap->arr[padre(nodo)]) > 0; nodo = padre(nodo)) {
     void* temp = heap->arr[nodo];
     heap->arr[nodo] = heap->arr[padre(nodo)];
     heap->arr[padre(nodo)] = temp;
