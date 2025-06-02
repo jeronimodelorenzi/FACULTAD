@@ -18,11 +18,11 @@ void* cola_prioridad_maximo (ColaP cola) {
   return cola->capacidad > -1 ? cola->arr[0] : NULL;
 }
 
-void cola_prioridad_eliminar_maximo (ColaP cola) {
+void* cola_prioridad_eliminar_maximo (ColaP cola) {
   return bheap_eliminar(cola, 0);
 }
 
-void cola_prioridad_insertar (ColaP cola, void *dato) {
+ColaP cola_prioridad_insertar (ColaP cola, void *dato) {
   return bheap_insertar(cola, dato);
 }
 

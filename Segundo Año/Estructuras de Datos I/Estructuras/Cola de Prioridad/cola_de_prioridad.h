@@ -31,11 +31,11 @@ void* cola_prioridad_maximo(ColaP cola);
 /**
  * Elimina el elemento prioritario de la cola.
  */
-void cola_prioridad_eliminar_maximo(ColaP cola);
+void* cola_prioridad_eliminar_maximo(ColaP cola);
 
 /**
  * Inserta un elemento en la cola con una prioridad determinada.
  */
-void cola_prioridad_insertar(ColaP cola, void *dato);
+ColaP cola_prioridad_insertar(ColaP cola, void *dato);
 
 #endif
