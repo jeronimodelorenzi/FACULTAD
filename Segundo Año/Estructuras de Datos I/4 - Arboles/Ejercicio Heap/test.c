@@ -28,26 +28,30 @@ void destruir_entero(void *dato) {
 int main () {
   srand(time(NULL));
 
-  BHeap heap = bheap_crear(SIZE, comparar_entero, copiar_entero, destruir_entero);
-  printf("Vacio: %d\n", bheap_es_vacio(heap));
+  //BHeap heap = bheap_crear(SIZE, comparar_entero, copiar_entero, destruir_entero);
+  //printf("Vacio: %d\n", bheap_es_vacio(heap));
 
   int arr[] = {86, 93, 83, 92, 86, 35, 77, 15, 49, 21};
 //   for (int i = 0 ; i < SIZE ; i++)
 //     arr[i] = rand() % 100;
 
-  for (int i = 0 ; i < SIZE ; i++)
-    heap = bheap_insertar(heap, &arr[i]);
+  //for (int i = 0 ; i < SIZE ; i++)
+  //  heap = bheap_insertar(heap, &arr[i]);
 
-  bheap_sort((int*)arr, SIZE, comparar_entero);
+  void* punteros[SIZE];
+  for (int i = 0 ; i < SIZE ; i++)
+    punteros[i] = &arr[i];
+
+  bheap_sort(punteros, SIZE, comparar_entero);
 
   for (int i = 0 ; i < SIZE ; i++) 
-    printf("%d ", arr[i]);
-    puts("");
-
-  bheap_recorrer(heap, imprimir_entero);
+    printf("%d ", *(*int)punteros[i]);
   puts("");
 
-  bheap_destruir(heap);
+  //bheap_recorrer(heap, imprimir_entero);
+  //puts("");
+
+  //bheap_destruir(heap);
 
   return 0;
 }
