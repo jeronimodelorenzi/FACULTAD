@@ -3,7 +3,7 @@
 
 #define RIGHT(i) (2*(i+1))
 #define LEFT(i) ((2*i)+1)
-#define PARENT(i) ((i-1)/2);
+#define PARENT(i) ((i-1)/2)
 
 static void swap(void **a, void **b) {
   void *temp = *a;
@@ -24,7 +24,7 @@ static void hundir(BHeap heap, int pos) {
 static void flotar(BHeap heap, int pos) {
   if (pos == 0) return;
   int pos_padre = PARENT(pos);
-  if (heap->arr[pos] > heap->arr[pos_padre]) {
+  if (heap->comp(heap->arr[pos], heap->arr[pos_padre]) > 0) {
     swap(&heap->arr[pos], &heap->arr[pos_padre]);
     flotar(heap, pos_padre);
   }
@@ -64,7 +64,7 @@ void bheap_destruir(BHeap heap) {
 }
 
 void bheap_recorrer(BHeap heap, FuncionVisitante visit) {
-  for (int i = 0 ; i < heap->ultimo ; i++)
+  for (int i = 0 ; i <= heap->ultimo ; i++)
     visit(heap->arr[i]);
 }
 
@@ -75,7 +75,7 @@ int bheap_es_vacio (BHeap heap) {
 BHeap bheap_insertar (BHeap heap, void *dato) {
   if (heap->ultimo + 1 == heap->capacidad) {
     heap->capacidad = heap->capacidad*2;
-    heap = realloc(heap, sizeof(void*) * heap->capacidad);
+    heap->arr = realloc(heap->arr, sizeof(void*) * heap->capacidad);
   }
 
   heap->ultimo++;
@@ -95,8 +95,7 @@ BHeap bheap_eliminar(BHeap heap, int pos) {
 
   heap->destroy(elem);
 
-  int pos_padre = PARENT(pos);
-  if (pos > 0 && heap->comp(heap->arr[pos], heap->arr[pos_padre]) > 0)
+  if (pos > 0 && heap->comp(heap->arr[pos], heap->arr[PARENT(pos)]) > 0)
     flotar(heap,pos);
   else
     hundir(heap,pos);
