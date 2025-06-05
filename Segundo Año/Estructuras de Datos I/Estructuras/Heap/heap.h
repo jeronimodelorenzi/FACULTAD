@@ -18,12 +18,12 @@ typedef struct _BHeap {
 /**
  * Crea un heap vacío. 
  */
-BHeap bheap_crear(int capacidad, FuncionComparadora comp, FuncionDestructora destroy);
+BHeap bheap_crear(int capacidad, FuncionComparadora comp, FuncionCopiadora copy, FuncionDestructora destroy);
 
 /**
  * Crea un heap desde un arreglo.
  */
-BHeap bheap_crear_desde_arr(void **arr, int n, FuncionCopiadora copia, FuncionComparadora comp);
+BHeap bheap_crear_desde_arr(void **arr, int n, FuncionCopiadora copia, FuncionComparadora comp, FuncionDestructora destroy);
 
 /**
  * Destruye el heap.
@@ -48,7 +48,7 @@ BHeap bheap_insertar(BHeap heap, void *dato);
 /**
  * Elimina un elemento del heap.
  */
-BHeap bheap_eliminar(BHeap heap, void *dato);
+BHeap bheap_eliminar(BHeap heap, int pos);
 
 /**
  * Retorna el elemento eliminado.
@@ -58,5 +58,6 @@ void* bheap_pop(BHeap heap);
 /**
  * Ordena un arrgleglo de enteros usando un heap.
  */
-void bheap_sort(int arr[], int n);
+void bheap_sort(void **, int n, FuncionComparadora comp);
+
 #endif 

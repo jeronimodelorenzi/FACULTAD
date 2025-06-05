@@ -111,7 +111,7 @@ void* bheap_pop (BHeap heap) {
   return max;
 }
 
-static void no_copia (void *dato){
+static void* no_copia (void *dato){
   return dato;
 }
 
@@ -128,4 +128,3 @@ void bheap_sort(void **arr, int n, FuncionComparadora comp) {
   }
   free(heap);
 }
-
