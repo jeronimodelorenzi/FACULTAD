@@ -38,31 +38,49 @@ Nodo* agregaJugador (Nodo* inicio, Jugador j){
     inicio->derecha = agregaJugador(inicio->derecha, j);
 
   return inicio;
-
-}
-
-void recuperaJugadoresPorPosicion_aux (Nodo* act, Nodo** res, int max, int min) {
-  if (act == NULL) return;
-
-  if (act->jug->posicionJugador > min)
-    recuperaJugadoresPorPosicion_aux(act->izquierda, res, max, min);
-
-  if (act->jug->posicionJugador >= min && act->jug->posicionJugador <= max) {
-    *res = agregaJugador(*res, crearJugador(act->jug->nombre, act->jug->club, act->jug->posicionJugador, act->jug->edad));
-  }
-
-  if (act->jug->posicionJugador < max)
-    recuperaJugadoresPorPosicion_aux(act->derecha, res, max, min);
 }
 
 Nodo* recuperaJugadoresPorPosicion (Nodo* inicio, int posicionMax, int posicionMin) {
-  if (inicio == NULL || posicionMax < posicionMin) return NULL;
+  if (inicio == NULL || posicionMax < posicionMin) {
+    return NULL;
+  }
+  Nodo *arbol = malloc(sizeof(Nodo));
 
-  Nodo* res = NULL;
+  if (inicio->jug->posicionJugador > posicionMax)
+    recuperaJugadoresPorPosicion(inicio->izquierda, posicionMax, posicionMin);
+  else if (inicio->jug->posicionJugador < posicionMin)
+    recuperaJugadoresPorPosicion(inicio->izquierda, posicionMax, posicionMin);
+  else {
+    arbol = inicio;
+    arbol->izquierda = recuperaJugadoresPorPosicion(arbol->izquierda, posicionMax, posicionMin);
+    arbol->derecha = recuperaJugadoresPorPosicion(arbol->derecha, posicionMax, posicionMin);
+  }
 
-  recuperaJugadoresPorPosicion_aux(inicio, &res, posicionMax, posicionMin);
-  return res;
+  return arbol;
 }
+
+// void recuperaJugadoresPorPosicion_aux (Nodo* act, Nodo** res, int max, int min) {
+//   if (act == NULL) return;
+
+//   if (act->jug->posicionJugador > min)
+//     recuperaJugadoresPorPosicion_aux(act->izquierda, res, max, min);
+
+//   if (act->jug->posicionJugador >= min && act->jug->posicionJugador <= max) {
+//     *res = agregaJugador(*res, crearJugador(act->jug->nombre, act->jug->club, act->jug->posicionJugador, act->jug->edad));
+//   }
+
+//   if (act->jug->posicionJugador < max)
+//     recuperaJugadoresPorPosicion_aux(act->derecha, res, max, min);
+// }
+
+// Nodo* recuperaJugadoresPorPosicion (Nodo* inicio, int posicionMax, int posicionMin) {
+//   if (inicio == NULL || posicionMax < posicionMin) return NULL;
+
+//   Nodo* res = NULL;
+
+//   recuperaJugadoresPorPosicion_aux(inicio, &res, posicionMax, posicionMin);
+//   return res;
+// }
 
 void mostrarJugador (Jugador j) {
   printf("Nombre: %s | Club: %s | Posición: %d | Edad: %d\n", j->nombre, j->club, j->posicionJugador, j->edad);
