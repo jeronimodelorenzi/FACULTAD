@@ -79,7 +79,7 @@ BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora comp, Funcio
     bstree_eliminar(arbol->der, dato, comp, destroy, copy);
   else if (comparacion == 0) {
     // Sin hijos.
-    if (arbol->izq == NULL && arbol->der == NULL ){
+    if (arbol->izq == NULL && arbol->der == NULL){
       destroy(arbol->dato);
       free(arbol);
       return NULL;

@@ -46,7 +46,7 @@ void btree_recorrer_extra(BTree arbol, BTreeOrdenDeRecorrido orden, FuncionVisit
 /**
  * Recorrido del árbol, utilizando la función pasada. Utiliza busqueda por extensión.
  */
-int btree_recorrer_bfs(BTree arbol, FuncionVisitante visit);
+void btree_recorrer_bfs(BTree arbol, FuncionVisitante visit);
 
 /**
  * Retorna el número de nodos del árbol.
