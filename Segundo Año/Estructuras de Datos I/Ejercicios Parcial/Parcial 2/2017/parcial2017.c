@@ -33,7 +33,7 @@ Nodo* agregaJugador (Nodo* inicio, Jugador j){
   }
 
   if (j->posicionJugador < inicio->jug->posicionJugador)
-    inicio->izquierda = agregaJugador(inicio->derecha, j);
+    inicio->izquierda = agregaJugador(inicio->izquierda, j);
   else
     inicio->derecha = agregaJugador(inicio->derecha, j);
 
@@ -48,14 +48,14 @@ void recuperaJugadoresPorPosicion_aux (Nodo* act, Nodo** res, int max, int min) 
     recuperaJugadoresPorPosicion_aux(act->izquierda, res, max, min);
 
   if (act->jug->posicionJugador >= min && act->jug->posicionJugador <= max) {
-    *res = agregaJugador(*res, act->jug);
+    *res = agregaJugador(*res, crearJugador(act->jug->nombre, act->jug->club, act->jug->posicionJugador, act->jug->edad));
   }
 
   if (act->jug->posicionJugador < max)
     recuperaJugadoresPorPosicion_aux(act->derecha, res, max, min);
 }
 
-Nodo *recuperaJugadoresPorPosicion (Nodo* inicio, int posicionMax, int posicionMin) {
+Nodo* recuperaJugadoresPorPosicion (Nodo* inicio, int posicionMax, int posicionMin) {
   if (inicio == NULL || posicionMax < posicionMin) return NULL;
 
   Nodo* res = NULL;
@@ -70,8 +70,8 @@ void mostrarJugador (Jugador j) {
 
 void mostrarArbol (Nodo* raiz) {
  if (raiz == NULL) return;
- mostrarArbol(raiz->izquierda);
  mostrarJugador(raiz->jug);
+ mostrarArbol(raiz->izquierda);
  mostrarArbol(raiz->derecha);
 }
 
@@ -103,11 +103,16 @@ int main () {
   raiz = agregaJugador(raiz, crearJugador("Ignacio Malcorra", "Rosario Central", 10, 37));
   raiz = agregaJugador(raiz, crearJugador("Emiliano Martinez", "Aston Villa", 1, 30));
   raiz = agregaJugador(raiz, crearJugador("Lautaro Martinez", "Inter de Milan", 9, 26));
+  raiz = agregaJugador(raiz, crearJugador("Angel Di Maria", "Rosario Central", 11, 37));
+  raiz = agregaJugador(raiz, crearJugador("Cristian Romero", "Tottenham", 2, 24));
+  raiz = agregaJugador(raiz, crearJugador("Giovani Lo Celso", "Real Betis", 7, 29));
 
+  printf("Arbol completo\n");
   mostrarArbol(raiz);
 
-  res = recuperaJugadoresPorPosicion(raiz, 10,9);
+  res = recuperaJugadoresPorPosicion(raiz, 10,7);
 
+  printf("Arbol filtrado\n");
   mostrarArbol(res);
 
   destruirArbol(raiz);
