@@ -1,6 +1,12 @@
 #include "algoritmos.h"
 #include <stdlib.h>
 
+static void swap (int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
 /*
 BÚSQUEDA BINARIA.
 */
@@ -28,6 +34,35 @@ int binsearch_rec (int a[], int inicio, int final, int v) {
 }
 
 /*
+BUBBLE SORT
+*/
+void bubble_sort (int a[], int len) {
+  int bandera = 1;
+  while (bandera) {
+    bandera = 0;
+    for (int i = 0 ; i < len-1 ; i++) {
+      if (a[i] > a[i+1]) {
+        swap(a[i], a[i+1]);
+        bandera = 1;
+      }
+    }
+  }
+}
+
+/*
+SELECTION SORT
+*/
+void selection_sort (int a[], int len) {
+  for (int i = 0 ; i < len - 2 ; i++) {
+    int minPos = i;
+    for (int j = i+1 ; i < len - 1 ; j++) 
+      if (a[j] < a[minPos])
+        minPos = j;
+    swap(a[i], a[minPos]);
+  }
+}
+
+/*
 INSERTION SORT.
 */
 void insertion_sort (int a[], int len) {
@@ -41,6 +76,7 @@ void insertion_sort (int a[], int len) {
     a[j+1] = valor;
   }
 }
+
 /*
 MERGE SORT.
 */
@@ -101,9 +137,7 @@ int particion_de_lomuto (int a[], int len, int pvt) {
 
   for (int i = 0; i < len ; i++)
     if (a[i] <= pvt) {
-      int temp = a[i];
-      a[i] = a[j];
-      a[j] = temp;
+      swap(a[i], a[j]);
       j++;
     }
 
@@ -117,9 +151,7 @@ void quick_sort (int a[], int len) {
 
   int n_izq = particion_de_lomuto(a + 1, len-1, pvt);
   
-  int temp = a[0];
-  a[0] = a[n_izq];
-  a[n_izq] = temp;
+  swap(a[0], a[n_izq]);
 
   quick_sort(a, n_izq);
   quick_sort(a+n_izq+1, len-n_izq-1);

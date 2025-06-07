@@ -8,6 +8,18 @@
  */
 int binsearch(int* arreglo, int length, int valor);
 
+
+/**
+ * Algoritmo de ordenamiento: Bubble Sort.
+ * NO RECOMENDABLE SU USO.
+ */
+void bubble_sort(int *arreglo, int length);
+
+/**
+ * Algoritmo de ordenamiento: Selection Sort.
+ */
+void selection_sort(int *arreglo, int length);
+
 /**
  * Algoritmo de ordenamiento: Insertion Sort.
  */

@@ -32,7 +32,7 @@ Arbol construirArbolDesdeHeap (BHeap heap, int i) {
   Arbol arbol = malloc(sizeof(Nodo));
   arbol->invitado = heap->datos[i];
   arbol->izq = construirArbolDesdeHeap(heap, 2*i+1);
-  arbol->der = construirArbolDesdeHeap(heap, 2*(i+1));
+  arbol->der = construirArbolDesdeHeap(heap, 2*i+2);
 
   return arbol;
 }
@@ -46,10 +46,10 @@ void recorrerArbolYAgregarEnHeap (Arbol inicio, BHeap heap, int pos) {
   if (inicio == NULL || pos >= MAX_HEAP) return;
 
   heap->datos[pos] = inicio->invitado;
-  heap->nelems++;
+  if(heap->nelems <= pos) heap->nelems++;
 
   recorrerArbolYAgregarEnHeap(inicio->izq, heap, 2*pos + 1);
-  recorrerArbolYAgregarEnHeap(inicio->der, heap, 2*(pos+1));
+  recorrerArbolYAgregarEnHeap(inicio->der, heap, 2*pos+2);
 
 }
 
