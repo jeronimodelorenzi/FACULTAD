@@ -27,7 +27,7 @@ int binsearch_rec (int a[], int inicio, int final, int v) {
     int medio = (inicio + final) / 2;
 
     if (a[medio] == v) return medio;
-    if (a[medio > v]) return binsearch_rec(a, medio+1, final, v);
+    if (a[medio] > v) return binsearch_rec(a, medio+1, final, v);
     if (a[medio] < v) return binsearch_rec(a, inicio, medio-1, v);
   }
   return -1;
@@ -42,7 +42,7 @@ void bubble_sort (int a[], int len) {
     bandera = 0;
     for (int i = 0 ; i < len-1 ; i++) {
       if (a[i] > a[i+1]) {
-        swap(a[i], a[i+1]);
+        swap(&a[i], &a[i+1]);
         bandera = 1;
       }
     }
@@ -53,12 +53,12 @@ void bubble_sort (int a[], int len) {
 SELECTION SORT
 */
 void selection_sort (int a[], int len) {
-  for (int i = 0 ; i < len - 2 ; i++) {
+  for (int i = 0 ; i < len - 1 ; i++) {
     int minPos = i;
-    for (int j = i+1 ; i < len - 1 ; j++) 
+    for (int j = i+1 ; j < len ; j++) 
       if (a[j] < a[minPos])
         minPos = j;
-    swap(a[i], a[minPos]);
+    swap(&a[i], &a[minPos]);
   }
 }
 
@@ -137,7 +137,7 @@ int particion_de_lomuto (int a[], int len, int pvt) {
 
   for (int i = 0; i < len ; i++)
     if (a[i] <= pvt) {
-      swap(a[i], a[j]);
+      swap(&a[i], &a[j]);
       j++;
     }
 
@@ -151,7 +151,7 @@ void quick_sort (int a[], int len) {
 
   int n_izq = particion_de_lomuto(a + 1, len-1, pvt);
   
-  swap(a[0], a[n_izq]);
+  swap(&a[0], &a[n_izq]);
 
   quick_sort(a, n_izq);
   quick_sort(a+n_izq+1, len-n_izq-1);
