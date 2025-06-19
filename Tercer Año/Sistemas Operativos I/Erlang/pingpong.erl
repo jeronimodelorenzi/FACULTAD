@@ -32,5 +32,5 @@ ping() ->
 play() ->
   PidPong = spawn(pingpong, pong, []),
   PidPing = spawn(pingpong, ping, []),
-  PidPong ! {10, PidPing},
+  PidPing ! {10, PidPong},
   playok.
