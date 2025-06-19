@@ -1,8 +1,9 @@
 -module(intro).
 -export([init/0]).
+
 match_test () ->
     {A,B} = {5,4},
-    {C,C} = {5,4},
+    %{C,C} = {5,4},
     {B,A} = {4,5},
     {D,D} = {5,5}.
 
@@ -18,15 +19,16 @@ string_test () -> [
 tuple_test (P1, P2) ->
     io:fwrite("El nombre de P1 es ~p y el apellido de P2 es ~p~n", [nombre(P1), apellido(P2)]).
 
-apellido ({persona, _, {apellido, Apellido}}) ->
+apellido({persona, _, {apellido, Apellido}}) ->
         Apellido.
-nombre ({persona, {nombre, Nombre}, _}) ->
+nombre({persona, {nombre, Nombre}, _}) ->
         Nombre.
 
-filtrar_por_apellido(Personas, Apellido) -> 
+filtrar_por_apellido(Personas, Apellido) ->
+    [Nombre || {persona, {nombre, Nombre}, {apellido, Ap}} <- Personas, Ap = Apellido].
     
 
-init () ->
+init() ->
     P1 = {persona, {nombre, "Juan"}, {apellido, "Gomez"}},
     P2 = {persona, {nombre, "Carlos"}, {apellido, "Garcia"}},
     P3 = {persona, {nombre, "Javier"}, {apellido, "Garcia"}},
@@ -34,7 +36,9 @@ init () ->
     match_test(),
     tuple_test(P1, P2),
     string_test(),
-    Garcias = filtrar_por_apellido([P4, P3, P2, P1], "Garcia").
+    Garcias = filtrar_por_apellido([P4, P3, P2, P1], "Garcia"),
+    io:format("Garcias: ~p~n", Garcias),
+    ok.
 
 % Justifique cu´ales match de la funci´on match_test deber´ıan ser v´alidos y cu´ales no
 

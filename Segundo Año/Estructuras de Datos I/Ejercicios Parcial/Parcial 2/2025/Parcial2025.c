@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
 Defina una función:
@@ -28,14 +29,14 @@ typedef struct _BHeap {
 } *BHeap;
 
 void bst_to_heap_aux (BSTree arbol, BHeap *heap) {
-  if (arbol == NULL) return NULL;
+  if (arbol == NULL) return;
   bst_to_heap_aux (arbol->der, heap);
-  (*heap)->arr[(*heap)->ultimo++] = arbol->dato;
+  (*heap)->arr[++(*heap)->ultimo] = arbol->dato;
   bst_to_heap_aux (arbol->izq, heap);
 }
 
 BHeap bst_to_heap (BSTree arbol, FuncionComparadora comp) {
-  if (arbol == NULL) return;
+  if (arbol == NULL) return NULL;
   BHeap heap = malloc(sizeof(struct _BHeap));
   heap->capacidad = SZ;
   heap->arr = malloc(sizeof(void*)*heap->capacidad);
@@ -53,29 +54,47 @@ No puede utilizarse la función insertar para arboles AVL.
 */
 
 typedef struct _AVL_Nodo {
-  void *dato;
+  int dato;
   struct _AVL_Nodo* izq, *der;
   int altura;
 } AVL_Nodo;
 
-typedef struct AVL_Nodo *AVL;
+typedef AVL_Nodo *AVL;
 
-AVL sorted_arr_to_avl (void **arr, int n) {
-  if (n == 0) {
-    AVL_Nodo *nuevoNodo = malloc(sizeof(AVL_Nodo));
-    nuevoNodo->dato = arr[n];
-    nuevoNodo->izq = NULL;
-    nuevoNodo->der = NULL;
-    nuevoNodo->altura = 0;
-  }
-  
+AVL sorted_arr_to_avl (int *arr, int n) {
+  if (n <= 0) return NULL;
+
   int mitad = n/2;
-  void *elem_medio = arr[mitad];
-  void *arr_der = arr+mitad+1; // no contamos el elemento medio. 
 
-  sorted_arr_to_avl(elem_medio, 1);
-  sorted_arr_to_avl(arr, mitad);
-  sorted_arr_to_avl(arr_der, n-mitad-1);
+  AVL izq = sorted_arr_to_avl(arr, mitad);
 
+  AVL nodo = malloc(sizeof(AVL_Nodo));
+  nodo->dato = arr[mitad];
+  nodo->izq = izq;
+
+  nodo->der = sorted_arr_to_avl(arr+mitad+1, n-mitad-1);
+
+  int alt_izq = nodo->izq ? nodo->izq->altura : -1;
+  int alt_der = nodo->der ? nodo->der->altura : -1;
+  nodo->altura = 1 + (alt_izq > alt_der ? alt_izq : alt_der);
+
+  return nodo;
 }
 
+void imprimir_arbol (AVL raiz){
+  if (raiz == NULL) return;
+
+  imprimir_arbol(raiz->izq);
+  imprimir_arbol(raiz->der);
+  printf("%d ", raiz->dato);
+}
+
+int main () {
+  int arr[] = {1,2,3,4,5,6,7};
+
+  AVL arbol = sorted_arr_to_avl(arr, 7);
+  imprimir_arbol(arbol);
+  puts("");
+
+  return 0;
+}
