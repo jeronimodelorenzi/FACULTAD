@@ -25,7 +25,7 @@ nombre({persona, {nombre, Nombre}, _}) ->
         Nombre.
 
 filtrar_por_apellido(Personas, Apellido) ->
-    [Nombre || {persona, {nombre, Nombre}, {apellido, Ap}} <- Personas, Ap = Apellido].
+    [Nombre || {persona, {nombre, Nombre}, {apellido, Ap}} <- Personas, Ap == Apellido].
     
 
 init() ->
@@ -37,7 +37,7 @@ init() ->
     tuple_test(P1, P2),
     string_test(),
     Garcias = filtrar_por_apellido([P4, P3, P2, P1], "Garcia"),
-    io:format("Garcias: ~p~n", Garcias),
+    io:format("Garcias: ~p~n", [Garcias]),
     ok.
 
 % Justifique cu´ales match de la funci´on match_test deber´ıan ser v´alidos y cu´ales no
