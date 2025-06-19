@@ -5,20 +5,24 @@ pong() ->
   receive
     {0, PidPing} ->
       io:fwrite("Final pong!~n"),
-      PidPing ! {fin, self()},
-      pongok;
+      PidPing ! {fin, self()};
+    {fin, _} ->
+      io:fwrite("Pong recv fin~n"),
+      ok;
     {N, PidPing} ->
-        io:fwrite("Pong! Recv: ~p~n", [N]),
-        PidPing ! {(N-1), self()},
-        pong()
+      io:fwrite("Pong! Recv: ~p~n", [N]),
+      PidPing ! {(N-1), self()},
+      pong()
   end.
 
 ping() ->
   receive
     {0, PidPong} ->
       io:fwrite("Final ping!~n"),
-      PidPong ! {fin, self()},
-      pingok;
+      PidPong ! {fin, self()};
+    {fin, _} ->
+      io:fwrite("Ping recv fin~n"),
+      ok;
     {N, PidPong} ->
       io:fwrite("Ping! Recv: ~p~n", [N]),
       PidPong ! {(N-1), self()},
