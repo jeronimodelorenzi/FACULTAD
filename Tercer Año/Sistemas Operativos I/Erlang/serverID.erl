@@ -1,5 +1,5 @@
 -module(serverID).
--include("serverID.hrl").
+-include("/home/jeronimodelorenzi/Escritorio/FACULTAD/Tercer Año/Sistemas Operativos I/Erlang/serverID.hrl").
 
 -export([iniciar/0, terminar/0]).
 -export([server_init/1]).
@@ -7,10 +7,12 @@
 
 iniciar() ->
   Pid = spawn(serverID, server_init, [self()]),
-  register(servidorIds, Pid),
-  ok.
+  receive
+    ok -> register(servidorIds, Pid),
+    ok
+  end.
 
-nuevoNombre(Nombre) ->
+nuevo_nombre(Nombre) ->
   servidorIds ! {nuevoId, Nombre, self()},
   receive
     {ok, N} -> N;
@@ -31,7 +33,7 @@ lista_id() ->
     _ -> error
   end.
 
-finalizar() ->
+terminar() ->
   servidorIds ! {fin, self()},
   unregister(servidorIds),
   receive
