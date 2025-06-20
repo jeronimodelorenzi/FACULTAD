@@ -4,20 +4,20 @@
 -export([loopBroadcast/2]).
 
 iniciar() ->
-  spawn(?MODULE, loopBroadcast, [[], self()]),
+  Broadcast = spawn(?MODULE, loopBroadcast, [[], self()]),
   register(broadcast, Broadcast),
   ack().
 
 ack() ->
   receive
-    serverOK ->
+    serverOk ->
       ok;
     serverErr ->
       err
   end.
 
 terminar() ->
-  broadcast ! {env, self()},
+  broadcast ! {fin, self()},
   unregister(broadcast),
   ack().
 
@@ -32,7 +32,8 @@ registrar() ->
 loopBroadcast(St) ->
   receive
     {fin, Pid} ->
-      Pid ! serverOk, ok;
+      Pid ! serverOk, 
+      ok;
     {env, Pid, Msg} ->
       list:foreach(fun (X) -> X ! Msg end, St),
       Pid ! serverOk,
