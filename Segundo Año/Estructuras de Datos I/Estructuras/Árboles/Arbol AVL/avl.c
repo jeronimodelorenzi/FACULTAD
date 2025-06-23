@@ -249,11 +249,11 @@ static AVL_Nodo* avl_nodo_eliminar (AVL_Nodo* arbol, void* dato, FuncionDestruct
     AVL_Nodo *suc = arbol->der;
     while(suc->izq != NULL)
       suc = suc->izq;
-    destroy(arbol->dato);
-    arbol->dato = copy(suc->dato);
 
+    arbol->dato = copy(suc->dato);
     arbol->der = avl_nodo_eliminar(arbol->der, suc->dato, destroy, comp, copy);
   }
+  
   arbol->altura = 1 + avl_nodo_max_altura_hijos(arbol);
   arbol = avl_nodo_rebalancear(arbol);
 

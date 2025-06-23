@@ -103,7 +103,7 @@ void heap_sort (void **arr, int n, FuncionComparadora comp) {
   heap->capacidad = n;
   heap->ultimo = n-1;
 
-  for (int j = heap->ultimo ; j >= 0 ; j--)
+  for (int j = heap->ultimo/2 ; j >= 0 ; j--)
     hundir(heap, j, comp);
 
   for (int j = n-1 ; j >= 0; j-- ){
@@ -171,7 +171,7 @@ AVL_Nodo* insertar_avl(AVL_Nodo* raiz, void *dato, FuncionComparadora comp, Func
     if (factor_balance(raiz) == 2){
       if (factor_balance(raiz->der) == -1)
         raiz->der = rebalancear_der(raiz->der);
-      raiz = rebalancear_der(raiz);
+      raiz = rebalancear_izq(raiz);
     }
     raiz->altura = 1 + nodo_altura_max(raiz);
     return raiz;
@@ -183,7 +183,7 @@ AVL_Nodo* insertar_avl(AVL_Nodo* raiz, void *dato, FuncionComparadora comp, Func
     if (factor_balance(raiz) == -2) {
       if (factor_balance(raiz->izq) == 1)
         raiz->izq = rebalancear_izq(raiz->izq);
-      raiz = rebalancear_izq(raiz);
+      raiz = rebalancear_der(raiz);
     }
     raiz->altura = 1 + nodo_altura_max(raiz);
     return raiz;

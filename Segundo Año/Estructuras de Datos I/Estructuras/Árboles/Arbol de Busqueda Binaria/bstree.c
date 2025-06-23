@@ -150,7 +150,7 @@ void *bstree_k_esimo_menor(BSTree arbol, int k) {
   return bstree_k_esimo_menor_aux(arbol, &k);
 }
 
-BSTree bstree_validar_aux (BSTree arbol, FuncionComparadora comp, void* ant, int* validar) {
+BSTree bstree_validar_aux (BSTree arbol, FuncionComparadora comp, void** ant, int* validar) {
   if(arbol == NULL || *validar == 0) return NULL;
   
   arbol->izq = bstree_validar_aux(arbol->izq, comp, ant, validar);
@@ -165,6 +165,7 @@ BSTree bstree_validar_aux (BSTree arbol, FuncionComparadora comp, void* ant, int
 
 int bstree_validar (BSTree arbol, FuncionComparadora comp) {
   int validar = 1;
-  bstree_validar_aux(arbol, comp, NULL, &validar);
+  void *ant = NULL;
+  bstree_validar_aux(arbol, comp, &ant, &validar);
   return validar;
 }

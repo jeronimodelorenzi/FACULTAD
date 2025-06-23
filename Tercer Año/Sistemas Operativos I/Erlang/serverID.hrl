@@ -1,1 +1,0 @@
--record(nuevoId, {nombre, cid}).
