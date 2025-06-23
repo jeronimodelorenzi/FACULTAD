@@ -101,10 +101,10 @@ void gbtree_recorrer_bfs (GBTree arbol, FuncionVisitante visit) {
 }
 
 GBTree gbtree_copia (GBTree arbol, FuncionCopia copy) {
-  GBTree nuevoNodo = malloc(sizeof(struct _GBTNodo));
-
+  
   if(arbol == NULL) return NULL;
-
+  
+  GBTree nuevoNodo = malloc(sizeof(struct _GBTNodo));
   nuevoNodo->dato = copy(arbol->dato);
   nuevoNodo->left = gbtree_copia(arbol->left, copy);
   nuevoNodo->right = gbtree_copia(arbol->right, copy);

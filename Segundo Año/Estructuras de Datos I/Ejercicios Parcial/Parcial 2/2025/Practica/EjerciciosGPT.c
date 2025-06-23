@@ -78,24 +78,24 @@ AVL sorted_arr_to_avl (void **arr, int n) {
 
 // 3
 
-#define LEFT(i) ((2*i)+1)
-#define RIGTH(i) (2*(i+1))
+// #define LEFT(i) ((2*i)+1)
+// #define RIGTH(i) (2*(i+1))
 
-void swap (void **a, void **b) {
-  void *temp = *a;
-  *a = *b;
-  *b = temp;
-}
+// void swap (void **a, void **b) {
+//   void *temp = *a;
+//   *a = *b;
+//   *b = temp;
+// }
 
-void hundir (BHeap heap, int pos, FuncionComparadora comp) {
-  int mayorPos = pos;
-  if (RIGTH(pos) <= heap->ultimo && comp(heap->arr[RIGTH(pos)], heap->arr[mayorPos]) > 0) mayorPos = RIGTH(pos);
-  if (LEFT(pos) <= heap->ultimo && comp(heap->arr[LEFT(pos)], heap->arr[mayorPos]) > 0) mayorPos = LEFT(pos);
-  if (mayorPos != pos) {
-    swap(&heap->arr[pos], &heap->arr[mayorPos]);
-    hundir(heap, mayorPos, comp);
-  }
-}
+// void hundir (BHeap heap, int pos, FuncionComparadora comp) {
+//   int mayorPos = pos;
+//   if (RIGTH(pos) <= heap->ultimo && comp(heap->arr[RIGTH(pos)], heap->arr[mayorPos]) > 0) mayorPos = RIGTH(pos);
+//   if (LEFT(pos) <= heap->ultimo && comp(heap->arr[LEFT(pos)], heap->arr[mayorPos]) > 0) mayorPos = LEFT(pos);
+//   if (mayorPos != pos) {
+//     swap(&heap->arr[pos], &heap->arr[mayorPos]);
+//     hundir(heap, mayorPos, comp);
+//   }
+// }
 
 void heap_sort (void **arr, int n, FuncionComparadora comp) {
   BHeap heap = malloc(sizeof(struct _BHeap));
@@ -325,4 +325,442 @@ RangeBST filtrar_rango (RangeBST arbol, int a, int b) {
   nodo->der = filtrar_rango(arbol->der, a, b);
 
   return nodo;
+}
+
+// Repaso funciones AVL BSTREE HEAP ALGORITMOS
+
+// AVL
+
+typedef void (*FuncionDestructora)(void *dato);
+
+AVL avl_crear () {
+  return NULL;
+}
+
+void avl_destruir (AVL raiz, FuncionDestructora destroy) {
+  if (raiz != NULL) {
+    avl_destruir(raiz->izq, destroy);
+    avl_destruir(raiz->der, destroy);
+    destroy(raiz->dato);
+    free(raiz);
+  }
+}
+
+int avl_buscar (AVL raiz, void *dato, FuncionComparadora comp) {
+  if (raiz == NULL) 
+    return 0;
+  else if (comp(dato, raiz->dato) == 0) 
+    return 1;
+  else if (comp(dato, raiz->dato) > 0)
+    return avl_buscar(raiz->der, dato, comp);
+  else if (comp(dato, raiz->dato) < 0)
+    return avl_buscar(raiz->izq, dato, comp);
+}
+
+int avl_nodo_altura (AVL raiz) {
+  return (raiz == NULL ? -1 : raiz->altura);
+}
+
+int avl_altura_max_hijos (AVL raiz) {
+  if (raiz == NULL) return -1;
+  int altIzq = avl_altura(raiz->izq);
+  int altDer = avl_altura(raiz->der);
+  return (altIzq > altDer ? altIzq : altDer);
+}
+
+int avl_factor_balance (AVL raiz) {
+  if (raiz == NULL) return;
+  int factor = avl_altura_max_hijos(raiz->der) - avl_altura_max_hijos(raiz->izq);
+  return factor;
+}
+
+AVL avl_nodo_rotacion_simple_izq (AVL raiz) {
+  if (raiz == NULL) return NULL;
+  AVL hijoDer = raiz->der;
+  raiz->der = hijoDer->izq;
+  hijoDer->izq = raiz;
+  raiz->altura = 1 + avl_altura_max_hijos(raiz);
+  hijoDer->altura = 1 + avl_altura_max_hijos(hijoDer);
+  return hijoDer;
+}
+
+AVL avl_nodo_rotacion_simple_der (AVL raiz) {
+  if (raiz == NULL) return NULL;
+  AVL hijoIzq = raiz->izq;
+  raiz->izq = hijoIzq->der;
+  hijoIzq->der = raiz;
+  raiz->altura = 1 + avl_altura_max_hijos(raiz);
+  hijoIzq->altura = 1 + avl_altura_max_hijos(hijoIzq);
+  return hijoIzq;
+}
+
+AVL avl_rebalancear (AVL raiz) {
+  if (avl_factor_balance(raiz) == -2) {
+    if (avl_factor_balance(raiz->izq) == 1)
+      raiz->izq = avl_nodo_rotacion_simple_izq(raiz->izq);
+    raiz = avl_nodo_rotacion_simple_der(raiz);
+  }
+  else if (avl_factor_balance(raiz == 2)) {
+    if (avl_factor_balance(raiz->der) == -1)
+      raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
+    raiz = avl_nodo_rotacion_simple_izq(raiz);
+  }
+  return raiz;
+}
+
+AVL avl_crear_nodo (void *dato, FuncionCopiadora copy) {
+  AVL nodo = malloc(sizeof(AVL_Nodo));
+  nodo->dato = copy(dato);
+  nodo->altura = 0;
+  nodo->izq = NULL;
+  nodo->der = NULL;
+  return nodo;
+}
+
+AVL avl_insertar (AVL raiz, void *dato, FuncionCopiadora copy, FuncionComparadora comp) {
+  if (raiz == NULL)
+    return avl_crear_nodo (dato, copy);
+  else if (comp(dato, raiz->dato) > 0)
+    raiz->der = avl_insertar(raiz->der, dato, copy, comp);
+  else if (comp(dato, raiz->dato) < 0)
+    raiz->izq = avl_insertar(raiz->izq, dato, copy, comp);
+  else return raiz;
+
+  raiz->altura = 1 + avl_altura_max_hijos(raiz);
+  raiz = avl_rebalancear(raiz);
+  return raiz;
+}
+
+AVL avl_eliminar (AVL raiz, void *dato, FuncionComparadora comp, FuncionDestructora destroy, FuncionCopiadora copy) {
+  if (raiz == NULL) return NULL;
+  if (comp(dato, raiz->dato) < 0)
+    raiz->izq = avl_eliminar(raiz->izq, dato, comp, destroy, copy);
+  else if (comp(dato, raiz->dato) > 0)
+    raiz->der = avl_eliminar(raiz->der, dato, comp, destroy, copy);
+  else if (comp(dato, raiz->dato) == 0) {
+    if (raiz->izq == NULL && raiz->der == NULL) {
+      destroy(raiz->dato);
+      free(raiz);
+      return NULL;
+    }
+    if (raiz->izq == NULL) {
+      AVL temp = raiz->der;
+      destroy(raiz->dato);
+      free(raiz);
+      return temp;
+    }
+    if (raiz->der == NULL) {
+      AVL temp = raiz->izq;
+      destroy(raiz->dato);
+      free(raiz);
+      return temp;
+    }
+    AVL suc = raiz->der;
+    while (suc->izq != NULL)
+      suc = suc->izq;
+
+    raiz->dato = copy(suc->dato);
+    raiz->der = avl_eliminar(raiz->der, suc->dato, comp, destroy, copy);
+  }
+
+  raiz->altura = 1 + avl_altura_max_hijos(raiz);
+  raiz = avl_rebalancear(raiz);
+  return raiz;
+}
+
+int avl_validar_bst (AVL raiz, void *min, void *max, FuncionComparadora comp) {
+  if (raiz == NULL) return 1;
+  if (min != NULL && comp(raiz->dato, min) <= 0) return 0;
+  if (max != NULL && comp(raiz->dato, max) >= 0) return 0;
+  return (avl_validar_bst(raiz->izq, min, raiz->dato, comp) && avl_validar_bst(raiz->der, raiz->dato, max, comp));
+}
+
+int avl_validar_altura_balance (AVL raiz) {
+  if (raiz == NULL) return 1;
+  int ret1 = avl_validar_altura_balance(raiz->izq);
+  int ret2 = avl_validar_altura_balance(raiz->der);
+  if (ret1 && ret2) {
+    int altura = 1 + avl_altura_max_hijos(raiz);
+    int balance = avl_factor_balance(raiz);
+    if ((raiz->altura == altura) && (balance >= -1) && (balance <= 1))
+      return 1;
+  }
+  return 0;
+}
+
+void *avl_k_esimo_menor_aux (AVL raiz, int *k) {
+  if (raiz == NULL) return NULL;
+
+  void *izq = avl_k_esimo_menor_aux(raiz->izq, k);
+
+  if (izq != NULL) return izq;
+  (*k)--;
+  if (*k == 0) return raiz->dato;
+
+  return avl_k_esimo_menor_aux(raiz->der, k);
+}
+
+void *avl_k_esimo_menor (AVL raiz, int k) {
+  return avl_k_esimo_menor_aux(raiz, &k);
+}
+
+typedef void (*FuncionVisitante)(void *);
+
+typedef enum {
+  IN,
+  PRE,
+  POST
+} AVLRecorrido;
+
+void avl_recorrer (AVL raiz, AVLRecorrido recorrido, FuncionVisitante visit) {
+  if (raiz == NULL) return;
+
+  if (recorrido == PRE)
+    visit(raiz->dato);
+  
+  avl_recorrer(raiz->izq, recorrido, visit);
+
+  if (recorrido == IN)
+    visit(raiz->dato);
+  
+  avl_recorrer(raiz->der, recorrido, visit);
+  
+  if (recorrido == POST)
+    visit(raiz->dato);
+}
+
+// HEAP
+
+#define LEFT(i) ((2*i)+1)
+#define RIGTH(i) (2*(i+1))
+#define PARENT(i) ((i-1)/2)
+
+void swap (void **a, void **b) {
+  void *temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+void hundir (BHeap heap, int pos, FuncionComparadora comp) {
+  int mayorPos = pos;
+  if (LEFT(pos) <= heap->ultimo && comp(heap->arr[LEFT(pos)], heap->arr[mayorPos]) > 0) 
+    mayorPos = LEFT(pos);
+  if (RIGTH(pos) <= heap->ultimo && comp(heap->arr[RIGTH(pos)], heap->arr[mayorPos]) > 0)
+    mayorPos = RIGTH(pos);
+  if (mayorPos != pos) {
+    swap(&heap->arr[pos], &heap->arr[mayorPos]);
+    hundir(heap, mayorPos, comp);
+  }
+}
+
+void flotar (BHeap heap, int pos, FuncionComparadora comp) {
+  if (pos == 0) return;
+  int posPadre = PARENT(pos);
+  if (comp(heap->arr[pos], heap->arr[posPadre]) > 0) {
+    swap(&heap->arr[pos], &heap->arr[posPadre]);
+    flotar(heap, posPadre, comp);
+  }
+}
+
+BHeap bheap_crear (int capacidad) {
+  BHeap heap = malloc(sizeof(struct _BHeap));
+  heap->capacidad = capacidad;
+  heap->arr = malloc(sizeof(void*)*capacidad);
+  heap->ultimo = -1;
+  return heap;
+}
+
+
+BHeap bheap_crear_desde_array (void **arr, int n, FuncionComparadora comp) {
+  BHeap heap = malloc(sizeof(struct _BHeap));
+  heap->arr = arr;
+  heap->capacidad = n;
+  heap->ultimo = n-1;
+
+  for (int i = heap->ultimo/2 ; i >= 0 ; i--) {
+    hundir(heap, i, comp);
+  }
+
+  return heap;
+}
+
+void bheap_destruir (BHeap heap, FuncionDestructora destroy) {
+  for (int i = 0 ; i <= heap->ultimo ; i++)
+    destroy(heap->arr[i]);
+  free(heap->arr);
+  free(heap);
+}
+
+int bheap_es_vacio (BHeap heap) {
+  return heap->ultimo == -1;
+}
+
+void bheap_recorrer (BHeap heap, FuncionVisitante visit) {
+  for (int i = 0 ; i <= heap->ultimo ; i++)
+    visit(heap->arr[i]);
+}
+
+BHeap bheap_insertar (BHeap heap, void *dato, FuncionCopiadora copy, FuncionComparadora comp) {
+  if (heap->ultimo == heap->capacidad-1) {
+    heap->capacidad = heap->capacidad*2;
+    heap->arr = realloc(heap->arr, sizeof(void*)*heap->capacidad);
+  }
+
+  heap->ultimo++;
+  heap->arr[heap->ultimo] = copy(dato);
+
+  flotar(heap, heap->ultimo, comp);
+
+  return heap;
+}
+
+BHeap bheap_eliminar (BHeap heap, int pos, FuncionComparadora comp,FuncionDestructora destroy) {
+  if (bheap_es_vacio(heap) || pos < 0) return NULL;
+
+  void *elem = heap->arr[pos];
+  heap->arr[pos] = heap->arr[heap->ultimo]; 
+  heap->ultimo--;
+
+  destroy(elem);
+
+  if (comp(heap->arr[pos], heap->arr[PARENT(pos)]) > 0)
+    flotar(heap, pos, comp);
+  else
+    hundir(heap, pos, comp);
+
+  return heap;
+}
+
+void* bheap_pop (BHeap heap, FuncionComparadora comp) { /*¿Cola de prioridad?*/
+  void *temp = heap->arr[0];
+  heap->arr[0] = heap->arr[heap->ultimo];
+  heap->ultimo--;
+  hundir(heap, 0, comp);
+  return temp;
+}
+
+void bheap_sort (void **arr, int n, FuncionComparadora comp) {
+  BHeap heap = malloc(sizeof(struct _BHeap));
+  heap->arr = arr;
+  heap->capacidad = n;
+  heap->ultimo = n-1;
+
+  for (int i = heap->ultimo/2 ; i >= 0 ; i--) {
+    hundir(heap, i, comp);
+  }
+
+  for (int i = heap->ultimo ; i >= 0 ; i--) {
+    swap(&heap->arr[0], &heap->arr[i]);
+    heap->ultimo--;
+    hundir(heap, 0, comp);
+  }
+}
+
+// ALGORITMOS
+
+void bubble_sort (int a[], int len) {
+  int bandera = 1;
+  while (bandera) {
+    bandera = 0;
+    for (int i = 0 ; i < len-1 ; i++) {
+      if (a[i] > a[i+1]){
+        swap(&a[i], &a[i+1]);
+        bandera = 1;
+      }
+    }
+  }
+}
+
+void selection_sort (int a[], int len) { 
+  for (int i = 0 ; i < len-1 ; i++) {
+    int minPos = i;
+    for (int j = i+1 ; j < len ; j++) 
+      if (a[j] < a[minPos])
+        minPos = j;
+    swap(&a[i], &a[minPos]);
+  }
+}
+
+void insertion_sort (int a[], int len) {
+  for (int i = 1 ; i < len ; i++) {
+    int valor = a[i];
+    int j = i -1;
+
+    for (; j >= 0 && a[j] > valor ; j--)
+      a[j+1] = a[j];
+
+    a[j+1] = valor;
+  }
+}
+
+int* merge (int a[], int len_a, int b[], int len_b) {
+  int *resultado = malloc(sizeof(int)*(len_a+len_b));
+  int i = 0, j = 0, k = 0;
+
+  for (; i < len_a && j < len_b ; k++) {
+    if (a[i] < b[j]) {
+      resultado[k] = a[i];
+      i++;
+    }
+    else {
+      resultado[k] = b[j];
+      j++;
+    }
+  }
+
+  for (; i < len_a ; k++, i++)
+    resultado[k] = a[i];
+
+  for (; j < len_b ; k++, j++)
+    resultado[k] = b[j];
+
+  return resultado;
+}
+
+int* merge_sort (int a[], int len) {
+  if (len == 1) {
+    int *copia = malloc(sizeof(int));
+    copia[0] = a[0];
+    return copia;
+  }
+
+  int mitad = len/2;
+
+  int *a1 = a;
+  int *a2 = a+mitad;
+
+  int *b1 = merge_sort(a1, mitad);
+  int *b2 = merge_sort(a2, len - mitad);
+
+  int *resultado = merge(b1, mitad, b2, len - mitad);
+
+  free(b1);
+  free(b2);
+
+  return resultado;
+}
+
+int particion_de_lomuto (int a[], int len, int pvt) {
+  int j = 0;
+
+  for (int i = 0 ; i < len ; i++)
+    if (a[i] <= pvt) {
+      swap(&a[i], &a[j]);
+      j++;
+    }
+
+  return j;
+}
+
+void quick_sort (int a[], int len) {
+  if (len < 2) return;
+
+  int pvt = a[0];
+
+  int nIzq = particion_de_lomuto(a+1, len-1, pvt);
+
+  swap(&a[0], &a[nIzq]);
+
+  quick_sort(a, nIzq);
+  quick_sort(a+nIzq+1, len-nIzq-1);
 }
