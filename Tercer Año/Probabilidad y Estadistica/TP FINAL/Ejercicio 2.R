@@ -39,4 +39,3 @@ ggplot(dfRes, aes(x = certificados)) +
        title = "Distribución simulada de certificados en 350 viviendas") +
   geom_vline(xintercept = media, col = "red", linetype = "dashed") +
   theme_minimal()
-
