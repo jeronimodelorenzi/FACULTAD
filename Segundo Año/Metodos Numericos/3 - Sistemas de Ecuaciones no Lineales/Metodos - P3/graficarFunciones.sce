@@ -4,6 +4,6 @@ a = gca();
 a.x_location = 'origin';
 a.y_location = 'origin';
 
-plot(x,log(1+2.*x));
-plot(x,x.^3);
+plot(x,exp(x)-2.*x);
+plot(x,x)
 xgrid;

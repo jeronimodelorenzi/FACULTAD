@@ -1,7 +1,6 @@
 function y = funciones(k)
-    y(1) = k(1)*exp(k(2))+k(3)-10
-    y(2) = k(1)*exp(2*k(2))+2*k(3)-12
-    y(3) = k(1)*exp(3*k(2))+3*k(3)-15
+    y(1) = k(1)-k(2)^2+k(1)*exp(k(2))-2
+    y(2) = k(2)*exp(k(2))+k(1)^3-1
 endfunction
 
 function nm = newtonMultivariable(f,x0,tol,iter,h)
@@ -24,7 +23,7 @@ function nm = newtonMultivariable(f,x0,tol,iter,h)
 
 endfunction
 
-vectorInicial = [1,1,1];
+vectorInicial = [1,1];
 errorDeseado = 0.0001;
 maxIteraciones = 1000;
 solucion = newtonMultivariable(funciones, vectorInicial, errorDeseado, maxIteraciones,2);
