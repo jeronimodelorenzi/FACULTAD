@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <ieee754.h>
 
+#define EXPONENTE(x) (((*(int*)&(x)) >> 23) & 0xFF)
+#define FRACCION(x) (((*(int*)&(x)) & 0x7FFFFF))
+
 int is_one (long n, int b) {
   int cond = 0;
   if (n & (1 << b))
@@ -17,7 +20,7 @@ void printbin (long n, int bits) {
     puts("");
     break;
   case 64:
-    for (int i = 31 ; i >= 0 ; i--)
+    for (int i = 63 ; i >= 0 ; i--)
       printf("%d", is_one(n, i));
     puts("");
   default:
@@ -28,10 +31,11 @@ void printbin (long n, int bits) {
 
 int main () {
   float f = 6.225f;
-  double f = 6.225;
+  double d = 6.225;
 
   printf("Float 32 bits: %f", f);
   printf("Bits: ");
-  printbin(f,32);
-  
+  float
+
+
 }
