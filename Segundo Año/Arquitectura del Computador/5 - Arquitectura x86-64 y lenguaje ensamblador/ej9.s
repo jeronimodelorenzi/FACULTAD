@@ -8,9 +8,9 @@ str: .asciz "Hola mundo \n"
 .global main
 main:
   leaq a, %rdx
-  movw (%rdx), %ax     # ax = 0xffff
-  movb b+1, %al       # al=0x63
+  movw (%rdx), %ax      # ax = 0xffff
+  movb b+1, %al         # al=0x63
   movl str, %esi        # esi="aloH"
-  movl c, %edi      # edi=0x3fc00000
+  movl c, %edi          # edi=0x3fc00000
   movl %esi, (%rdx)
   ret
