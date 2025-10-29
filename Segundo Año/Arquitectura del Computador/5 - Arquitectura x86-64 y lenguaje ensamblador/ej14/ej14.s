@@ -1,3 +1,4 @@
+/*
 .text
 .globl suma
 suma:
@@ -39,3 +40,50 @@ fin:
     movq %rbp, %rsp
     popq %rbp
     ret
+    */
+
+.data
+str1: .asciz "Ingrese al menos un argumento\n"
+str2: .asciz "Cantidad de argumentos ingresados: %d. La suma es %lu.\n"
+.text
+.global main
+main:
+    # prólogo
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+
+    # Asignación en pila
+    movq %rdi, -8(%rbp)
+    movq %rsi, -16(%rbp)
+
+    # Si no hay argumentos
+    movq -8(%rbp), %rdi
+    decq %rdi
+    je print_str1
+
+    # Si hay argumentos
+    movq -8(%rbp), %r8 # argc
+    movq -16(%rbp), %r9 # argv
+loop_suma:
+    movq (%r9, %r12, 8), %r13
+
+
+
+
+
+
+print_str1:
+    movq -8(%rbp), %rsi
+    leaq str1, %rdi
+    xor %rax, %rax
+    call printf
+    
+
+
+    # epílogo
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+    

@@ -10,7 +10,7 @@ unsigned long fact1(unsigned long x){
 .globl fact1
 
 # FORMA 1
-
+/*
 fact1:
     # prólogo
     pushq %rbp
@@ -30,6 +30,35 @@ recursion:
 
 fin_fact1:
     # epílogo
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+*/
+
+# FORMA 2
+
+fact1:
+    # prólogo
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+
+    movl %edi, -4(%rbp)
+
+    movl -4(%rbp), %ebx
+    cmpl $1, %ebx
+    jg recursion
+    movl $1, %eax
+    jmp fin_fact1
+
+recursion:
+    movl -4(%rbp), %edi
+    decl %edi
+    call fact1
+    movl -4(%rbp), %ebx
+    imull %ebx, %eax
+
+fin_fact1:
     movq %rbp, %rsp
     popq %rbp
     ret
