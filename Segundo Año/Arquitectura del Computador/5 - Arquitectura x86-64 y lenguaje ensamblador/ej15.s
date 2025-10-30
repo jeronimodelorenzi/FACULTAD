@@ -14,18 +14,17 @@ main:
     movq %rsp, %rbp
 
     # Leemos el entero.
-    movq $entero, %rsi
-    movq $fmt, %rdi
-    xorq %rax, %rax
+    movq $entero, %rsi      # rsi=dir. de memoria de la etiqueta entero
+    movq $fmt, %rdi         # rdi=dir. de memoria de la etiqueta fmt
+    xorq %rax, %rax         # Limpia rax
     call scanf
 
-    xorq %rax, %rax
-
+    xorq %rax, %rax         # Limpia el registro rax
     
 # COMPLETE CON DOS INSTRUCCIONES.
-    movl entero, %eax
-    movq funcs(, %rax,8), %rdx
-    jmp *%rdx
+    movl entero, %eax       # eax=entero=valor ingresado y leido por scanf
+    movq funcs(, %rax,8), %rdx  # rdx=nada+rax*8+funcs => funcs[rax]
+    jmp *%rdx               # Salta a lo que hay en el registro rdx
 fin:
     movq %rbp, %rsp
     popq %rbp
