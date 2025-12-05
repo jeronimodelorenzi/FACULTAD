@@ -50,10 +50,7 @@ fin:
 sin_notas:
     leaq str_sinNotas, %rdi
     call printf
-    xorq %rax, %rax
-    movq %rbp, %rsp
-    popq %rbp
-    ret
+    jmp fin
 
 .global main
 main:
