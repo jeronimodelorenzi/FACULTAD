@@ -1,0 +1,87 @@
+#ifndef __COLAS_H__
+#define __COLAS_H__
+
+typedef void (*FuncionDestructora)(void *dato);
+typedef void *(*FuncionCopia)(void *dato);
+typedef void (*FuncionVisitante)(void *dato);
+typedef int (*Predicado)(void *dato);
+
+typedef struct _GNode {
+  void *data;
+  struct _GNode *next;
+} GNode;
+
+typedef struct _GList{
+  GNode *inicio;
+  GNode *final;
+} GList;
+
+/**
+ * Devuelve una lista vacía.
+ */
+GList* glist_crear();
+
+/**
+ * Destruccion de la lista.
+ */
+void glist_destruir(GList* lista, FuncionDestructora destruir);
+
+/**
+ * Determina si la lista es vacía.
+ */
+int glist_vacia(GList* lista);
+
+/**
+ * Agrega un elemento al inicio de la lista.
+ */
+GList* glist_agregar_inicio(GList* lista, void *dato, FuncionCopia copiar);
+/**
+ * Agrega un elemento al final de la lista.
+ */
+GList* glist_agregar_final(GList* list, void *data, FuncionCopia copy);
+
+/**
+ * Recorrido de la lista, utilizando la funcion pasada.
+ */
+void glist_recorrer(GList* lista, FuncionVisitante visitar);
+
+// COLA
+
+typedef GList *Cola;
+
+/**
+ * Crea una cola
+ */
+Cola cola_crear();
+
+/**
+ * Destruye la cola.
+ */
+void cola_destruir(Cola cola, FuncionDestructora destroy);
+
+/**
+ * Retorna 1 si la cola es vacía, 0 en caso contrario.
+ */
+int cola_es_vacia(Cola cola);
+
+/**
+ * Retorna el elemento que se encuentra al inicio de la cola.
+ */
+void* cola_inicio(Cola cola);
+
+/**
+ * Agrega un elemento a la cola.
+ */
+void cola_encolar(Cola cola, void *data, FuncionCopia copy);
+
+/**
+ * Elimina un elemento de la cola.
+ */
+void cola_desencolar(Cola cola, FuncionDestructora destroy);
+
+/**
+ * Muestra en pantalla la cola.
+ */
+void cola_imprimir(Cola cola, FuncionVisitante visit);
+
+#endif /* __GLIST_H__ */

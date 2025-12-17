@@ -1,5 +1,5 @@
-#ifndef __PILA_H__
-#define __PILA_H__
+#ifndef __pilaL_H__
+#define __pilaL_H__
 
 #include "glist.h"
 
@@ -8,42 +8,42 @@ typedef GList Pila;
 /**
  * Crea e inicializa una pila vacía.
  */
-Pila pila_crear();
+Pila pilaL_crear();
 
 /**
  * Libera la memoria requerida para la pila.
  */
-void pila_destruir(Pila pila, FuncionDestructora destroy);
+void pilaL_destruir(Pila pila, FuncionDestructora destroy);
 
 /**
  * Retorna 1 si la pila está vacía, y 0 en caso contrario.
  */
-int pila_es_vacia(Pila pila);
+int pilaL_es_vacia(Pila pila);
 
 /**
  * Retorna el elemento que se encuentra en el tope de la pila sin eliminarlo.
  */
-void *pila_tope(Pila pila);
+void *pilaL_tope(Pila pila);
 
 /**
  * Inserta un elemento en el tope de la pila, en caso de estar llena, se aumenta el doble la capacidad.
  */
-void pila_apilar(Pila* pila, void *elemento, FuncionCopia copy);
+void pilaL_apilar(Pila* pila, void *elemento, FuncionCopia copy);
 
 /**
  * Elimina el elemento que se encuentra en el tope de la pila.
  */
-void pila_desapilar(Pila* pila, FuncionDestructora destroy);
+void pilaL_desapilar(Pila* pila, FuncionDestructora destroy);
 
 /**
  * Imprime en orden los elementos de la pila.
  */
-void pila_imprimir(Pila pila, FuncionVisitante visit);
+void pilaL_imprimir(Pila pila, FuncionVisitante visit);
 
 /**
  * Revierte el orden de la pila.
  */
-GList pila_revertir_orden(GList lista, FuncionCopia copy);
+GList pilaL_revertir_orden(GList lista, FuncionCopia copy);
 
 
 #endif
