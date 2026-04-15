@@ -1,5 +1,5 @@
 module Practica3 where
-
+import System.Posix (semGetValue)
 
 {-
 1) El modelo de color RGB es un modelo aditivo que tiene al color rojo, verde y azul
@@ -157,7 +157,11 @@ data Exp = Lit Int | Add Exp Exp | Sub Exp Exp | Prod Exp Exp | Div Exp Exp
 
 -- Definición de ejemplo.
 ev1 :: Exp
-ev1 = (Div (Sub (Prod (Lit 3) (Add (Lit 4) (Lit 1))) (Lit 1)) (Lit 2))
+ev1 = Div (Sub (Prod (Lit 3) (Add (Lit 4) (Lit 1))) (Lit 1)) (Lit 2)
+
+ev2 :: Exp
+ev2 = Div (Sub (Prod (Lit 3) (Add (Lit 4) (Lit 1))) (Lit 1)) (Lit 0)
+
 {-
 Defina un evaluador eval :: Exp -> Int.
 -}
@@ -179,3 +183,17 @@ eval (Div x y) = eval x `div` eval y
 -}
 
 -- b) Defina un evaluador seval :: Exp -> Maybe Int para controlar los errores de división por 0.
+seval :: Exp -> Maybe Int
+seval (Lit x) = Just x
+seval (Add x y) = case (seval x, seval y) of
+    (Just x, Just y) -> Just (x+y)
+    _ -> Nothing
+seval (Sub x y) = case (seval x, seval y) of
+    (Just x, Just y) -> Just (x-y)
+    _ -> Nothing
+seval (Prod x y) = case (seval x, seval y) of
+    (Just x, Just y) -> Just (x*y)
+    _ -> Nothing
+seval (Div x y) = case (seval x, seval y) of
+    (Just x, Just 0) -> Nothing 
+    (Just x, Just y) -> Just (x `div` y)
