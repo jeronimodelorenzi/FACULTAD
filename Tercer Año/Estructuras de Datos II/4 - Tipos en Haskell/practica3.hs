@@ -1,5 +1,6 @@
 module Practica3 where
-import System.Posix (semGetValue)
+
+import Data.Char (digitToInt)
 
 {-
 1) El modelo de color RGB es un modelo aditivo que tiene al color rojo, verde y azul
@@ -153,7 +154,7 @@ concatCL (Consnoc a xs b) = appendCL a (appendCL (concatCL xs) b)
 {-
 4) Para el siguiente tipo algebraico:
 -}
-data Exp = Lit Int | Add Exp Exp | Sub Exp Exp | Prod Exp Exp | Div Exp Exp
+data Exp = Lit Int | Add Exp Exp | Sub Exp Exp | Prod Exp Exp | Div Exp Exp deriving Show
 
 -- Definición de ejemplo.
 ev1 :: Exp
@@ -171,6 +172,44 @@ eval (Add x y) = eval x + eval y
 eval (Sub x y) = eval x - eval y
 eval (Prod x y) = eval x * eval y
 eval (Div x y) = eval x `div` eval y
+
+{-
+5) La notación polca inversa o RPN es una manera alternativa de escribir expresiones
+matemáticas, en la cual los operadores se escribem luego de los operadores, es decir,
+usando notación posfija. Por ejemplo, la suma de los enteros 3 y 5 que con notación infija
+notamos 3 + 5, en RPN se escriben 3 5 +.
+Para evaluar una expresión escrita en RPN, podemos usar un stack. Recorremos la expresión de
+izquierda a derecha. Cada vez que encontramos un número, lo apilamos. Cada vez que encontramos
+un operador, retiramos los dos números que están en la cima de la pila, le aplicamos el operador
+y apilamos el resultado. Si la expresión está bien formada, al alcanzar el final de la misma, 
+debemos tener un único número en la pila, que representa el resultado de la expresión.
+-}
+
+-- a) Defina una función parseRPN :: String -> Exp que, dado un string que representa una expresión
+-- escrita en RPN, construya un elemento del tipo Exp.
+eliminarEspacio :: String -> String
+eliminarEspacio [] = []
+eliminarEspacio (c:cs)  | not(c == ' ') = c : eliminarEspacio cs
+                        | otherwise = eliminarEspacio cs
+
+parseRPNAux :: String -> [Exp] -> Exp
+parseRPNAux [] [x] = x
+parseRPNAux [] _ = error "Rrror: expresión mal formada"
+parseRPNAux (c:cs) [] = parseRPNAux cs [Lit (digitToInt c)]
+parseRPNAux (c:cs) [x] = parseRPNAux cs ((Lit (digitToInt c)):[x])
+parseRPNAux (c:cs) (n1:n2:xs)   | c == '+'  = parseRPNAux cs (Add n2 n1:xs)
+                                | c == '-'  = parseRPNAux cs (Sub n2 n1:xs)
+                                | c == '*'  = parseRPNAux cs (Prod n2 n1:xs)
+                                | c == '/'  = parseRPNAux cs (Div n2 n1:xs)
+                                | otherwise = parseRPNAux cs (Lit (digitToInt c):(n1:n2:xs))
+
+parseRPN :: String -> Exp
+parseRPN s = parseRPNAux (eliminarEspacio s) []
+
+-- b) Defina una función evalRPN :: String -> Int para evaluar expresiones
+-- aritméticas escritas en RPN.
+evalRPN :: String -> Int
+evalRPN s = eval (parseRPN s)
 
 {-
 6)
