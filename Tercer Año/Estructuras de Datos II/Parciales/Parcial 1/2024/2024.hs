@@ -71,4 +71,22 @@ member a (N _ b l r)    | a == b    = True
                         | a <= b    = member a l
                         | otherwise = member a r 
 
-insert
+insert :: Ord a => a -> AATree a -> AATree a
+insert a t = makeB (ins a t)
+    where
+        makeB :: AATree a -> AATree a
+        makeB (N _ a l r) = N B a l r
+
+        ins :: Ord a => a -> AATree a -> AATree a
+        ins a E = N R a E E
+        ins a (N c b l r)   | a < b     = split(skew (N c b (ins a l) r)) 
+                            | a > b     = split(skew (N c b l (ins a r)))
+                            | otherwise = N c b l r
+
+        skew :: AATree a -> AATree a
+        skew (N color y (N R x a b) c) = N color x a (N R y b c)
+        skew t = t
+
+        split :: AATree a -> AATree a
+        split (N B x a (N R y b (N R z c d))) = N R y (N B x a b) (N B z c d)
+        split t = t
