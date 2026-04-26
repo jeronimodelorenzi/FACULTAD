@@ -256,7 +256,7 @@ fromList2 (x:xs)    = merge (N 1 x Emp Emp) (fromList2 xs)
 7) Un pairing heap es un árbol general que satisface la invariante de heap.
 Para implementar pairing heap en Haskell definimos el siguiente tipo de datos:
 -}
-data PHeaps a = Empt | Root a [PHeaps a]
+data PHeaps a = Empt | Root a [PHeaps a] deriving Show
 
 {-
 Definir las siguientes funciones:
@@ -291,7 +291,16 @@ insertPH h x = mergePH h (Root x [])
 -- d) concatHeaps :: Ord a => [PHeaps a] -> PHeaps a, que dada una lista de pairing
 -- heaps construya otro con los elementos del mismo.
 concatHeaps :: Ord a => [PHeaps a] -> PHeaps a
-cancatHeaps [] = Empt
+concatHeaps [] = Empt
 concatHeaps (x:xs) = mergePH x (concatHeaps xs)
 
--- e) delMin :: Ord a => PHeaps a -> Maybe
+-- e) delMin :: Ord a => PHeaps a -> Maybe (a, PHeaps a), que dado un pairing heaps,
+-- devuelva si el árbol no es vacío un par con el menor elemento y un pairing heap
+--  sin este elemento, o Nothing en otro caso.
+delMin :: Ord a => PHeaps a -> Maybe (a, PHeaps a)
+delMin Empt = Nothing
+delMin (Root x hs) = Just (x, concatHeaps hs)
+
+-- Caso de prueba
+pheap1 = insertPH (insertPH (insertPH (insertPH (insertPH (insertPH Empt 1) 4) 3) 8) 7) 12
+pheap2 = insertPH (insertPH Empt 5) 0
