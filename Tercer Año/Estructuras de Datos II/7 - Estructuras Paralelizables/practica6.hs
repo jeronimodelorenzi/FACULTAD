@@ -292,10 +292,12 @@ splitAtTree t@(Node s l x r) i
 -- cualquierda l1 y l2 la profundidad de los mismos difiere en a lo sumo 1).
 rebalance :: BTree a -> BTree a
 rebalance Empty = Empty
-rebalance (Nodo s l x r)
-    | abs (sizeIzq - sizeDer) == 1  = if 
+rebalance t@(Node s l x r) = let
+                                mitad = s `div` 2
+                                x = nth t mid 
+                                (izq, derTemp) = splitAtTree t mid
+                                der = dropT 1 derTemp
+                              in 
+                                Node s (rebalance izq) x (rebalance der)
 
-    where
-        abs x   | x < 0     = -x
-                | otherwise = x 
 
