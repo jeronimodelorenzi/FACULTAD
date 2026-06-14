@@ -245,9 +245,76 @@ groupS cmp s =  let
 collectS :: (Seq s, Ord a) => s (a,b) -> s (a, s b)
 collectS s =    let
                     sortSeq     = sortS (\(x1,y1) (x2, y2) -> compare x1 x2) s
-                    indices     = tabulateS id (lengthS sortSeq)
-                    filtrado    = filterS (\i -> i == 0 || compare fst(nthS sortSeq i) (nthS sortSeq (i-1))) indices
-                    cant
-
+                    indices     = tabulateS id (lengthS sortSeq) `asTypeOf` mapS (\_ -> 0::Int) s
+                    filtrado    = filterS (\i -> i == 0 || compare (fst (nthS sortSeq i)) (fst (nthS sortSeq (i-1))) /= EQ) indices
+                    cantElem    = tabulateS (\i -> if i == (lengthS filtrado -1) 
+                                                then (lengthS sortSeq) - (nthS filtrado i) 
+                                                else (nthS filtrado (i+1)) - (nthS filtrado i)) (lengthS filtrado) `asTypeOf` filtrado
+                    seqCollect  = tabulateS (\i -> let
+                                                    inicio = nthS filtrado i
+                                                    cant   = nthS cantElem i
+                                                    clave  = fst (nthS sortSeq inicio)
+                                                    res    = takeS (dropS sortSeq inicio) cant
+                                                    val    = mapS snd res
+                                                  in (clave, val)) (lengthS filtrado)
                 in
-                    mapS (\i -> nthS  i) filtrado
+                    seqCollect
+
+{-
+8) Una universidad cuenta con una base de datos de los estudiantes que rindieron los exámenes de ingrreso y las notas de las evaluaciones realizadas.
+Un estudiante ingresa a la universidad si e promedio de los resultados de los exámenes es mayor o igual a 70 y quedará en lista de espera si el promedio
+es mayor a 50 y menor a 70. Se desea saber cuantos estudiantes aprobaron el ingreso, cuantos quedaron en lista de espera y cuantos no podrían ingresar a
+la universidad, junto con las notas máxima de cada uno de los 3 casos.
+
+Definir una función datosIngreso : Seq (String, Seq Int) -> Seq (Int, Int) que dada una secuencia con los nombres de los estudiantes y las notas de los exámenes,
+calcule los datos necesarios (cantidad de alumnos, nota máxima) de los exámenes de ingreso. Definirla en términos de mapCollectReduce
+-}
+datosIngreso :: Seq s => s (String, s Int) -> s (Int, Int)
+datosIngreso s =    let
+                        mapeoAlumnos = mapS mapAlumno s
+                        alumnosAgrupados = collectS mapeoAlumnos
+                    in
+                        mapS mapGrupo alumnosAgrupados 
+                            where
+                                mapAlumno :: Seq s => (String, s Int) -> (Int, Int)
+                                mapAlumno (nombre, notas) = let
+                                                    promedio    = fromIntegral (reduceS (+) 0 notas) / fromIntegral(lengthS notas)
+                                                    maxNota     = maxE compare notas
+                                                    categoria   = if promedio >= 70 then 0
+                                                                            else if promedio > 50 then 1
+                                                                            else 2
+                                                in
+                                                    (categoria, maxNota)
+                                
+                                mapGrupo :: Seq s => (Int, s Int) -> (Int, Int)
+                                mapGrupo (_, notasMax) =  let
+                                                                n       = lengthS notasMax
+                                                                notaMax = maxE compare notasMax
+                                                            in
+                                                                (n, notaMax)
+
+{-
+9)
+-}
+
+-- a) Definir una función countCaract : Seq (Seq Char) -> Seq (Char, Int) que dada una colección de textos calcule la cantidad
+-- de veces con que aparecen los caracteres en los textos. Definirla en términos de mapCollectReduce.
+countCaract :: Seq s => s (s Char) -> s (Char, Int)
+countCaract s = let
+                    seqAplanada = joinS s
+                    letrasTupla = mapS (\i-> (i, 1)) seqAplanada
+                    letrasGrupo = collectS letrasTupla
+                    letrasTotal = mapS (\(letra, cant) -> (letra, reduceS (+) 0 cant)) letrasGrupo
+                in
+                    letrasTotal       
+            
+-- b) Definir una función huffman : Seq (Seq Char) -> Seq (Int Seq Char) que dada una colección de textos calcule las frecuencias
+-- con que cada caracter aparece en los textos. La secuencia resultado debe contener pares de la forma (n, caracteres con frecuencia n).
+-- y debe estar ordenada según la frecuencias de los caracteres. Utilizar las funciones countCaract, map y collect.
+huffman :: Seq s => s (s Char) -> s (Int, s Char)
+huffman s = let
+                aparicionLetras = countCaract s
+                swapTupla       = mapS (\(letra, cant) -> (cant, letra)) aparicionLetras
+                frecuenciaLetra = collectS swapTupla
+            in     
+                frecuenciaLetra
