@@ -158,6 +158,15 @@ sccmlScan s =   let
                 in
                     maxTotal
 
+sccmlScan' :: Seq s => s Int -> Int
+sccmlScan' s = let
+                    s_info      = tabulateS (\i -> if nthS s i < nthS s (i+1) then (1, True) else (0,False)) (lengthS s -1) `asTypeOf` mapS (\_ -> (0,False)) s
+                    (s_red, r)  = scanS (\(sL, bL) (sR, bR) -> if bR then (sL + sR, bL && bR) else (sR, False)) (0,True) s_info
+                    s_res       = mapS (\(i, _) -> i) (appendS s_red (singletonS r))
+                in
+                    reduceS max 0 s_res
+
+
                     
 {-
 5) Dada una secuencia de enteros s, se desea determinar el tamaño del siguiente conjunto:
