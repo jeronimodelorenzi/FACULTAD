@@ -84,5 +84,31 @@ instance Seq [] where
                                                                 | otherwise = let (res, rest) = op y x1 ||| expandir op xs ys (not p)
                                                                               in res: rest
 
+    mergeS cmp s1 s2 = case showtS s1 of
+                EMPTY      -> s2
+                ELT x      -> let
+                                  menores = filterS (\y -> cmp y x == LT) s2
+                                  mayores = filterS (\y -> cmp y x /= LT) s2
+                              in 
+                                  appendS menores (appendS s1 mayores)
+
+                NODE l1 r1 -> let
+                                  pivot      = nthS r1 0 
+                                  menorPivot = filterS (\i -> cmp i pivot == LT) s2
+                                  mayorPivot = filterS (\i -> cmp i pivot /= LT) s2
+                                  seq1       = mergeS cmp l1 menorPivot
+                                  seq2       = mergeS cmp r1 mayorPivot
+                              in 
+                                  appendS seq1 seq2
+
+    sortS cmp s = case showtS s of
+                    EMPTY       -> s
+                    ELT x       -> s
+                    NODE l r    ->  let
+                                        sortL = sortS cmp l
+                                        sortR = sortS cmp r
+                                    in
+                                        mergeS cmp sortL sortR
+
     -- fromList   :: [a] -> s a
     fromList xs = xs

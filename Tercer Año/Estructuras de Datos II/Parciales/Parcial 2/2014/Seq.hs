@@ -19,6 +19,8 @@ class Seq s where
    reduceS    :: (a -> a -> a) -> a -> s a -> a
    scanS      :: (a -> a -> a) -> a -> s a -> (s a, a)
    fromList   :: [a] -> s a
+   mergeS     :: (a -> a -> Ordering) -> s a -> s a -> s a
+   sortS      :: (a -> a -> Ordering) -> s a -> s a
 
 data TreeView a t = EMPTY | ELT a | NODE t t
 data ListView a t = NIL | CONS a t

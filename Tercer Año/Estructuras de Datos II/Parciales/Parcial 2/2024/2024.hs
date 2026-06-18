@@ -11,7 +11,7 @@ isValue :: (Ord k, Eq v) => k -> v -> MultiDic k v -> Bool
 isValue _ _ E = False
 isValue k v (N l (k2, vT) r)    | k == k2   = isElement v vT
                                 | k < k2    = isValue k v l
-                                | otherwise    = isValue k v r
+                                | otherwise = isValue k v r
     where
         isElement :: Eq v => v -> Tree v -> Bool
         isElement _ Empty       = False
@@ -60,6 +60,29 @@ toMap (N l (k, vT) r) = let
         merge t1 t2     = Node (size t1 + size t2) t1 t2
 
 -- 2)
+-- spaml :: Seq s => s Int -> Int
+-- spaml s | n <= 2    = n
+--         | otherwise = spaml_aux s
+--     where
+--         n = lengthS s
+
+--         spaml_aux :: Seq s => s Int -> Int
+--         spaml_aux s = let
+--                         n           = lengthS s
+--                         s_dif       = tabulateS (\i-> nthS s (i+1) - nthS s i) (n-1) `asTypeOf` s
+--                         s_info      = mapS f s_dif
+--                         (s_red, r)  = scanS g (nthS s_info 0) (dropS s_info 1)
+--                         s_res       = mapS h (appendS s_red (singletonS r))
+--                         f           = (\i-> (i, 1, True))
+--                         g           = (\(vL, sufL, bL) (vR, sufR, bR) -> 
+--                                         if vL == vR && bR then
+--                                                             (vR, sufL + sufR, bL && bR)
+--                                                            else
+--                                                             (vR, sufR, False))
+--                         h           = (\(_, i, _) -> i)
+--                       in
+--                         1 + reduceS max 0 s_res
+
 spaml :: Seq s => s Int -> Int
 spaml s | n <= 2    = n
         | otherwise = spaml_aux s
@@ -73,13 +96,9 @@ spaml s | n <= 2    = n
                         s_info      = mapS f s_dif
                         (s_red, r)  = scanS g (nthS s_info 0) (dropS s_info 1)
                         s_res       = mapS h (appendS s_red (singletonS r))
-                        f           = (\i-> (i, 1, True))
-                        g           = (\(vL, sufL, bL) (vR, sufR, bR) -> 
-                                        if vL == vR && bR then
-                                                            (vR, sufL + sufR, bL && bR)
-                                                           else
-                                                            (vR, sufR, False))
-                        h           = (\(_, i, _) -> i)
+                        f           = (\i -> (nthS s_dif i, i, nthS s_dif i, i))
+                        g           = (\(l1, i1, r1, j1) (l2, i2, r2, j2) -> if r1 == l2 && j1 == i2-1 then (l1,i1,r2,j2) else (l2,i2,r2,j2))
+                        h           = (\(l,i,r,j) -> j-1+1)
                       in
                         1 + reduceS max 0 s_res
 
