@@ -526,3 +526,74 @@ spaml s | n <= 2    = n
                         h           = (\(_, i, _) -> i)
                       in
                         1 + reduceS max 0 s_res
+
+
+descomprimir :: Seq s => s Int -> s Int
+descomprimir s = let
+                    s_secuencias = mapS (\x -> tabulateS (const x) x `asTypeOf` s) s
+                 in
+                    colapsar s_secuencias
+colapsar :: Seq s => s (s Int) -> s Int
+colapsar seqs 
+        | lengthS seqs == 0 = tabulateS id 0     -- Caso base: vacío
+        | lengthS seqs == 1 = nthS seqs 0        -- Caso base: 1 solo elemento
+        | otherwise = let
+                        -- Partimos a la mitad exacta
+                        mitad = lengthS seqs `div` 2
+                        izq = takeS seqs mitad 
+                        der = dropS seqs mitad 
+                      in
+                        -- Unimos las mitades resueltas recursivamente
+                        appendS (colapsar izq) (colapsar der)
+
+
+
+diasDerrumbe :: Seq s => s Float -> s Int
+diasDerrumbe s =  let
+                    s_idx = tabulateS id (lengthS s) `asTypeOf` mapS undefined s
+                    s_info = tabulateS (\i -> if i == 0 then False else nthS s i < (nthS s (i-1) / 2.0)) (lengthS s) `asTypeOf` mapS undefined s
+                  in
+                    filterS (\i -> nthS s_info i == True) s_idx
+
+rachaCrecimiento :: Seq s => s Int -> Int
+rachaCrecimiento s  
+  | lengthS s == 0 = 0
+  | otherwise = let
+                  s_info = tabulateS (\i -> (nthS s i , i, nthS s i , i)) (lengthS s-1) `asTypeOf` mapS undefined s
+                  compare (0, -2, 0, -2) t = t
+                  compare t (0, -2, 0, -2) = t
+                  compare (l1, i1, r1, j1) (l2, i2, r2, j2) =
+                    if r1 < l2 && j1 == i2-1 then (l1, i1, r2, j2) else (l2, i2, r2, j2)
+                  (s_red, r) = scanS compare (0, -2, 0, -2) s_info
+                  s_app = appendS (dropS s_red 1) (singletonS r)
+                  s_res = mapS (\(_,i,_,j) -> j-i+1) s_app
+                in
+                  reduceS max 0 s_res
+
+rachaCrecimiento' :: Seq s => s Int -> Int
+rachaCrecimiento' s | lengthS s == 0 = 0
+                   | otherwise = racha_aux s
+  where
+    racha_aux s = let
+                    s_info = mapS f s
+                    (s_red, r) = scanS g (nthS s_info 0) (dropS s_info 1)
+                    s_res = mapS h (appendS s_red (singletonS r))
+                    
+                    f = \v -> (v,v,1,1)
+                    g = \(l1, r1, rc1, s1) (l2, r2, rc2, s2)-> (l1, r2, if r1 < l2 && rc2 == s2 then rc1 + rc2 else rc2, s1+s2)
+                    h = \(_, _, rc, _) -> rc
+                  in
+                    reduceS max 0 s_res
+
+peorGolpe :: Seq s => s Int -> Int
+peorGolpe s
+  | lengthS s == 0 = 0
+  | otherwise = let
+                    (s_sum, r_sum) = scanS (+) 0 s
+                    s_info = appendS s_sum (singletonS r_sum)
+                    (s_min, _) = scanS max 0 s_info
+                    s_res = tabulateS (\i -> nthS s_min i - nthS s_info i) (lengthS s_info) `asTypeOf` mapS undefined s
+                in
+                    reduceS max 0 s_res
+                    
+                                

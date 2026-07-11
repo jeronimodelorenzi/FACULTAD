@@ -86,3 +86,46 @@ instance Seq [] where
 
     -- fromList   :: [a] -> s a
     fromList xs = xs
+
+    mergeS cmp s1 s2 = case showtS s1 of
+                EMPTY      -> s2
+                ELT x      -> let
+                                  menores = filterS (\y -> cmp y x == LT) s2
+                                  mayores = filterS (\y -> cmp y x /= LT) s2
+                              in 
+                                  appendS menores (appendS s1 mayores)
+
+                NODE l1 r1 -> let
+                                  pivot      = nthS r1 0 
+                                  menorPivot = filterS (\i -> cmp i pivot == LT) s2
+                                  mayorPivot = filterS (\i -> cmp i pivot /= LT) s2
+                                  seq1       = mergeS cmp l1 menorPivot
+                                  seq2       = mergeS cmp r1 mayorPivot
+                              in 
+                                  appendS seq1 seq2
+
+    sortS cmp s = case showtS s of
+                    EMPTY       -> s
+                    ELT x       -> s
+                    NODE l r    ->  let
+                                        sortL = sortS cmp l
+                                        sortR = sortS cmp r
+                                    in
+                                        mergeS cmp sortL sortR
+
+    collectS s =    let
+                    sortSeq     = sortS (\(x1,y1) (x2, y2) -> compare x1 x2) s
+                    indices     = tabulateS id (lengthS sortSeq) `asTypeOf` mapS (\_ -> 0::Int) s
+                    filtrado    = filterS (\i -> i == 0 || compare (fst (nthS sortSeq i)) (fst (nthS sortSeq (i-1))) /= EQ) indices
+                    cantElem    = tabulateS (\i -> if i == (lengthS filtrado -1) 
+                                                then (lengthS sortSeq) - (nthS filtrado i) 
+                                                else (nthS filtrado (i+1)) - (nthS filtrado i)) (lengthS filtrado) `asTypeOf` filtrado
+                    seqCollect  = tabulateS (\i -> let
+                                                    inicio = nthS filtrado i
+                                                    cant   = nthS cantElem i
+                                                    clave  = fst (nthS sortSeq inicio)
+                                                    res    = takeS (dropS sortSeq inicio) cant
+                                                    val    = mapS snd res
+                                                  in (clave, val)) (lengthS filtrado)
+                in
+                    seqCollect

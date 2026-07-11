@@ -248,19 +248,61 @@ descendent x y (N5 z zs) | x == z = buscarY y zs
         val :: GTree a -> a
         val (N5 x _) = x
 
-arbolPrueba :: GTree Int
-arbolPrueba = 
-    N5 1 [
-        N5 2 [
-            N5 5 [],
-            N5 6 []
-        ],
-        N5 3 [],
-        N5 4 [
-            N5 7 [
-                N5 8 [],
-                N5 9 [],
-                N5 10 []
-            ]
-        ]
-    ]
+{-
+Final 1 - 2018
+-}
+type Name = String
+data DirTree a = Dir Name [DirTree a] | File Name a deriving Show
+type Path = [String]
+
+names :: [DirTree a] -> [Name]
+names [] = []
+names (x:xs) = toName x : names xs
+    where
+        toName :: DirTree a -> Name
+        toName (Dir n _) = n
+        toName (File n _) = n
+
+mkDir :: Path -> Name -> DirTree a -> DirTree a
+mkDir p n d = mkdir ("/" : p) n d
+    where
+        mkdir :: Path -> Name -> DirTree a -> DirTree a
+        mkdir [p] newName (Dir dirName xs) 
+            | p == dirName && not(exists newName xs) = Dir dirName (Dir newName [] : xs)
+            | otherwise                              = Dir dirName xs
+        mkdir (p:q:ps) newName (Dir dirName xs)
+            | p == dirName = Dir dirName (act (q:ps) newName xs)
+            | otherwise    = Dir dirName xs
+        mkdir _ _ d = d
+
+        exists :: Name -> [DirTree a] -> Bool
+        exists name xs = exists' name (names xs)
+
+        exists' :: Name -> [Name] -> Bool
+        exists' _ [] = False
+        exists' name (x:xs) = name == x || exists' name xs
+
+        act :: Path -> Name -> [DirTree a] -> [DirTree a]
+        act _ _ [] = []
+        act p n (q:ps) | (head p) == toName q = (mkdir p n q):ps
+                       | otherwise            = q:act p n ps
+
+        toName :: DirTree a -> Name
+        toName (Dir n _) = n
+        toName (File n _) = n
+
+ls :: Path -> DirTree a -> [Name]
+ls p t = ls' ("/":p) t
+    where
+        ls' [p] (Dir dirName xs) | p == dirName = names xs
+                                 | otherwise = []
+        ls' (p:q:ps) (Dir dirName xs) | p == dirName = buscar (q:ps) xs
+                                      | otherwise = []
+        ls' _ _ = []
+
+        buscar :: Path -> [DirTree a] -> [Name]
+        buscar _ [] = []
+        buscar p (q:ps) = ls' p q ++ buscar p ps
+
+dirtree = Dir "/" [Dir "home" [Dir "luis" [File "Carta.txt" "xxx"], Dir "Pedro" []], Dir "mnt" []]
+
