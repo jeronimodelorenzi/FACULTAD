@@ -700,7 +700,75 @@ insertTreap k p (N10 l p' k' r) | k <= k' = if p > p' then rotateR (N10 (insertT
 splitTreap :: (Ord k, Ord p, Num p) => k -> Treap p k -> (Treap p k, Treap p k)
 splitTreap _ E10 = (E10, E10)
 splitTreap k t = let
-                pMax = priority t
-                (N10 l _ _ r) = insertTreap k (pMax+1) t
-            in
-                (l,r)
+                    pMax = priority t
+                    (N10 l _ _ r) = insertTreap k (pMax+1) t
+                 in
+                    (l,r)
+
+{-
+Parcial 1 - 2024
+-}
+data Color = R | B
+data AATree = E11 | N11 Color (AATree a) a (AATree a) deriving (Show, Eq)
+
+isBSTAA :: Ord a => AATree a -> Bool
+isBSTAA t = isBST' t Nothing Nothing
+    where
+        isBST' :: Ord a => AATree a -> Maybe a -> Maybe a -> Bool
+        isBST' E11 _ _ = True
+        isBST' (N11 _ l x r) minB maxB = isValid x minB maxB && isBST' l minB (Just x) && isBST' r (Just x) maxB
+
+        isValid x minB maxB = checkMin x minB && checkMax x maxB
+
+        checkMin x Nothing = True
+        checkMin x (Just minB) = x >= minB
+
+        checkMax x Nothing = True
+        checkMax x (Just maxB) = x <= maxB
+
+isAATree :: Ord a => AATree a -> Bool
+isAATree t = isBSTAA t && inv2 t && inv3 t
+    where
+        inv2 :: AATree a -> Bool
+        inv2 t = snd (inv2' t)
+
+        inv2' :: AATree a -> (Int, Bool)
+        inv2' E11 = (0, True)
+        inv2' (N11 c l x r) = let
+                                (hBL, bL) = inv2' l
+                                (hBR, bR) = inv2' r
+                            in
+                                if bL && bR && hBL == hbR then (cond c hBL, True) else (0, False)
+
+        cond R h = h
+        cond B h = h+1
+
+        inv3 :: AATree a -> Bool
+        inv3 E11 = True
+        inv3 (N _ (N R _ _ _) _ _) = False
+        inv3 (N R _ _ (N R _ _ _)) = False
+        inv3 (N _ l _ r) = inv3 l && inv3 r
+
+memberAA :: Ord a => a -> AATree a -> Bool
+memberAA _ E11 = False
+memberAA x (N11 _ l y r) | x == y = True
+                         | x < y = memberAA x l
+                         | otherwise = memberAA x r
+
+insertAA :: Ord a => a -> AATree a -> AATree
+insertAA x t = makeB (ins x t)
+    where
+        makeB :: AATree a -> AATree a
+        makeB (N11 _ l x r) = N11 B l x r
+
+        ins :: Ord a => a -> AATree a -> AATree a
+        ins x E11 = N11 R E11 x E11
+        ins x (N11 c l y r) | x <= y = split(skew(N11 c (ins x l) y r))
+                            | otherwise = solit(skew(N11 c l y (ins x r)))
+
+        skew :: AATree a -> AATree a
+        skew (N11 c (N11 R a x b) y c) = N11 c a x (N11 R b y c)
+        skew t = t
+        
+        split :: AATree a -> AATree a
+        split (N11 c a x (N11 R b y (N11 R c z d))) = N11 R (N11 B a x b) y (N11 B c z d)
