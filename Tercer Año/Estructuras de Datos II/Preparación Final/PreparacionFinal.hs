@@ -708,8 +708,8 @@ splitTreap k t = let
 {-
 Parcial 1 - 2024
 -}
-data Color = R | B
-data AATree = E11 | N11 Color (AATree a) a (AATree a) deriving (Show, Eq)
+data Color = R | B deriving (Eq, Show)
+data AATree a =  N11 Color (AATree a) a (AATree a) | E11 deriving (Eq, Show)
 
 isBSTAA :: Ord a => AATree a -> Bool
 isBSTAA t = isBST' t Nothing Nothing
@@ -738,16 +738,16 @@ isAATree t = isBSTAA t && inv2 t && inv3 t
                                 (hBL, bL) = inv2' l
                                 (hBR, bR) = inv2' r
                             in
-                                if bL && bR && hBL == hbR then (cond c hBL, True) else (0, False)
+                                if bL && bR && hBL == hBR then (cond c hBL, True) else (0, False)
 
         cond R h = h
         cond B h = h+1
 
         inv3 :: AATree a -> Bool
         inv3 E11 = True
-        inv3 (N _ (N R _ _ _) _ _) = False
-        inv3 (N R _ _ (N R _ _ _)) = False
-        inv3 (N _ l _ r) = inv3 l && inv3 r
+        inv3 (N11 _ (N11 R _ _ _) _ _) = False
+        inv3 (N11 R _ _ (N11 R _ _ _)) = False
+        inv3 (N11 _ l _ r) = inv3 l && inv3 r
 
 memberAA :: Ord a => a -> AATree a -> Bool
 memberAA _ E11 = False
@@ -755,7 +755,7 @@ memberAA x (N11 _ l y r) | x == y = True
                          | x < y = memberAA x l
                          | otherwise = memberAA x r
 
-insertAA :: Ord a => a -> AATree a -> AATree
+insertAA :: Ord a => a -> AATree a -> AATree a
 insertAA x t = makeB (ins x t)
     where
         makeB :: AATree a -> AATree a
@@ -764,11 +764,98 @@ insertAA x t = makeB (ins x t)
         ins :: Ord a => a -> AATree a -> AATree a
         ins x E11 = N11 R E11 x E11
         ins x (N11 c l y r) | x <= y = split(skew(N11 c (ins x l) y r))
-                            | otherwise = solit(skew(N11 c l y (ins x r)))
+                            | otherwise = split(skew(N11 c l y (ins x r)))
 
         skew :: AATree a -> AATree a
-        skew (N11 c (N11 R a x b) y c) = N11 c a x (N11 R b y c)
+        skew (N11 color (N11 R a x b) y c) = N11 color a x (N11 R b y c)
         skew t = t
         
         split :: AATree a -> AATree a
-        split (N11 c a x (N11 R b y (N11 R c z d))) = N11 R (N11 B a x b) y (N11 B c z d)
+        split (N11 color a x (N11 R b y (N11 R c z d))) = N11 R (N11 B a x b) y (N11 B c z d)
+        split t = t
+
+{-
+Parcial 2 - 2026
+-}
+data Tree4 a = E12 | L12 a | N12 (Tree4 a) (Tree4 a) deriving (Eq, Show)
+
+intercalate :: Tree4 a -> Tree4 (Tree4 a) -> Tree4 a
+intercalate s E12 = E12
+intercalate E12 t = flattenTree t
+intercalate s (L12 t) = t
+intercalate s (N12 l r) = let
+                            (l', r') = intercalate s l ||| intercalate s r
+                          in
+                            append4 l' s r'
+
+flattenTree :: Tree4 (Tree4 a) -> Tree4 a
+flattenTree E12 = E12
+flattenTree (L12 t) = t
+flattenTree (N12 l r) = let
+                            (l', r') = flattenTree l ||| flattenTree r
+                        in
+                            N12 l' r'
+
+append4 :: Tree4 a -> Tree4 a -> Tree4 a -> Tree4 a
+append4 E12 _ r = r
+append4 l _ E12 = l
+append4 l s r = N12 l (N12 s r)
+
+-- mejorGanancia :: Seq s => s Int -> Int
+-- mejorGanancia s = let
+--                     n = lengthS s
+--                     op = max
+--                     b = 0
+--                     reverse s = tabulateS (\i -> nthS s (n-i-1)) (lengthS s) 
+--                     mejorVenta = reverse (fst (scanS op b (reverse s)))
+--                     diff = tabulateS (\i -> nthS mejorVenta i - nthS s i) (n-1)
+--                   in
+--                     if n < 2 then 0 else reduceS max 0 diff
+
+{-
+Final 1 - 2025
+-}
+type Vector a = [a]
+type Matriz a = [Vector a]
+
+dimension :: Matriz a -> (Int, Int)
+dimension [] = (0, 0)
+dimension m@(x:_) = (length m, length x)
+
+elemMatriz :: Int -> Int -> Matriz a -> a
+elemMatriz i j xs = (xs !! i) !! j
+
+fila :: Int -> Matriz a -> Vector a
+fila _ [] = []
+fila i m = m !! i
+
+columna :: Int -> Matriz a -> Vector a
+columna _ [] = []
+columna j (x:xs) = x !! j : columna j xs
+
+transpose :: Matriz a -> Matriz a
+transpose [] = []
+transpose m = let
+                (_, j) = dimension m
+              in
+                [columna k m | k <- [0..j-1]]
+
+pagarDeuda :: Seq s => s (Int, Char) -> Int -> Maybe Char
+pagarDeuda s x | lengthS s == 0 = Nothing
+               | otherwise = let
+                                s_idx = tabulateS id (lengthS s) `asTypeOf` mapS fst s
+                                s_pesos = mapS fst s
+                                (s_sum, r_sum) = scanS (+) 0 s_pesos
+                                s_append = appendS (dropS s_sum 1) (singletonS r_sum)
+                                s_filter = filterS (\i -> nthS s_append i > x) s_idx
+                             in
+                                if lengthS s_filter == 0 then Nothing else Just (snd (nthS s (nthS s_filter 0-1)))
+
+
+concatMapTree :: (a -> Tree4 b) -> Tree4 a -> Tree4 b
+concatMapTree f E12 = E12
+concatMapTree f (L12 x) = f x
+concatMapTree f (N12 l r) = let
+                            (l', r') = concatMapTree f l ||| concatMapTree f r
+                        in
+                            N12 l' r'
