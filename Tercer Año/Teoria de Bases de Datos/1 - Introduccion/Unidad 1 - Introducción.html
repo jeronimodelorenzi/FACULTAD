@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!-- saved from url=(0116)https://comunidades.campusvirtualunr.edu.ar/pluginfile.php/2634005/mod_resource/content/1/Unidad-01-estudiantes.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teoría de Bases de Datos · Unidad 1 · Introducción</title>
+<style>
+  :root{
+    --pine:#123534;--teal:#1f5f5b;--teal2:#2a6f6b;--amber:#d98a2b;--amber-soft:#e7b871;
+    --bg:#fbfaf7;--ink:#18211f;--muted:#5c6a67;--card:#f0efe9;--card2:#e9ede9;--line:#dcdcd4;
+    --serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#0b1a1a;font-family:var(--sans);color:var(--ink);overflow:hidden}
+  .deck{position:fixed;left:50%;top:50%;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:center center}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:33.1px 76.8px 43.2px;background:var(--bg)}
+  .slide.active{display:flex;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:14.1px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal2);font-weight:700;margin-bottom:14.4px}
+  h1{font-family:var(--serif);font-size:66.6px;line-height:1.05;color:var(--pine);font-weight:700}
+  h2{font-family:var(--serif);font-size:41px;line-height:1.1;color:var(--pine);font-weight:700;margin-bottom:18.7px}
+  .lead{font-size:24.3px;color:var(--muted);line-height:1.5;max-width:800px;text-align:justify;hyphens:auto}
+  p{font-size:19.2px;line-height:1.5}
+  .big{font-size:25.6px;line-height:1.45;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto}
+  em{color:var(--teal2);font-style:italic}strong{color:var(--pine)}
+  .slide.dark{background:radial-gradient(120% 120% at 15% 10%,#1c4b48 0%,#123534 55%,#0d2827 100%);color:#eef4f2}
+  .slide.dark h1,.slide.dark h2{color:#fff}.slide.dark .kicker{color:var(--amber-soft)}
+  .slide.dark .lead,.slide.dark p{color:#cfe0dc}.slide.dark strong{color:#fff}
+  .accentbar{color:var(--amber);font-family:var(--serif);font-style:italic}
+  .row{display:flex;gap:30.7px;flex:1;align-items:center}.row.top{align-items:flex-start}
+  .col{flex:1}.push{margin-top:auto}
+  .grid{display:grid;gap:16.6px;flex:1;align-content:center}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border-radius:14px;padding:15.8px 19.2px}
+  .card h3{font-size:19.2px;color:var(--pine);margin-bottom:4.32px;font-family:var(--sans)}
+  .card p{font-size:14.7px;color:var(--muted);line-height:1.4}
+  .badge{width:41px;height:41px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17.9px;margin-bottom:8.6px;flex:none}
+  .badge.amber{background:var(--amber)}
+  .rows{display:flex;flex-direction:column;gap:8.6px;flex:1;justify-content:center}
+  .item{display:flex;gap:16.6px;align-items:flex-start}
+  .item .num{font-family:var(--serif);font-size:23px;color:var(--amber);font-weight:700;min-width:28.2px}
+  .item h3{font-size:19.8px;color:var(--pine);margin-bottom:1.44px}.item p{font-size:15.4px;color:var(--muted);max-width:64ch}
+  .levels{display:flex;flex-direction:column;gap:7.2px;flex:none;width:422.4px}
+  .level{border-radius:12px;padding:13px 19.2px;color:#fff}
+  .level h3{font-size:19.2px;margin-bottom:1.44px;color:#fff;font-family:var(--sans)}.level p{font-size:13.4px;opacity:.92}
+  .lvl-ext{background:var(--amber);margin:0 64px}.lvl-con{background:var(--teal2);margin:0 32px}.lvl-int{background:var(--pine)}
+  .move{background:var(--card);border-radius:16px;padding:18.7px 20.5px}
+  .move .tag{font-size:13.4px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--teal2);margin-bottom:8.6px}
+  .move.two .tag{color:var(--amber)}
+  .steps{display:flex;flex-direction:column;gap:6.48px}
+  .step{font-size:16.6px;color:var(--ink);display:flex;gap:8.96px;align-items:baseline}.step .d{color:var(--amber);font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:8.96px;margin-top:7.2px}
+  .chip{background:var(--card);border-radius:999px;padding:6.48px 15.4px;font-size:15.4px;color:var(--pine);font-weight:600}.chip.n{background:#e7efe9;color:var(--teal)}
+  .tl{display:flex;flex-direction:column;gap:8.3px;flex:1;justify-content:center}
+  .tlrow{display:flex;gap:17.9px;align-items:baseline}
+  .yr{font-family:var(--serif);font-size:20.5px;color:var(--amber);font-weight:700;min-width:96px;text-align:right}
+  .tlrow p{font-size:16.4px;color:var(--ink);line-height:1.4}
+  .tbl{width:100%;border-collapse:collapse;font-size:16px}
+  .tbl caption{font-size:15.4px;color:var(--muted);margin-bottom:7.2px;text-align:left}
+  .tbl th{background:var(--pine);color:#fff;padding:7.2px 12.8px;text-align:left;font-weight:600}
+  .tbl td{padding:7.2px 12.8px;border-bottom:1px solid var(--line);background:#fff}
+  .tbl td.a{color:var(--teal);font-weight:600}.tbl td.b{color:var(--amber);font-weight:600}
+  .result{background:#fbeee0;border-radius:12px;padding:11.5px 17.9px;font-size:17.3px;line-height:1.4;margin-top:10.1px}
+  .result strong{color:#b06a12}
+  .files{display:flex;flex-direction:column;gap:7.2px}
+  .file{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9.4px 15.4px;font-size:15.4px}
+  .file b{color:var(--pine)}.file .bad{color:#c0491f;font-weight:600}
+  a{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(217,138,43,.5)}
+  ul.cl{list-style:none}ul.cl li{font-size:16.6px;line-height:1.55;padding-left:20.5px;position:relative;color:var(--ink);margin-bottom:2.5px}ul.cl li:before{content:"\203A";position:absolute;left:0;color:var(--amber);font-weight:700}
+  .foot{position:fixed;bottom:15.8px;right:38.4px;font-size:12.8px;color:var(--muted);z-index:5}
+  .pbar{position:fixed;left:0;bottom:0;height:5px;background:var(--amber);z-index:6;transition:width .3s}
+  .hint{position:fixed;bottom:15.8px;left:38.4px;font-size:11.52px;color:var(--muted);z-index:5}
+
+
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck" style="transform: translate(-50%, -50%) scale(1.3375);">
+
+  <section class="slide dark">
+    <div class="kicker">Teoría de Bases de Datos · UNR</div>
+    <div class="push"></div>
+    <h1>Unidad 1<br>Introducción</h1>
+    <p class="lead" style="margin-top:21.6px">El <span class="accentbar">qué</span> y el <span class="accentbar">para qué</span> de las bases de datos.</p>
+    <div class="push"></div>
+    <p style="font-size:16.6px;color:#9fbfb9">Licenciatura en Ciencias de la Computación</p>
+  </section>
+
+  <section class="slide active">
+    <div class="kicker">Unidad 1 · Introducción</div>
+    <h2>Qué vamos a ver hoy</h2>
+    <p style="font-size:18.6px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">En esta primera clase vamos a entender qué es una base de datos y, sobre todo, para qué la necesitamos. Son seis etapas:</p>
+    <div class="rows" style="margin-top:7.2px">
+      <div class="item"><div class="num">1</div><div><h3>La persistencia de los datos</h3><p>Miremos alrededor: ¿qué sistemas de los que usamos todos los días guardan datos? ¿Y qué pasaría si esos datos se perdieran o se corrompieran?</p></div></div>
+      <div class="item"><div class="num">2</div><div><h3>El problema</h3><p>¿Qué pasa si gestionamos los datos con archivos y programas sueltos?</p></div></div>
+      <div class="item"><div class="num">3</div><div><h3>La respuesta: el DBMS</h3><p>Qué es un Sistema de Gestión de Bases de Datos, qué nos provee y qué problema nos resuelve.</p></div></div>
+      <div class="item"><div class="num">4</div><div><h3>De dónde venimos</h3><p>Un poco de historia: de los archivos al modelo relacional de Codd, y de SQL al mundo NoSQL.</p></div></div>
+      <div class="item"><div class="num">5</div><div><h3>Abstracción y modelos</h3><p>Los tres niveles de un sistema, la independencia de datos y los dos lenguajes para trabajar con un DBMS.</p></div></div>
+      <div class="item"><div class="num">6</div><div><h3>El mapa de la materia</h3><p>Quién es quién alrededor de una base de datos, y el recorrido del cuatrimestre.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · La persistencia de los datos</div>
+    <h2>Los datos están en todas partes</h2>
+    <p style="font-size:18.6px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">Antes de definir nada, miremos alrededor. ¿Dónde hay, ahora mismo, una base de datos funcionando?</p>
+    <div class="rows" style="margin-top:7.2px;gap:7.2px">
+      <div class="item"><div class="num">›</div><div><h3>SIU-Guaraní</h3><p>La base de datos de la universidad: inscripciones, exámenes, historia académica.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Banco</h3><p>Cuentas, saldos, transferencias. Un error acá es plata que aparece o desaparece.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Hospital</h3><p>Historias clínicas, estudios, medicación. Un dato equivocado puede costar una vida.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Comercio electrónico</h3><p>Catálogo, stock y pagos: miles de operaciones simultáneas compitiendo por el mismo producto.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Red social</h3><p>Usuarios y las relaciones entre ellos: el dato central es el grafo de conexiones.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Streaming</h3><p>Catálogo, historial y recomendaciones, para millones de usuarios a la vez.</p></div></div>
+    </div>
+    <p style="font-size:17.9px;color:var(--ink);margin-top:8.6px">¿Qué tienen en común? Detrás de cada uno hay una base de datos — y que funcione bien es <strong>crítico</strong>.</p>
+  </section>
+
+  <section class="slide dark">
+    <div class="kicker">La pregunta de fondo</div>
+    <div class="push"></div>
+    <h1 style="font-size:51.2px">¿Por qué necesitamos<br>un sistema específico para gestionar los datos?</h1>
+    <p class="lead" style="margin-top:21.6px">¿No alcanzaría con guardarlos en archivos y construir programas que los lean y los escriban? Intentemos ese camino, y veamos qué pasa.</p>
+    <div class="push"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema</div>
+    <h2>El “antes”: procesamiento de archivos</h2>
+    <p class="big" style="font-size:21.8px">¿Cómo se trabajaba antes de las bases de datos? Cada aplicación guardaba sus datos en <strong>su propio archivo</strong>, con <strong>un formato propio</strong>. Vamos a ver un ejemplo para entender esto.</p>
+    <p style="font-size:17.9px;margin-top:14.4px;max-width:800px;text-align:justify;hyphens:auto">En la facultad conviven tres sistemas, desarrollados cada uno por su cuenta, sin un plan común:</p>
+    <div class="files" style="margin-top:11.5px;max-width:588.8px">
+      <div class="file"><b>Sistema de Alumnado</b> → estudiantes.dat</div>
+      <div class="file"><b>Sistema de Biblioteca</b> → socios.csv</div>
+      <div class="file"><b>Sistema de Becas</b> → becarios.dat</div>
+    </div>
+    <p style="font-size:17.3px;color:var(--muted);margin-top:14.4px;max-width:800px;text-align:justify;hyphens:auto">El estudiante López aparece en los tres archivos, cargado por tres oficinas distintas. Nadie coordina el conjunto: los mismos datos terminan escritos en varios lugares, con formatos distintos, y toda la lógica —incluidas las reglas académicas— queda dispersa dentro de cada programa.</p>
+    <div class="push"></div>
+    <p style="font-size:17.9px;color:var(--ink)">¿Qué puede salir mal? <strong>Veamos.</strong></p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 1 de 6</div>
+    <h2>Redundancia e inconsistencia</h2>
+    <p class="big" style="font-size:21.8px">El mismo dato, escrito en varios archivos: se actualiza en uno y se olvida en los otros.</p>
+    <p style="font-size:17.3px;color:var(--muted);margin-top:14.4px;max-width:800px;text-align:justify;hyphens:auto">Retomemos el caso del estudiante López: se muda y hace el trámite en Alumnado, que registra la dirección nueva. Pero Biblioteca y Becas siguen con la vieja dirección.</p>
+    <div class="files" style="margin-top:15.8px;max-width:665.6px">
+      <div class="file"><b>Alumnado:</b> López — <span style="color:var(--teal);font-weight:600">Av. Pellegrini 250</span> ✓ actualizado</div>
+      <div class="file"><b>Biblioteca:</b> López — <span class="bad">San Martín 800</span> ✗ viejo</div>
+      <div class="file"><b>Becas:</b> López — <span class="bad">San Martín 800</span> ✗ viejo</div>
+    </div>
+    <div class="push"></div>
+    <div class="result"><strong>Resultado:</strong> la facultad tiene dos direcciones distintas para el mismo estudiante. ¿Cuál vale? No hay forma de saberlo.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 2 de 6</div>
+    <h2>Dificultad de acceso</h2>
+    <p class="big" style="font-size:21.8px">Guardar es la mitad del asunto. La otra mitad es <em>consultar</em> lo que guardamos.</p>
+    <p style="font-size:17.9px;margin-top:15.8px;max-width:800px;text-align:justify;hyphens:auto">Supongamos que aparece una pregunta que nadie anticipó: <em>“¿qué estudiantes de Ciencias de la Computación deben sólo dos finales y no se reinscribieron este año?”</em>. ¿Cómo la respondemos? No hay manera de hacer esa consulta sobre los archivos: hay que modificar el programa, agregarle una función que haga exactamente eso, y llamarla.</p>
+    <div class="push"></div>
+    <p style="font-size:17.9px;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto">Así con cada consulta imprevista: cada una cuesta un cambio en el código.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 3 de 6</div>
+    <h2>Aislamiento de los datos</h2>
+    <p class="big" style="font-size:21.8px">Los datos están dispersos en archivos con formatos distintos.</p>
+    <div class="files" style="margin-top:15.8px;max-width:691.2px">
+      <div class="file">Una fecha: <span style="font-family:var(--mono)">31/12/2024</span> en un lado, <span style="font-family:var(--mono)">2024-12-31</span> en otro.</div>
+      <div class="file">Un nombre: <b>“López, Andrés”</b> en un lado, <b>“Andrés López”</b> en el otro.</div>
+    </div>
+    <div class="push"></div>
+    <p style="font-size:17.9px;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto">¿Queremos combinarlos para responder algo? Se vuelve un trabajo manual.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 4 de 6</div>
+    <h2>Problemas de integridad</h2>
+    <p class="big" style="font-size:21.8px">Hay reglas que deberían valer siempre — restricciones de integridad. ¿Dónde están, si los datos son archivos sueltos? En el código de cada programa, y repetidas en todos.</p>
+    <div class="card" style="margin-top:17.3px;max-width:716.8px"><h3>Reglas que deberían valer siempre</h3>
+      <ul class="cl" style="margin-top:5.76px">
+        <li>La nota de un final está entre 0 y 10.</li>
+        <li>Nadie se inscribe a una materia sin tener la correlativa regularizada o aprobada.</li>
+        <li>Toda acta corresponde a una materia que existe.</li>
+      </ul>
+    </div>
+    <p style="font-size:17.9px;color:var(--ink);margin-top:17.3px;max-width:800px;text-align:justify;hyphens:auto">No están declaradas en ningún lado y nada las garantiza: cada programa las repite… o las ignora. Si un programa nuevo se olvida de una, carga datos inválidos y nadie lo detiene.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 5 de 6</div>
+    <h2>Anomalías de concurrencia</h2>
+    <p class="big" style="font-size:21.8px">¿Qué pasa si dos programas necesitan trabajar sobre el mismo archivo a la vez? La lectura y escritura de archivos no es concurrente: es <strong>bloqueante</strong>. Mientras un programa tiene el archivo abierto para escribir, los demás tienen que esperar.</p>
+    <p style="font-size:17.9px;margin-top:14.4px;max-width:800px;text-align:justify;hyphens:auto">Pensemos en la época de inscripciones: el archivo de inscripciones es uno solo, y cada operación lo bloquea entero. Aunque dos empleados atiendan a estudiantes de materias distintas, uno trabaja y el otro espera.</p>
+    <p style="font-size:17.9px;margin-top:14.4px;max-width:800px;text-align:justify;hyphens:auto">¿Y si dejamos que los dos escriban a la vez, sin bloquear? Peor: las escrituras se pisan entre sí y el archivo queda corrupto.</p>
+    <div class="push"></div>
+    <div class="result">Con archivos no se puede manejar la concurrencia: o se bloquea el archivo entero —seguro, pero lento— o las escrituras se pisan.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema · Falencia 6 de 6</div>
+    <h2>Problemas de seguridad</h2>
+    <p class="big" style="font-size:21.8px">No todos deben ver ni modificar todo. Las reglas son fáciles de enunciar:</p>
+    <div class="card" style="margin-top:17.3px;max-width:716.8px"><h3>Quién puede ver y hacer qué</h3>
+      <ul class="cl" style="margin-top:5.76px">
+        <li>El estudiante ve sus notas, no las de los demás.</li>
+        <li>El docente carga notas de su materia, pero no modifica los datos personales.</li>
+        <li>El auditor lee todo, pero no modifica nada.</li>
+      </ul>
+    </div>
+    <p style="font-size:17.9px;color:var(--ink);margin-top:17.3px;max-width:800px;text-align:justify;hyphens:auto">Ahora bien, un archivo no puede hacer valer ninguna de estas reglas: los datos no tienen protección propia, y quien accede al archivo accede a todo. El control queda en los programas: es cada uno el que debe impedir las operaciones sobre los datos según las credenciales de quien lo usa. Esa lógica hay que escribirla, repetirla y mantenerla en cada programa — y alcanza con que uno la implemente mal para que el control desaparezca.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El problema</div>
+    <h2>Seis falencias que justifican un DBMS</h2>
+    <p style="font-size:17.9px;color:var(--muted)">Estas son las seis falencias que vimos:</p>
+    <div class="rows" style="margin-top:2.88px;gap:7.2px">
+      <div class="item"><div class="num">1</div><div><h3>Redundancia e inconsistencia</h3><p>El mismo dato, escrito en varios lugares y tarde o temprano contradictorio.</p></div></div>
+      <div class="item"><div class="num">2</div><div><h3>Dificultad de acceso</h3><p>Cada consulta imprevista obliga a modificar un programa.</p></div></div>
+      <div class="item"><div class="num">3</div><div><h3>Aislamiento</h3><p>Formatos incompatibles, difíciles de combinar.</p></div></div>
+      <div class="item"><div class="num">4</div><div><h3>Integridad</h3><p>Restricciones de integridad programadas en cada aplicación, sin garantía.</p></div></div>
+      <div class="item"><div class="num">5</div><div><h3>Concurrencia</h3><p>El acceso simultáneo se bloquea o corrompe los datos.</p></div></div>
+      <div class="item"><div class="num">6</div><div><h3>Seguridad</h3><p>Sin control central de quién puede ver y hacer qué.</p></div></div>
+    </div>
+    <p class="push" style="font-size:17.9px;color:var(--teal2);font-weight:600;margin-top:7.2px">La respuesta a las seis es el mismo sistema.</p>
+  </section>
+
+  <section class="slide dark">
+    <div class="kicker">La respuesta</div>
+    <h2 style="color:#fff">El DBMS</h2>
+    <p class="big" style="color:#eef4f2">Un <strong style="color:#fff">Sistema de Gestión de Bases de Datos</strong> es, a la vez, una colección de datos interrelacionados <span class="accentbar">y</span> un conjunto de programas para acceder a esos datos y gestionarlos.</p>
+    <p style="font-size:19.2px;color:#bcd4cf;margin-top:20.2px;max-width:800px;text-align:justify;hyphens:auto">Su objetivo: ofrecer un entorno <em style="color:var(--amber-soft)">práctico</em> y <em style="color:var(--amber-soft)">eficiente</em> para almacenar, recuperar y proteger la información — eliminando las seis falencias anteriores.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Qué es un DBMS</div>
+    <h2>Qué provee un DBMS, y qué problema resuelve</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">Volvamos sobre las seis falencias: para cada una, el DBMS trae una función que la resuelve.</p>
+    <div class="rows" style="margin-top:2.88px;gap:7.2px">
+      <div class="item"><div class="num">›</div><div><h3>Definición de estructuras</h3><p>Un lenguaje para describir cómo se organizan los datos. Resuelve el aislamiento.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Manipulación</h3><p>Un lenguaje para consultar y actualizar de forma general: la consulta nueva se escribe en el momento, sin tocar ningún programa. Resuelve la dificultad de acceso.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Datos no redundantes</h3><p>Cada dato se guarda en un solo lugar. Resuelve la redundancia y la inconsistencia.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Integridad</h3><p>Las reglas se declaran una vez y se cumplen siempre. Resuelve los problemas de integridad.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Concurrencia y recuperación</h3><p>Coordina el acceso simultáneo sin serializarlo todo, y tras una falla vuelve a un estado consistente. Resuelve las anomalías de concurrencia.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Seguridad</h3><p>Control central de quién ve y quién modifica. Resuelve los problemas de seguridad.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · De dónde venimos (I)</div>
+    <h2>De los archivos al modelo relacional</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">¿Cómo llegamos al DBMS? Hagamos un poco de historia.</p>
+    <div class="tl" style="margin-top:4.32px">
+      <div class="tlrow"><div class="yr">años 50–60</div><p><strong>Procesamiento de archivos:</strong> los datos persisten en archivos de texto plano y cada programa —por lo general en <strong>COBOL</strong>— los lee y los escribe por su cuenta. Es el escenario de las seis falencias que acabamos de ver. <em>Todavía no hay un gestor.</em></p></div>
+      <div class="tlrow"><div class="yr">~1968</div><p><strong>Modelo jerárquico</strong> — IMS, de IBM, creado para el programa Apolo. Nace el DBMS: por primera vez un software administra los datos, organizados en forma de árbol.</p></div>
+      <div class="tlrow"><div class="yr">1970</div><p><strong>Edgar Codd</strong>, en el laboratorio de IBM en San José, publica el <strong>modelo relacional</strong>: los datos como tablas, con base matemática. Esa es la ruptura — el programa declara <em>qué</em> datos quiere, no <em>cómo</em> llegar a ellos.</p></div>
+      <div class="tlrow"><div class="yr">1971</div><p><strong>Modelo en red</strong> — CODASYL/DBTG, sobre las ideas de <strong>Charles Bachman</strong> (premio Turing 1973). Admite estructuras más generales que el árbol, pero el programa debe recorrer los datos siguiendo enlaces entre registros, uno por uno: sigue atado al <em>cómo</em>.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · De dónde venimos (II)</div>
+    <h2>Del modelo a la industria</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">¿Y cómo pasó el modelo relacional del paper a la industria?</p>
+    <div class="tl" style="margin-top:4.32px">
+      <div class="tlrow"><div class="yr">mediados 70</div><p>Los prototipos <strong>System R</strong> (IBM) e <strong>Ingres</strong> (Berkeley) demuestran que lo relacional funciona en la práctica.</p></div>
+      <div class="tlrow"><div class="yr">~1974</div><p>De System R nace <strong>SQL</strong> (al principio, SEQUEL): un lenguaje para pedir datos diciendo <em>qué</em> se quiere, no <em>cómo</em> obtenerlo.</p></div>
+      <div class="tlrow"><div class="yr">1979</div><p><strong>Oracle</strong> lanza el primer sistema relacional comercial. Lo relacional llega a la industria.</p></div>
+      <div class="tlrow"><div class="yr">años 80</div><p>SQL se estandariza —<strong>ANSI (1986)</strong> e <strong>ISO (1987)</strong>— y el modelo relacional domina la industria: <strong>DB2</strong>, <strong>SQL Server</strong>.</p></div>
+      <div class="tlrow"><div class="yr">años 90</div><p>Open source: <strong>MySQL (1995)</strong> y <strong>PostgreSQL (1996)</strong> ponen las bases de datos al alcance de cualquiera.</p></div>
+      <div class="tlrow"><div class="yr">2006 · 2007</div><p>El volumen y el tráfico de la web traen <strong>NoSQL</strong>: <strong>Bigtable</strong> (Google) y <strong>Dynamo</strong> (Amazon) inspiran a MongoDB, Redis, Cassandra y Neo4j.</p></div>
+      <div class="tlrow"><div class="yr">2010 →</div><p>Nube y analítica: <strong>Snowflake</strong>, <strong>ClickHouse</strong> — el motor como servicio.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Abstracción · ANSI/SPARC, 1975</div>
+    <h2>Tres niveles de abstracción</h2>
+    <p style="font-size:17.9px;max-width:800px;text-align:justify;hyphens:auto">¿Necesita quien consulta una nota saber en qué archivo, y con qué formato, está guardada? No. Un DBMS separa tres niveles:</p>
+    <div class="levels" style="margin-top:11.5px;width:665.6px">
+      <div class="level lvl-ext"><h3>Externo (vistas)</h3><p>Lo que ve cada usuario: sólo su parte.</p></div>
+      <div class="level lvl-con"><h3>Conceptual (lógico)</h3><p>Qué datos hay y cómo se relacionan.</p></div>
+      <div class="level lvl-int"><h3>Interno (físico)</h3><p>Cómo se almacena realmente.</p></div>
+    </div>
+    <div class="push"></div>
+    <p style="font-size:17.3px;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto">Cada nivel oculta los detalles del que tiene debajo. Veamos cómo funciona esto en el Guaraní.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Abstracción</div>
+    <h2>Los tres niveles en el Guaraní</h2>
+    <div class="rows" style="margin-top:4.32px">
+      <div class="item"><div class="num" style="color:var(--amber)">›</div><div><h3>Externo</h3><p>El empleado de Alumnado ve “las notas de López”. No sabe cómo se guardan, ni le importa: trabaja con la parte de los datos que le corresponde.</p></div></div>
+      <div class="item"><div class="num" style="color:var(--teal2)">›</div><div><h3>Conceptual</h3><p>El diseñador define que hay <em>estudiantes</em>, <em>materias</em> y una relación <em>cursa</em> entre ellos, con sus atributos.</p></div></div>
+      <div class="item"><div class="num" style="color:var(--pine)">›</div><div><h3>Interno</h3><p>El DBMS guarda los estudiantes en un archivo ordenado por DNI, con un índice sobre el promedio.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Abstracción</div>
+    <h2>Independencia de datos</h2>
+    <p class="big" style="font-size:20.5px">¿Qué ganamos con los tres niveles? La posibilidad de cambiar un nivel sin reescribir los que están por encima. Eso es la <strong>independencia de datos</strong>, y viene en dos formas:</p>
+    <div class="rows" style="margin-top:7.2px">
+      <div class="item"><div class="num">›</div><div><h3>Independencia física</h3><p>Podemos cambiar <strong>cómo</strong> se almacenan los datos sin tocar los programas. Por ejemplo: el DBA agrega un índice para acelerar las búsquedas por promedio, y las pantallas de Alumnado no cambian ni una línea.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Independencia lógica</h3><p>Podemos cambiar la <strong>estructura lógica</strong> con impacto mínimo. Por ejemplo: se agrega el campo <span style="font-family:var(--mono)">email</span> a estudiante, y los programas que no lo usan siguen funcionando igual.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Modelos</div>
+    <h2>Modelos de datos hoy</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">El modelo relacional sigue dominando, pero convive con otras familias. ¿Con qué modelos nos vamos a cruzar?</p>
+    <div class="rows" style="margin-top:2.88px;gap:7.2px">
+      <div class="item"><div class="num">›</div><div><h3>Relacional</h3><p>Los datos como tablas. Domina la industria y es el eje de la materia: PostgreSQL, MySQL, Oracle.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Documental</h3><p>Documentos tipo JSON, con esquema flexible: MongoDB.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Clave-valor</h3><p>Un diccionario gigante y muy rápido: Redis.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Columnar (wide-column)</h3><p>Pensado para grandes volúmenes y escritura masiva: Cassandra.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>De grafos</h3><p>Las relaciones son el centro del modelo: Neo4j.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Entidad-Relación</h3><p>No es de implementación: es la herramienta de <em>diseño</em>. La vemos en la próxima unidad.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Panorama</div>
+    <h2>Libre o comercial: ya no es binario</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">¿Estos motores son gratis o se pagan? La pregunta parece simple, pero hoy la respuesta tiene cuatro categorías:</p>
+    <div class="rows" style="margin-top:4.32px">
+      <div class="item"><div class="num">›</div><div><h3 style="color:#1f5f5b">Open source (OSI)</h3><p>Libre de verdad: usar, modificar y redistribuir. <strong>PostgreSQL, MySQL, SQLite, Cassandra, ClickHouse.</strong></p></div></div>
+      <div class="item"><div class="num">›</div><div><h3 style="color:#d98a2b">Open-core</h3><p>Núcleo libre más una edición paga con extras y soporte. <strong>Neo4j</strong>: Community gratis, Enterprise comercial.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3 style="color:#b06a12">Source-available</h3><p>El código se puede ver, pero <em>no</em> es open source según la definición de la OSI. <strong>MongoDB</strong> (licencia SSPL).</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3 style="color:#575e59">Propietario</h3><p>Comercial cerrado, con licencia paga. <strong>Oracle, DB2, SQL Server, Snowflake.</strong></p></div></div>
+    </div>
+    <div class="push"></div>
+    <div class="result">¿Y esto es fijo? No: <strong>Redis</strong> fue BSD (libre) por años, pasó a <em>source-available</em> (SSPL) en 2024 —y nació el fork libre <strong>Valkey</strong>— y volvió a <em>open source</em> (AGPL) en 2025. La licencia también hay que verificarla.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Lenguajes</div>
+    <h2>Dos lenguajes: DDL y DML</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">Cuando vimos qué provee un DBMS hablamos de dos lenguajes: uno para la estructura y otro para el contenido. Presentémoslos con nombre y apellido — las siglas vienen del inglés y así aparecen en toda la bibliografía:</p>
+    <div class="rows" style="margin-top:4.32px">
+      <div class="item"><div class="num" style="font-size:17.9px">DDL</div><div><h3>Lenguaje de definición de datos <span style="color:var(--muted);font-weight:400;font-size:15.4px">(Data Definition Language)</span></h3><p>Describe y modifica la <strong>estructura</strong>: qué tablas existen, con qué columnas y qué restricciones. Se usa al crear la base de datos y cada vez que el diseño cambia.</p></div></div>
+      <div class="item"><div class="num" style="font-size:17.9px">DML</div><div><h3>Lenguaje de manipulación de datos <span style="color:var(--muted);font-weight:400;font-size:15.4px">(Data Manipulation Language)</span></h3><p>Trabaja con el <strong>contenido</strong>: consultar, insertar, actualizar y borrar. Es el que se usa todo el tiempo.</p></div></div>
+    </div>
+    <div class="push"></div>
+    <div class="card" style="background:var(--card2)">
+      <p style="font-size:17.9px"><strong>Procedural o no procedural:</strong> ¿le decimos al sistema <em>cómo</em> obtener los datos, paso a paso, o sólo <em>qué</em> datos queremos, y que él decida cómo?</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · Actores</div>
+    <h2>Quién es quién</h2>
+    <p style="font-size:17.9px;color:var(--muted);max-width:800px;text-align:justify;hyphens:auto">¿Quiénes trabajan alrededor de una base de datos?</p>
+    <div class="rows" style="margin-top:4.32px">
+      <div class="item"><div class="num">›</div><div><h3>Administrador de la base de datos (DBA)</h3><p>Tiene el control técnico global: esquema, rendimiento, seguridad, respaldo y recuperación.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Diseñador de la base de datos</h3><p>Traduce la realidad a un esquema: decide qué entidades, relaciones y restricciones existen. Es lo que empezamos a hacer en la próxima unidad.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Programador de aplicaciones</h3><p>Construye los programas que usan la base de datos a través del DBMS, con SQL embebido o una capa de acceso a datos.</p></div></div>
+      <div class="item"><div class="num">›</div><div><h3>Usuario final</h3><p>Consulta y carga datos, casi siempre sin saber que hay un DBMS debajo.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 1 · El mapa de la materia</div>
+    <h2>El mapa de la materia</h2>
+    <div class="move" style="margin-top:2.88px">
+      <div class="tag">Diseñar y usar la base de datos</div>
+      <div class="steps">
+        <div class="step"><span class="d">1</span> Introducción <span style="color:var(--muted)">(estamos acá)</span></div>
+        <div class="step"><span class="d">2</span> Modelo conceptual (Entidad-Relación)</div>
+        <div class="step"><span class="d">3</span> Modelo relacional</div>
+        <div class="step"><span class="d">4</span> SQL</div>
+        <div class="step"><span class="d">5</span> Normalización</div>
+      </div>
+    </div>
+    <div class="move two" style="margin-top:11.5px">
+      <div class="tag">Por dentro del DBMS</div>
+      <div class="steps">
+        <div class="step"><span class="d">6</span> Almacenamiento e índices</div>
+        <div class="step"><span class="d">7</span> Procesamiento y optimización de consultas</div>
+        <div class="step"><span class="d">8</span> Transacciones, concurrencia y recuperación</div>
+        <div class="step"><span class="d">9</span> Datos distribuidos y no relacionales</div>
+      </div>
+    </div>
+    <p class="push" style="font-size:17.3px;color:var(--muted);margin-top:10.1px">Primero aprendemos a <strong>diseñar y usar</strong> la base de datos; recién después estudiamos <strong>cómo funciona por dentro</strong>.</p>
+  </section>
+
+  <section class="slide dark">
+    <div class="kicker">Del para qué al cómo</div>
+    <div class="push"></div>
+    <h1 style="font-size:43.5px">Ya sabemos <span class="accentbar">para qué</span>.<br>Falta aprender el cómo.</h1>
+    <p class="lead" style="margin-top:17.5px">En la próxima unidad empezamos a diseñar: de un problema real al modelo Entidad-Relación.</p>
+    <div class="push"></div>
+  </section>
+
+
+
+<div class="foot" id="foot">2 / 25</div>
+<div class="hint">← →  navegar &nbsp;·&nbsp; F  pantalla completa</div>
+</div>
+<div class="pbar" id="pbar" style="width: 8%;"></div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const foot=document.getElementById('foot'),pbar=document.getElementById('pbar');
+  let i=0;
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    foot.textContent=(i+1)+' / '+slides.length;pbar.style.width=((i+1)/slides.length*100)+'%';}
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){show(i+1);e.preventDefault();}
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){show(i-1);e.preventDefault();}
+    else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}}
+  });
+  document.addEventListener('click',e=>{if(e.target.closest('a'))return;
+    const x=e.clientX/window.innerWidth;show(x<0.25?i-1:i+1);});
+  show(0);
+const _deck=document.getElementById('deck');function fit(){const s=Math.min(window.innerWidth/1280,window.innerHeight/720);_deck.style.transform='translate(-50%,-50%) scale('+s+')';}window.addEventListener('resize',fit);fit();
+</script>
+
+
+</body></html>

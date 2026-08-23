@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!-- saved from url=(0104)https://comunidades.campusvirtualunr.edu.ar/pluginfile.php/2634006/mod_resource/content/2/Unidad-03.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teoría de Bases de Datos · Unidad 3 · Modelo Relacional</title>
+<style>
+  :root{
+    --pine:#123534;--teal:#1f5f5b;--teal2:#2a6f6b;--amber:#d98a2b;--amber-soft:#e7b871;
+    --bg:#fbfaf7;--ink:#18211f;--muted:#5c6a67;--card:#f0efe9;--card2:#e9ede9;--line:#dcdcd4;
+    --serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#0b1a1a;font-family:var(--sans);color:var(--ink);overflow:hidden}
+  /* Lienzo fijo 1280x720: se compone en px y se escala entero a la pantalla (como PowerPoint) */
+  .deck{position:fixed;left:50%;top:50%;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:center center}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:32px 77px 40px;background:var(--bg)}
+  .slide.active{display:flex;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal2);font-weight:700;margin-bottom:11px}
+  h1{font-family:var(--serif);font-size:64px;line-height:1.05;color:var(--pine);font-weight:700}
+  h2{font-family:var(--serif);font-size:37px;line-height:1.08;color:var(--pine);font-weight:700;margin-bottom:14px}
+  .lead{font-size:24px;color:var(--muted);line-height:1.5;max-width:800px;text-align:justify;hyphens:auto}
+  .body{font-size:19px;line-height:1.55;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto}
+  .body+.body{margin-top:10px}
+  em{color:var(--teal2);font-style:italic}strong{color:var(--pine)}
+  .slide.dark{background:radial-gradient(120% 120% at 15% 10%,#1c4b48 0%,#123534 55%,#0d2827 100%);color:#eef4f2}
+  .slide.dark h1,.slide.dark h2{color:#fff}.slide.dark .kicker{color:var(--amber-soft)}
+  .slide.dark .lead,.slide.dark .body{color:#cfe0dc}.slide.dark strong{color:#fff}
+  .accentbar{color:var(--amber);font-family:var(--serif);font-style:italic}
+  .row{display:flex;gap:28px;flex:1;align-items:flex-start}.col{flex:1}.push{margin-top:auto}.mid{align-items:center}
+  .lbl{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--teal2);margin-bottom:5px}
+  .lbl.amber{color:var(--amber)}
+  .def{background:#e7efe9;border-radius:12px;padding:13px 19px;margin:10px 0;font-size:20px;line-height:1.45;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto}
+  .def strong{color:var(--pine)}
+  .example{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 19px;margin-top:14px;font-size:17px;line-height:1.5;max-width:800px;text-align:justify;hyphens:auto}
+  .example .mono,.mono{font-family:var(--mono)}
+  .note{background:var(--card2);border-radius:12px;padding:11px 18px;margin-top:14px;font-size:17px;line-height:1.45;max-width:800px;text-align:justify;hyphens:auto}
+  .grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border-radius:14px;padding:14px 18px}
+  .card h3{font-size:18px;color:var(--pine);margin-bottom:3px}.card p{font-size:14px;color:var(--muted);line-height:1.4}
+  ul.cl{list-style:none;margin-top:7px}ul.cl li{font-size:18px;line-height:1.6;padding-left:20px;position:relative;color:var(--ink);margin-bottom:3px}
+  ul.cl li:before{content:"›";position:absolute;left:0;color:var(--amber);font-weight:700}
+  .sym{font-family:var(--serif);color:var(--amber)}
+  .foot{position:absolute;bottom:14px;right:38px;font-size:13px;color:var(--muted);z-index:5}
+  .pbar{position:fixed;left:0;bottom:0;height:5px;background:var(--amber);z-index:6;transition:width .3s}
+  .hint{position:absolute;bottom:14px;left:38px;font-size:12px;color:var(--muted);z-index:5}
+
+
+
+  svg{max-width:100%}
+</style>
+</head>
+<body>
+<div class="deck" id="deck" style="transform: translate(-50%, -50%) scale(1.34028);">
+
+  <section class="slide dark">
+    <div class="kicker">Teoría de Bases de Datos · UNR</div>
+    <div class="push"></div>
+    <h1>Unidad 3<br>Modelo Relacional</h1>
+    <p class="lead" style="margin-top:21.5px">La estructura sobre la que se construye: la <span class="accentbar">tabla</span>, con matemática detrás.</p>
+    <div class="push"></div>
+  </section>
+
+  <section class="slide active">
+    <div class="kicker">Unidad 3 · Modelo Relacional</div>
+    <h2>Qué vamos a ver hoy</h2>
+    <p class="body" style="color:var(--muted)">Ya tenemos el diagrama; en esta unidad lo convertimos en tablas. Son cinco etapas:</p>
+    <ul class="cl" style="margin-top:8.5px">
+      <li>La <strong>estructura</strong> formal: relación, atributo, dominio, tupla, esquema e instancia.</li>
+      <li>Las cuatro <strong>propiedades</strong> que hacen que una tabla sea una relación.</li>
+      <li>Las <strong>claves</strong>: candidata, primaria y foránea.</li>
+      <li>Las reglas de <strong>integridad</strong>.</li>
+      <li>Las <strong>reglas de paso</strong>: cómo se traduce cada elemento del DER a tablas.</li>
+    </ul>
+    <p class="body" style="margin-top:14px">Al final, el diagrama de la unidad anterior queda convertido en un esquema listo para consultar.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Marco</div>
+    <h2>Qué es el modelo relacional</h2>
+    <p class="body" style="color:var(--muted)">El DER describe la realidad, pero ningún motor lo ejecuta. ¿Cuál es, entonces, el modelo de los sistemas reales?</p>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>modelo de datos lógico</strong> que representa toda la información mediante <strong>relaciones</strong> (tablas), con una base formal en la teoría de conjuntos.</div>
+    <p class="body">Propuesto por <strong>Edgar Codd en 1970</strong>. Combina una estructura simple —la tabla— con una base matemática que permite razonar sobre las consultas y optimizarlas. Es el modelo que implementan PostgreSQL, MySQL, Oracle y SQL Server.</p>
+    <p class="body">El DER es conceptual: describe. El relacional es lógico: se implementa. El diagrama de la unidad anterior se traduce a estas tablas.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Estructura</div>
+    <h2>Relación</h2>
+    <div class="def"><span class="lbl">Definición</span>Dados los dominios D₁, …, Dₙ, una <strong>relación</strong> es un subconjunto del producto cartesiano D₁ × D₂ × … × Dₙ.</div>
+    <p class="body">Informalmente: una <strong>tabla</strong>. Cada fila toma un valor de cada dominio, y sólo aparecen las combinaciones que existen en la realidad. Como es un conjunto, no hay filas repetidas y el orden no importa.</p>
+    <div class="example"><span class="lbl amber">Vocabulario</span><svg viewBox="0 0 720 165" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><text x="425.0" y="32" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">PERSONA</text><rect x="215" y="42" width="110" height="32" fill="#123534" stroke="#dcdcd4"></rect><text x="270.0" y="63" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">dni</text><rect x="325" y="42" width="150" height="32" fill="#123534" stroke="#dcdcd4"></rect><text x="400.0" y="63" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">nombre</text><rect x="475" y="42" width="160" height="32" fill="#123534" stroke="#dcdcd4"></rect><text x="555.0" y="63" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">fecha_nacimiento</text><rect x="215" y="74" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="270.0" y="95" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">44876052</text><rect x="325" y="74" width="150" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="400.0" y="95" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">López, Andrés</text><rect x="475" y="74" width="160" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="555.0" y="95" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">12/03/2003</text><rect x="215" y="106" width="110" height="32" fill="#fdf3e7" stroke="#dcdcd4"></rect><text x="270.0" y="127" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">40112233</text><rect x="325" y="106" width="150" height="32" fill="#fdf3e7" stroke="#dcdcd4"></rect><text x="400.0" y="127" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">Paz, Carla</text><rect x="475" y="106" width="160" height="32" fill="#fdf3e7" stroke="#dcdcd4"></rect><text x="555.0" y="127" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">01/09/2001</text><rect x="325" y="42" width="150" height="96" fill="none" stroke="#2a6f6b" stroke-width="2.5"></rect><rect x="475" y="74" width="160" height="64" fill="none" stroke="#d98a2b" stroke-width="2" stroke-dasharray="6 4"></rect><text x="200" y="32" text-anchor="end" font-size="15" font-style="italic" fill="#2a6f6b">relación = tabla</text><line x1="203" y1="28" x2="238" y2="42" stroke="#2a6f6b" stroke-dasharray="4 4"></line><text x="200" y="75" text-anchor="end" font-size="15" font-style="italic" fill="#2a6f6b">atributo = columna</text><line x1="203" y1="71" x2="323" y2="90" stroke="#2a6f6b" stroke-dasharray="4 4"></line><text x="712" y="148" text-anchor="end" font-size="15" font-style="italic" fill="#b06a10">tupla = fila</text><line x1="700" y1="142" x2="640" y2="126" stroke="#b06a10" stroke-dasharray="4 4"></line><text x="712" y="30" text-anchor="end" font-size="15" font-style="italic" fill="#d98a2b">dominio = tipo</text><line x1="690" y1="36" x2="640" y2="72" stroke="#d98a2b" stroke-dasharray="4 4"></line></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Estructura</div>
+    <h2>Atributo</h2>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>atributo</strong> es una columna de la relación: un nombre y un dominio. No puede haber dos atributos con el mismo nombre en la misma relación.</div>
+    <p class="body">Los atributos permiten referirse a los datos por su significado y no por su posición: se pide <span class="mono">nombre</span>, no “la segunda columna”. Todos los valores de una columna pertenecen al mismo dominio.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>En <span class="mono">PERSONA(dni, nombre, fecha_nacimiento)</span>, los atributos son <span class="mono">dni</span>, <span class="mono">nombre</span> y <span class="mono">fecha_nacimiento</span>.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Estructura</div>
+    <h2>Dominio</h2>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>dominio</strong> es un conjunto de valores <strong>atómicos</strong> (indivisibles) del mismo tipo. Cada atributo tiene un dominio: es su tipo.</div>
+    <p class="body">“Atómico” significa que, desde el punto de vista del modelo, el valor no se descompone: una celda guarda un valor entero, una fecha, una cadena — nunca una lista ni otra tabla.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>El dominio de <span class="mono">dni</span> son los enteros positivos; el de <span class="mono">carrera</span>, un conjunto de nombres de carrera.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Estructura</div>
+    <h2>Tupla</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>tupla</strong> es una fila de la relación: una asignación de un valor —de su dominio— a cada atributo.</div>
+    <p class="body">Las tuplas presentes en un momento dado forman el <em>valor</em> de la relación en ese momento: su instancia.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>La tupla <span class="mono">(44876052, 'López, Andrés', 12/03/2003)</span> es una instancia de PERSONA.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Esquema e instancia</div>
+    <h2>Esquema de relación vs. instancia</h2>
+    <div class="def"><span class="lbl">Definición</span>El <strong>esquema</strong> es la definición de la relación: su nombre y sus atributos con dominios. La <strong>instancia</strong> es el conjunto de tuplas presentes en un momento dado.</div>
+    <p class="body">El esquema es <em>estable</em> (se define una vez); la instancia <em>cambia</em> con cada inserción, borrado o modificación. Se escribe el esquema como <span class="mono">PERSONA(dni, nombre, fecha_nacimiento)</span>.</p>
+    <div class="example"><span class="lbl amber">Analogía</span>El esquema es a la instancia lo que la clase al objeto: la clase se define una vez; los objetos que existen —y sus valores— cambian mientras el programa corre.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Propiedades · 1 de 4</div>
+    <h2>No hay tuplas duplicadas</h2>
+    <div class="def"><span class="lbl">Propiedad</span>Una relación es un <strong>conjunto</strong> de tuplas: no puede contener dos tuplas idénticas.</div>
+    <p class="body">Si dos filas fueran iguales en todos sus atributos, serían indistinguibles y sobraría una. La <strong>clave primaria</strong> es el mecanismo que garantiza que no ocurra.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Propiedades · 2 de 4</div>
+    <h2>El orden de las tuplas es irrelevante</h2>
+    <div class="def"><span class="lbl">Propiedad</span>Las tuplas de una relación <strong>no tienen orden</strong>: un conjunto no está ordenado.</div>
+    <p class="body">No existe “la primera” ni “la última” tupla. Se accede a los datos por su <em>contenido</em> (una condición), nunca por su posición física.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Propiedades · 3 de 4</div>
+    <h2>El orden de los atributos es irrelevante</h2>
+    <div class="def"><span class="lbl">Propiedad</span>Los atributos se identifican por su <strong>nombre</strong>, no por su posición. El orden de las columnas no cambia la relación.</div>
+    <p class="body">Como cada atributo tiene nombre propio, da igual en qué orden se listen: <span class="mono">(dni, nombre)</span> y <span class="mono">(nombre, dni)</span> describen la misma relación. Esto libera al modelo de depender de posiciones.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Propiedades · 4 de 4</div>
+    <h2>Valores atómicos</h2>
+    <div class="def"><span class="lbl">Definición</span>Cada celda contiene un <strong>único valor atómico</strong>.</div>
+    <p class="body">Es la propiedad que garantiza la regularidad de la tabla. Si una persona tiene varios teléfonos, no van “varios en una celda”: van en una tabla aparte.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Claves</div>
+    <h2>Superclave</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>superclave</strong> es un conjunto de atributos tal que no existen dos tuplas distintas con los mismos valores en esos atributos.</div>
+    <p class="body">Identifica unívocamente cada tupla, aunque puede incluir atributos innecesarios.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>En PERSONA, <span class="mono">{dni}</span> y <span class="mono">{dni, nombre}</span> son superclaves; la segunda tiene un atributo de más.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Claves</div>
+    <h2>Candidata, primaria, alternativa</h2>
+    <p class="body">La <strong>clave candidata</strong> es una superclave <em>mínima</em>: ninguno de sus atributos puede quitarse sin que pierda la capacidad de identificar. Puede haber varias en la misma relación. La <strong>clave primaria</strong> es la candidata que se elige para identificar oficialmente a las tuplas, y se subraya en el esquema. Las candidatas que no fueron elegidas quedan como <strong>claves alternativas</strong>.</p>
+    <div class="example" style="margin-top:10px"><span class="lbl amber">Ejemplo</span><span class="mono">PERSONA(<u>dni</u>, cuil, nombre)</span>: candidatas <span class="mono">{dni}</span> y <span class="mono">{cuil}</span>; primaria <span class="mono">dni</span>; alternativa <span class="mono">cuil</span>.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Claves</div>
+    <h2>Clave foránea</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>clave foránea</strong> es un atributo (o conjunto) de una relación que <strong>referencia</strong> la clave primaria de otra (o de la misma) relación.</div>
+    <p class="body">Es cómo se conectan las tablas y cómo se materializan las relaciones del DER, sin punteros físicos. El valor de la clave foránea debe existir como clave primaria en la tabla referenciada (o ser nulo).</p>
+    <svg viewBox="0 0 720 135" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="245.0" y="46" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="40" y="56" width="70" height="32" fill="#123534"></rect><text x="75.0" y="77" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="110" y="56" width="220" height="32" fill="#123534"></rect><text x="220.0" y="77" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">título</text><rect x="330" y="56" width="120" height="32" fill="#123534"></rect><text x="390.0" y="77" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#e7b871">dni_docente</text><rect x="40" y="88" width="70" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="75.0" y="109" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">TBD</text><rect x="110" y="88" width="220" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="220.0" y="109" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">Teoría de Bases de Datos</text><rect x="330" y="88" width="120" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="390.0" y="109" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">17222333</text><text x="600.0" y="46" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">DOCENTE</text><rect x="490" y="56" width="110" height="32" fill="#123534"></rect><text x="545.0" y="77" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">dni</text><rect x="600" y="56" width="110" height="32" fill="#123534"></rect><text x="655.0" y="77" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">categoría</text><rect x="490" y="88" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="545.0" y="109" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">17222333</text><rect x="600" y="88" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="655.0" y="109" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">Titular</text><path d="M 450 106 L 485 106" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf1)"></path></svg>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Valores nulos</div>
+    <h2>El valor nulo</h2>
+    <div class="def"><span class="lbl">Definición</span><strong>NULL</strong> es un marcador especial que indica ausencia de valor: desconocido o inaplicable. No es cero ni cadena vacía.</div>
+    <p class="body">Los nulos son útiles pero problemáticos: <span class="mono">NULL</span> no es igual a nada, ni siquiera a otro <span class="mono">NULL</span>. Al comparar contra un nulo, el resultado no es verdadero ni falso, sino <em>desconocido</em>. Ejemplo: la nota de un acta que aún no se cerró es <span class="mono">NULL</span>; el “Ausente”, en cambio, es un valor válido — el estudiante se inscribió y no rindió.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Integridad · 1 de 3</div>
+    <h2>Integridad de dominio</h2>
+    <div class="def"><span class="lbl">Regla</span>Cada valor de un atributo debe pertenecer a su <strong>dominio</strong>: del tipo correcto y dentro de las restricciones declaradas.</div>
+    <p class="body">Es la forma más básica de integridad. Impide, por ejemplo, cargar una letra en <span class="mono">dni</span> o una nota de 15 cuando el dominio es 0 a 10. En SQL se expresa con tipos de dato y restricciones <span class="mono">CHECK</span>.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Integridad · 2 de 3</div>
+    <h2>Integridad de entidad</h2>
+    <div class="def"><span class="lbl">Regla</span>Ningún atributo de la <strong>clave primaria</strong> puede tomar valor nulo.</div>
+    <p class="body">La justificación es directa: si la clave primaria fuera nula, no podría identificar la tupla, y una relación exige que sus tuplas sean distinguibles. Por eso el DBMS rechaza toda inserción con clave primaria nula.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Integridad · 3 de 3</div>
+    <h2>Integridad referencial</h2>
+    <div class="def"><span class="lbl">Regla</span>Toda <strong>clave foránea</strong> debe referenciar una tupla existente en la tabla referenciada, o bien ser completamente nula.</div>
+    <p class="body">Garantiza que no queden referencias “colgadas”: no puede haber una materia cuyo <span class="mono">dni_docente</span> no corresponda a ningún docente. El DBMS verifica esto en cada inserción, modificación y borrado.</p>
+  </section>
+
+
+  <section class="slide dark">
+    <div class="kicker">Del DER al relacional</div>
+    <div class="push"></div>
+    <h1 style="font-size:43.5px">Traducir el diagrama<br>a <span class="accentbar">tablas</span>, con reglas.</h1>
+    <p class="lead" style="margin-top:17.5px">Cada elemento del DER tiene su regla de paso al relacional.</p>
+    <div class="push"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 1</div>
+    <h2>Entidad fuerte → tabla</h2>
+    <div class="def"><span class="lbl">Regla</span>Cada entidad fuerte se convierte en una tabla con sus atributos simples como columnas y su clave primaria como clave de la tabla.</div>
+    <p class="body">Es la traducción más directa: cada instancia de la entidad pasa a ser una tupla de la tabla. Los atributos compuestos, multivaluados y derivados tienen tratamiento propio, que vemos en la regla siguiente.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span><span class="mono">PERSONA(<u>dni</u>, nombre, fecha_nacimiento)</span><svg viewBox="0 0 800 175" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><rect x="151" y="8" width="150" height="50" rx="4" fill="#123534"></rect><text x="226" y="39" text-anchor="middle" font-size="16" fill="#ffffff">PERSONA</text><line x1="176" y1="58" x2="60" y2="114" stroke="#5c6a67"></line><line x1="226" y1="58" x2="182" y2="114" stroke="#5c6a67"></line><line x1="276" y1="58" x2="348" y2="114" stroke="#5c6a67"></line><ellipse cx="60" cy="140" rx="48" ry="26" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="60" y="145" text-anchor="middle" font-size="14" font-family="Georgia" text-decoration="underline" fill="#123534">dni</text><ellipse cx="182" cy="140" rx="62" ry="26" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="182" y="145" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">nombre</text><ellipse cx="348" cy="140" rx="92" ry="26" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="348" y="145" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">fecha_nacimiento</text><path d="M 455 88 L 495 88" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf2)"></path><text x="642.5" y="41" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">PERSONA</text><rect x="495" y="51" width="55" height="32" fill="#123534"></rect><text x="522.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">dni</text><rect x="550" y="51" width="85" height="32" fill="#123534"></rect><text x="592.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">nombre</text><rect x="635" y="51" width="155" height="32" fill="#123534"></rect><text x="712.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">fecha_nacimiento</text><rect x="495" y="83" width="55" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="522.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text><rect x="550" y="83" width="85" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="592.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text><rect x="635" y="83" width="155" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="712.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 2</div>
+    <h2>Atributos compuestos y multivaluados</h2>
+    <p class="body">Un atributo <strong>compuesto</strong> se descompone: una columna por componente. La <span class="mono">dirección</span> se convierte en <span class="mono">calle</span>, <span class="mono">número</span> y <span class="mono">ciudad</span>.</p>
+    <p class="body">Un atributo <strong>multivaluado</strong> genera una tabla propia, con la clave de la entidad más el valor: los teléfonos de una persona van a <span class="mono">TELEFONO(<u>dni, numero</u>)</span>. ¿Por qué una tabla aparte y no varias columnas? Porque cada celda guarda un solo valor —la propiedad que ya vimos—: los varios teléfonos de una persona no caben en una única celda.</p>
+    <p class="body">Un atributo <strong>derivado</strong> no se almacena: se calcula al consultar.</p>
+    <div class="example"><span class="lbl amber">Notación</span><div style="margin:2px 0 0"><strong>Compuesto</strong> → una columna por componente:</div><svg viewBox="0 0 720 128" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:680px;margin:6px auto 0"><ellipse cx="120" cy="26" rx="72" ry="23" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="120" y="32" text-anchor="middle" font-size="16" font-family="Georgia" fill="#123534">dirección</text><line x1="82" y1="45" x2="52" y2="82" stroke="#5c6a67"></line><line x1="120" y1="49" x2="145" y2="82" stroke="#5c6a67"></line><line x1="158" y1="45" x2="240" y2="82" stroke="#5c6a67"></line><ellipse cx="50" cy="102" rx="44" ry="22" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="50" y="108" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">calle</text><ellipse cx="147" cy="102" rx="52" ry="22" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="147" y="108" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">número</text><ellipse cx="252" cy="102" rx="50" ry="22" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="252" y="108" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">ciudad</text><path d="M 312 92 L 366 92" stroke="#d98a2b" stroke-width="2" fill="none"></path><path d="M 362 87 L 372 92 L 362 97 Z" fill="#d98a2b"></path><rect x="386" y="76" width="88" height="32" fill="#123534"></rect><text x="430" y="97" text-anchor="middle" font-size="14" font-family="Menlo, Consolas, monospace" fill="#fff">calle</text><rect x="474" y="76" width="100" height="32" fill="#123534"></rect><text x="524" y="97" text-anchor="middle" font-size="14" font-family="Menlo, Consolas, monospace" fill="#fff">número</text><rect x="574" y="76" width="92" height="32" fill="#123534"></rect><text x="620" y="97" text-anchor="middle" font-size="14" font-family="Menlo, Consolas, monospace" fill="#fff">ciudad</text></svg><div style="margin:8px 0 0"><strong>Multivaluado</strong> → tabla propia con la clave de la entidad:</div><svg viewBox="0 0 720 66" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:560px;margin:4px auto 0"><ellipse cx="120" cy="48" rx="82" ry="34" fill="#e9ede9" stroke="#5c6a67"></ellipse><ellipse cx="120" cy="48" rx="70" ry="26" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="120" y="54" text-anchor="middle" font-size="16" font-family="Georgia" fill="#123534">teléfonos</text><path d="M 210 48 L 268 48" stroke="#d98a2b" stroke-width="2" fill="none"></path><path d="M 264 43 L 274 48 L 264 53 Z" fill="#d98a2b"></path><text x="440" y="20" text-anchor="middle" font-size="13" letter-spacing="1" font-weight="bold" fill="#123534">TELEFONO</text><rect x="290" y="30" width="150" height="32" fill="#123534"></rect><text x="365" y="51" text-anchor="middle" font-size="14" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">dni</text><rect x="440" y="30" width="150" height="32" fill="#123534"></rect><text x="515" y="51" text-anchor="middle" font-size="14" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#fff">numero</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 3</div>
+    <h2>Relación 1:N → clave foránea</h2>
+    <div class="def"><span class="lbl">Regla</span>La clave primaria del lado “1” se agrega como <strong>clave foránea</strong> en la tabla del lado “N”. No se crea una tabla nueva.</div>
+    <p class="body">Es la traducción más frecuente. La clave foránea materializa el vínculo: cada fila del lado “muchos” dice a qué fila del lado “uno” pertenece.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>“El docente dicta la materia”:<svg viewBox="0 0 720 115" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:620px;margin:10px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145" y="63" text-anchor="middle" font-size="18" fill="#ffffff">DOCENTE</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">dicta</text><line x1="440" y1="57" x2="490" y2="57" stroke="#5c6a67"></line><text x="465" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575" y="63" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg><div style="margin:6px 0 0">la clave de DOCENTE pasa a MATERIA como clave foránea:</div><svg viewBox="0 0 740 135" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="195.0" y="41" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="40" y="51" width="95" height="32" fill="#123534"></rect><text x="87.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="135" y="51" width="80" height="32" fill="#123534"></rect><text x="175.0" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">título</text><rect x="215" y="51" width="135" height="32" fill="#123534"></rect><text x="282.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#e7b871">dni_docente</text><rect x="40" y="83" width="95" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="87.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">TBD</text><rect x="135" y="83" width="80" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="175.0" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text><rect x="215" y="83" width="135" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="282.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">17222333</text><path d="M 350 101 L 465 101" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf3)"></path><text x="582.5" y="41" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">DOCENTE</text><rect x="470" y="51" width="115" height="32" fill="#123534"></rect><text x="527.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">dni</text><rect x="585" y="51" width="110" height="32" fill="#123534"></rect><text x="640.0" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">categoría</text><rect x="470" y="83" width="115" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="527.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">17222333</text><rect x="585" y="83" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="640.0" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">Titular</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 4</div>
+    <h2>Relación N:M → tabla propia</h2>
+    <div class="def"><span class="lbl">Regla</span>Una relación N:M se convierte <strong>siempre</strong> en una tabla nueva, cuya clave primaria es la unión de las claves de ambas entidades, más los atributos de la relación.</div>
+    <p class="body">¿Por qué no alcanza con una clave foránea? Porque de cada lado hay muchos: ninguna de las dos tablas puede apuntar “a uno solo”. La tabla nueva guarda un renglón por cada par asociado.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>“El estudiante cursa la materia”, con atributo <span class="mono">nota</span>:<svg viewBox="0 0 720 150" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:640px;margin:12px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145" y="63" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">cursa</text><line x1="440" y1="57" x2="490" y2="57" stroke="#5c6a67"></line><text x="465" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575" y="63" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="360" y1="97" x2="360" y2="112" stroke="#5c6a67"></line><ellipse cx="360" cy="130" rx="40" ry="19" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="135" text-anchor="middle" font-size="14" font-family="Georgia" fill="#123534">nota</text></svg><div style="margin:6px 0 0">se traduce en una tabla nueva, <span class="mono">CURSA</span> →</div></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 4</div>
+    <h2>N:M → el resultado en tablas</h2>
+    <p class="body">ESTUDIANTE y MATERIA no cambian. La novedad es <span class="mono">CURSA</span>: su clave primaria es la unión <span class="mono">(dni, código)</span>, y cada columna es además foránea a su entidad.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span><svg viewBox="0 0 760 235" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf4" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="120.0" y="24" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">ESTUDIANTE</text><rect x="60" y="34" width="120" height="32" fill="#123534"></rect><text x="120.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">dni</text><rect x="60" y="66" width="120" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="120.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">44876052</text><text x="615.0" y="24" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="560" y="34" width="110" height="32" fill="#123534"></rect><text x="615.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="560" y="66" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="615.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">TBD</text><text x="400.0" y="151" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">CURSA</text><rect x="270" y="161" width="110" height="32" fill="#123534"></rect><text x="325.0" y="182" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">dni</text><rect x="380" y="161" width="90" height="32" fill="#123534"></rect><text x="425.0" y="182" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">código</text><rect x="470" y="161" width="60" height="32" fill="#123534"></rect><text x="500.0" y="182" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">nota</text><rect x="270" y="193" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="325.0" y="214" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">44876052</text><rect x="380" y="193" width="90" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="425.0" y="214" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">TBD</text><rect x="470" y="193" width="60" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="500.0" y="214" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">8</text><path d="M 325 161 L 325 130 L 120 130 L 120 100" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf4)"></path><path d="M 425 161 L 425 130 L 615 130 L 615 100" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf4)"></path></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 4</div>
+    <h2>N:M recursiva → dos claves foráneas a la misma tabla</h2>
+    <p class="body">¿Y si la relación une a la entidad consigo misma? La regla no cambia: tabla nueva cuya clave primaria es la unión de las dos claves. La novedad es que las dos claves foráneas apuntan a la misma tabla, y como las columnas no pueden llamarse igual, cada una toma el nombre de su rol.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>“Para cursar una materia hay que tener otras aprobadas”, con roles <em>requerida</em> y <em>habilitada</em>:<svg viewBox="0 0 720 140" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:640px;margin:10px auto 0"><rect x="60" y="57" width="170" height="56" rx="4" fill="#123534"></rect><text x="145" y="91" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="230" y1="85" x2="390" y2="85" stroke="#5c6a67"></line><text x="310" y="75" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><text x="310" y="105" text-anchor="middle" font-size="15" font-family="Georgia" font-style="italic" fill="#18211f">requerida</text><polygon points="390,85 490,45 590,85 490,125" fill="#d98a2b"></polygon><text x="490" y="90" text-anchor="middle" font-size="14" fill="#ffffff">es_correlativa_de</text><path d="M 490 45 L 490 20 L 145 20 L 145 57" fill="none" stroke="#5c6a67"></path><text x="462" y="38" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><text x="300" y="15" text-anchor="middle" font-size="15" font-family="Georgia" font-style="italic" fill="#18211f">habilitada</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 4</div>
+    <h2>N:M recursiva → el resultado en tablas</h2>
+    <p class="body"><span class="mono">MATERIA</span> no cambia. La novedad es <span class="mono">CORRELATIVA</span>: sus dos columnas son foráneas a la <em>misma</em> tabla, distinguidas por el nombre del rol, y su clave primaria es la unión de ambas. Cada renglón es un par (requerida, habilitada), y una misma materia puede habilitar a varias: por eso la clave primaria es la unión de las dos columnas.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>PR01 habilita a TBD y a SO01: para cursar cualquiera de las dos hay que tener Programación aprobada.<svg viewBox="0 0 760 267" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf5" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="402.5" y="24" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="280" y="34" width="95" height="32" fill="#123534"></rect><text x="327.5" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="375" y="34" width="150" height="32" fill="#123534"></rect><text x="450.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">título</text><rect x="280" y="66" width="95" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="327.5" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">PR01</text><rect x="375" y="66" width="150" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="450.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">Programación</text><text x="372.5" y="151" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">CORRELATIVA</text><rect x="195" y="161" width="175" height="32" fill="#123534"></rect><text x="282.5" y="182" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">codigo_requerida</text><rect x="370" y="161" width="180" height="32" fill="#123534"></rect><text x="460.0" y="182" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">codigo_habilitada</text><rect x="195" y="193" width="175" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="282.5" y="214" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">PR01</text><rect x="370" y="193" width="180" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="460.0" y="214" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">TBD</text><rect x="195" y="225" width="175" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="282.5" y="246" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">PR01</text><rect x="370" y="225" width="180" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="460.0" y="246" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">SO01</text><path d="M 282 161 L 282 132 L 315 132 L 315 100" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf5)"></path><path d="M 460 161 L 460 132 L 340 132 L 340 100" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf5)"></path></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 5</div>
+    <h2>Relación 1:1</h2>
+    <div class="def"><span class="lbl">Regla</span>Se agrega la clave de una entidad como clave foránea en la otra, con la condición de que sea única.</div>
+    <p class="body" style="margin-top:14px">¿De qué lado conviene ponerla? Del lado de participación total, así la clave foránea nunca queda nula; del lado de participación parcial habría filas sin pareja, con esa columna en null. Y la unicidad es lo que evita que la relación se vuelva 1:N.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>“La materia tiene un programa vigente”:<svg viewBox="0 12 720 92" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:520px;margin:10px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145" y="63" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">tiene</text><line x1="440" y1="53.5" x2="490" y2="53.5" stroke="#5c6a67"></line><line x1="440" y1="60.5" x2="490" y2="60.5" stroke="#5c6a67"></line><text x="465" y="44" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575" y="63" text-anchor="middle" font-size="18" fill="#ffffff">PROGRAMA</text></svg><div style="margin:6px 0 0">la clave foránea (única) va en PROGRAMA, el lado de participación total (doble línea):</div><svg viewBox="0 0 740 135" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf6" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="140.0" y="41" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">PROGRAMA</text><rect x="30" y="51" width="60" height="32" fill="#123534"></rect><text x="60.0" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">…</text><rect x="90" y="51" width="160" height="32" fill="#123534"></rect><text x="170.0" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">codigo_materia</text><rect x="30" y="83" width="60" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="60.0" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text><rect x="90" y="83" width="160" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="170.0" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">TBD</text><path d="M 250 101 L 465 101" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf6)"></path><text x="572.5" y="41" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="470" y="51" width="95" height="32" fill="#123534"></rect><text x="517.5" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="565" y="51" width="110" height="32" fill="#123534"></rect><text x="620.0" y="72" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">título</text><rect x="470" y="83" width="95" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="517.5" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">TBD</text><rect x="565" y="83" width="110" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="620.0" y="104" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 6</div>
+    <h2>Entidad débil → tabla</h2>
+    <div class="def"><span class="lbl">Regla</span>La entidad débil se convierte en una tabla que incluye la clave de la entidad fuerte. Su clave primaria es la clave de la fuerte más la clave parcial; esa clave de la fuerte funciona además como clave foránea.</div>
+    <div class="example"><span class="lbl amber">Ejemplo</span>«La materia tiene comisiones»: COMISIÓN es débil de MATERIA.<svg viewBox="0 20 720 180" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:440px;margin:6px auto 2px"><rect x="50" y="41" width="170" height="56" rx="4" fill="#123534"></rect><text x="135" y="75" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="220" y1="69" x2="285" y2="69" stroke="#5c6a67"></line><polygon points="365,29 445,69 365,109 285,69" fill="#d98a2b"></polygon><text x="365" y="75" text-anchor="middle" font-size="18" fill="#ffffff">tiene</text><line x1="445" y1="72.5" x2="510" y2="72.5" stroke="#5c6a67"></line><line x1="445" y1="65.5" x2="510" y2="65.5" stroke="#5c6a67"></line><rect x="510" y="41" width="170" height="56" rx="4" fill="#123534"></rect><rect x="515" y="46" width="160" height="46" rx="2" fill="none" stroke="#fbfaf7"></rect><text x="595" y="75" text-anchor="middle" font-size="18" fill="#ffffff">COMISIÓN</text><line x1="595" y1="97" x2="595" y2="140" stroke="#5c6a67"></line><ellipse cx="595" cy="168" rx="92" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="595" y="174" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">nro_comision</text><line x1="543" y1="181" x2="647" y2="181" stroke="#123534" stroke-dasharray="5 4"></line></svg><div style="margin:2px 0 0"><span class="mono">codigo_materia</span> es clave primaria (junto a la clave parcial) y foránea a la vez:</div><svg viewBox="0 0 750 175" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><defs><marker id="pf7" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d98a2b"></path></marker></defs><text x="252.5" y="24" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">COMISION</text><rect x="30" y="34" width="150" height="32" fill="#123534"></rect><text x="105.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#e7b871">codigo_materia</text><rect x="180" y="34" width="145" height="32" fill="#123534"></rect><text x="252.5" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">nro_comision</text><rect x="325" y="34" width="80" height="32" fill="#123534"></rect><text x="365.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">turno</text><rect x="405" y="34" width="70" height="32" fill="#123534"></rect><text x="440.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">cupo</text><rect x="30" y="66" width="150" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="105.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#1f5f5b">TBD</text><rect x="180" y="66" width="145" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="252.5" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">2</text><rect x="325" y="66" width="80" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="365.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">noche</text><rect x="405" y="66" width="70" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="440.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">40</text><path d="M 105 105 L 105 145 L 615 145 L 615 108" fill="none" stroke="#d98a2b" stroke-width="2" marker-end="url(#pf7)"></path><text x="622.5" y="24" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1.5" fill="#123534">MATERIA</text><rect x="525" y="34" width="95" height="32" fill="#123534"></rect><text x="572.5" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" text-decoration="underline" fill="#ffffff">código</text><rect x="620" y="34" width="100" height="32" fill="#123534"></rect><text x="670.0" y="55" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#ffffff">título</text><rect x="525" y="66" width="95" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="572.5" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">TBD</text><rect x="620" y="66" width="100" height="32" fill="#ffffff" stroke="#dcdcd4"></rect><text x="670.0" y="87" text-anchor="middle" font-size="14.5" font-family="Menlo, Consolas, monospace" fill="#18211f">…</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Reglas de paso · 7</div>
+    <h2>Jerarquías (IS-A) → tres estrategias</h2>
+    <p class="body" style="color:var(--muted)">¿Y cómo se traduce una jerarquía IS-A? No hay una única respuesta: hay tres estrategias, cada una con su costo.</p>
+    <ul class="cl" style="margin-top:7px">
+      <li><strong>Tabla única:</strong> una sola tabla con todos los atributos y un indicador de subtipo. Simple, pero con muchos nulos.</li>
+      <li><strong>Tabla por subtipo:</strong> una tabla por cada subtipo, cada una con la clave del supertipo y sus atributos propios.</li>
+      <li><strong>Supertipo + subtipos:</strong> una tabla para el supertipo y una por subtipo, ligadas por la clave. Sin nulos, pero para reconstruir la información completa hay que combinar tablas.</li>
+    </ul>
+    <p class="body" style="margin-top:6px">La elección depende de cuántos atributos propios tenga cada subtipo y de cómo se consulte.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Ejemplo integrador</div>
+    <h2>El diagrama completo</h2>
+    <p class="body">Todo lo de la unidad en un esquema: la jerarquía <span class="mono">PERSONA → ESTUDIANTE / DOCENTE</span>, la 1:N <span class="mono">dicta</span> y la N:M <span class="mono">cursa</span>. En la diapositiva siguiente, ya traducido a tablas.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span><svg viewBox="0 0 720 335" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:645px;margin:6px auto 0"><rect x="280" y="8" width="160" height="48" rx="4" fill="#123534"></rect><text x="360" y="38" text-anchor="middle" font-size="17" fill="#fff">PERSONA</text><line x1="360" y1="56" x2="360" y2="74" stroke="#5c6a67"></line><polygon points="360,74 330,114 390,114" fill="#e9ede9" stroke="#5c6a67"></polygon><text x="360" y="104" text-anchor="middle" font-size="14" font-family="Georgia" font-style="italic" fill="#123534">es un</text><line x1="338" y1="114" x2="180" y2="150" stroke="#5c6a67"></line><line x1="382" y1="114" x2="540" y2="150" stroke="#5c6a67"></line><rect x="60" y="150" width="160" height="48" rx="4" fill="#123534"></rect><text x="140" y="180" text-anchor="middle" font-size="16" fill="#fff">ESTUDIANTE</text><rect x="500" y="150" width="160" height="48" rx="4" fill="#123534"></rect><text x="580" y="180" text-anchor="middle" font-size="16" fill="#fff">DOCENTE</text><rect x="280" y="278" width="160" height="48" rx="4" fill="#123534"></rect><text x="360" y="308" text-anchor="middle" font-size="17" fill="#fff">MATERIA</text><line x1="150" y1="198" x2="192" y2="236" stroke="#5c6a67"></line><text x="156" y="222" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">N</text><polygon points="232,214 276,238 232,262 188,238" fill="#d98a2b"></polygon><text x="232" y="244" text-anchor="middle" font-size="15" fill="#fff">cursa</text><line x1="276" y1="240" x2="312" y2="278" stroke="#5c6a67"></line><text x="306" y="262" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">M</text><line x1="570" y1="198" x2="528" y2="236" stroke="#5c6a67"></line><text x="564" y="222" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">1</text><polygon points="488,214 532,238 488,262 444,238" fill="#d98a2b"></polygon><text x="488" y="244" text-anchor="middle" font-size="15" fill="#fff">dicta</text><line x1="444" y1="240" x2="408" y2="278" stroke="#5c6a67"></line><text x="414" y="262" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">N</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Ejemplo integrador</div>
+    <h2>El diseño, ya en tablas</h2>
+    <ul class="cl">
+      <li><span class="mono">PERSONA(<u>dni</u>, nombre)</span> — entidad fuerte, supertipo de la jerarquía</li>
+      <li><span class="mono">ESTUDIANTE(<u>dni</u>, carrera)</span> — subtipo; su <span class="mono">dni</span> referencia a PERSONA</li>
+      <li><span class="mono">DOCENTE(<u>dni</u>, categoría)</span> — subtipo; su <span class="mono">dni</span> referencia a PERSONA</li>
+      <li><span class="mono">MATERIA(<u>código</u>, título, <span style="color:var(--teal)">dni_docente</span>)</span> — relación 1:N vía FK</li>
+      <li><span class="mono">CURSA(<u>dni, código</u>, nota)</span> — relación N:M como tabla propia</li>
+    </ul>
+    <div class="example" style="margin-top:8.5px"><span class="lbl amber">Listo para consultar</span>Sobre este esquema trabajaremos el álgebra relacional y luego SQL.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 3 · Por qué ganó</div>
+    <h2>Por qué el modelo relacional se impuso</h2>
+    <p class="body" style="color:var(--muted)">Cerremos la unidad con la pregunta de fondo: ¿por qué este modelo desplazó a los anteriores y sigue dominando?</p>
+    <ul class="cl" style="margin-top:7px">
+      <li><strong>Simplicidad:</strong> una única estructura, la tabla, comprensible por cualquiera.</li>
+      <li><strong>Base matemática:</strong> teoría de conjuntos y lógica, que permiten razonar sobre las consultas con rigor.</li>
+      <li><strong>Independencia física:</strong> se consulta por contenido, sin recorrer enlaces registro por registro como en el modelo en red.</li>
+      <li><strong>Lenguajes declarativos:</strong> se pide <em>qué</em> se quiere, y el motor elige el mejor <em>cómo</em>. Eso habilita la optimización.</li>
+    </ul>
+    <p class="body" style="margin-top:8.5px">Las cuatro razones se sostienen entre sí — y la próxima unidad, SQL, es la cara visible de la última.</p>
+  </section>
+
+
+
+<div class="foot" id="foot">2 / 33</div>
+<div class="hint">← →  navegar &nbsp;·&nbsp; F  pantalla completa</div>
+</div>
+<div class="pbar" id="pbar" style="width: 6.06061%;"></div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const foot=document.getElementById('foot'),pbar=document.getElementById('pbar');
+  let i=0;
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));foot.textContent=(i+1)+' / '+slides.length;pbar.style.width=((i+1)/slides.length*100)+'%';}
+  document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){show(i+1);e.preventDefault();}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){show(i-1);e.preventDefault();}else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}}});
+  document.addEventListener('click',e=>{if(e.target.closest('a'))return;const x=e.clientX/window.innerWidth;show(x<0.25?i-1:i+1);});
+  show(0);
+const deck=document.getElementById('deck');function fit(){const s=Math.min(window.innerWidth/1280,window.innerHeight/720);deck.style.transform='translate(-50%,-50%) scale('+s+')';}window.addEventListener('resize',fit);fit();
+</script>
+
+
+</body></html>

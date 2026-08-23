@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<!-- saved from url=(0104)https://comunidades.campusvirtualunr.edu.ar/pluginfile.php/2633960/mod_resource/content/1/Unidad-02.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bases de Datos · Unidad 2 · Modelo Entidad-Relación</title>
+<style>
+  :root{
+    --pine:#123534;--teal:#1f5f5b;--teal2:#2a6f6b;--amber:#d98a2b;--amber-soft:#e7b871;
+    --bg:#fbfaf7;--ink:#18211f;--muted:#5c6a67;--card:#f0efe9;--card2:#e9ede9;--line:#dcdcd4;
+    --serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#0b1a1a;font-family:var(--sans);color:var(--ink);overflow:hidden}
+  /* Lienzo fijo 1280x720: se compone en px y se escala entero a la pantalla (como PowerPoint) */
+  .deck{position:fixed;left:50%;top:50%;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:center center}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;padding:32px 77px 40px;background:var(--bg)}
+  .slide.active{display:flex;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:13.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal2);font-weight:700;margin-bottom:11px}
+  h1{font-family:var(--serif);font-size:64px;line-height:1.05;color:var(--pine);font-weight:700}
+  h2{font-family:var(--serif);font-size:37px;line-height:1.08;color:var(--pine);font-weight:700;margin-bottom:14px}
+  .lead{font-size:24px;color:var(--muted);line-height:1.5;max-width:800px;text-align:justify;hyphens:auto}
+  .body{font-size:19px;line-height:1.55;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto}
+  .body+.body{margin-top:10px}
+  em{color:var(--teal2);font-style:italic}strong{color:var(--pine)}
+  .slide.dark{background:radial-gradient(120% 120% at 15% 10%,#1c4b48 0%,#123534 55%,#0d2827 100%);color:#eef4f2}
+  .slide.dark h1,.slide.dark h2{color:#fff}.slide.dark .kicker{color:var(--amber-soft)}
+  .slide.dark .lead,.slide.dark .body{color:#cfe0dc}.slide.dark strong{color:#fff}
+  .accentbar{color:var(--amber);font-family:var(--serif);font-style:italic}
+  .row{display:flex;gap:28px;flex:1;align-items:flex-start}.col{flex:1}.push{margin-top:auto}.mid{align-items:center}
+  .lbl{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--teal2);margin-bottom:5px}
+  .lbl.amber{color:var(--amber)}
+  .def{background:#e7efe9;border-radius:12px;padding:13px 19px;margin:10px 0;font-size:20px;line-height:1.45;color:var(--ink);max-width:800px;text-align:justify;hyphens:auto}
+  .def strong{color:var(--pine)}
+  .example{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 19px;margin-top:14px;font-size:17px;line-height:1.5;max-width:800px;text-align:justify;hyphens:auto}
+  .example .mono,.mono{font-family:var(--mono)}
+  .note{background:var(--card2);border-radius:12px;padding:11px 18px;margin-top:14px;font-size:17px;line-height:1.45;max-width:800px;text-align:justify;hyphens:auto}
+  .grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border-radius:14px;padding:14px 18px}
+  .card h3{font-size:18px;color:var(--pine);margin-bottom:3px}.card p{font-size:14px;color:var(--muted);line-height:1.4}
+  ul.cl{list-style:none;margin-top:7px}ul.cl li{font-size:18px;line-height:1.6;padding-left:20px;position:relative;color:var(--ink);margin-bottom:3px}
+  ul.cl li:before{content:"›";position:absolute;left:0;color:var(--amber);font-weight:700}
+  .sym{font-family:var(--serif);color:var(--amber)}
+  .foot{position:absolute;bottom:14px;right:38px;font-size:13px;color:var(--muted);z-index:5}
+  .pbar{position:fixed;left:0;bottom:0;height:5px;background:var(--amber);z-index:6;transition:width .3s}
+  .hint{position:absolute;bottom:14px;left:38px;font-size:12px;color:var(--muted);z-index:5}
+
+
+
+  svg{max-width:100%}
+</style>
+</head>
+<body>
+<div class="deck" id="deck" style="transform: translate(-50%, -50%) scale(1.3375);">
+
+  <section class="slide dark active">
+    <div class="kicker">Bases de Datos · UNR</div>
+    <div class="push"></div>
+    <h1>Unidad 2<br>Modelo Entidad-Relación</h1>
+    <p class="lead" style="margin-top:21.5px">El lenguaje para <span class="accentbar">diseñar</span> una base de datos antes de construirla.</p>
+    <div class="push"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Modelo Entidad-Relación</div>
+    <h2>Qué vamos a ver hoy</h2>
+    <p class="body" style="color:var(--muted)">En la unidad anterior quedó claro para qué sirve un DBMS. Ahora bien, antes de cargar un solo dato hay que decidir <em>qué</em> datos existen y cómo se vinculan. De eso se trata esta unidad: de aprender un lenguaje para diseñar. Tenemos cinco etapas:</p>
+    <ul class="cl" style="margin-top:8.5px">
+      <li>Qué es el modelo Entidad-Relación y qué problema resuelve.</li>
+      <li>Las <strong>entidades</strong> y sus <strong>atributos</strong>, con todas sus variantes.</li>
+      <li>Las <strong>claves</strong>: cómo identificar cada instancia sin ambigüedad.</li>
+      <li>Las <strong>relaciones</strong>: grado, cardinalidad, participación y roles.</li>
+      <li>Construcciones especiales —entidades débiles, jerarquías, agregación— y un método para diseñar.</li>
+    </ul>
+    <p class="body" style="margin-top:14px">La meta es concreta: al final de la unidad, frente a un enunciado en prosa, tienen que poder producir un diagrama entidad-relación —un <strong>DER</strong>— correcto.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Marco</div>
+    <h2>Qué es el modelo Entidad-Relación</h2>
+    <p class="body" style="color:var(--muted)">¿Por dónde se empieza una base de datos? No por el código: por el diseño. Y para diseñar hace falta un lenguaje.</p>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>modelo de datos conceptual</strong> que representa la realidad mediante <strong>entidades</strong>, sus <strong>atributos</strong> y las <strong>relaciones</strong> entre ellas, sin comprometerse con ningún sistema de gestión concreto.</div>
+    <p class="body">Es de alto nivel: describe <em>qué</em> información existe y cómo se vincula, sin decir todavía cómo se almacena. Su producto es un <strong>diagrama</strong>: un lenguaje gráfico que entienden por igual quien conoce el dominio y quien va a construir la base de datos. Ese diagrama se traduce después, con reglas mecánicas, a un esquema de tablas — eso es la próxima unidad.</p>
+    <p class="body">Fue propuesto por <strong>Peter Chen en 1976</strong> como una vista unificada de los datos, y su notación se volvió la clásica de la enseñanza del diseño.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Los elementos del modelo</div>
+    <h2>Tres constructores, tres símbolos</h2>
+    <p class="body" style="color:var(--muted)">Todo el modelo se construye con tres piezas. ¿Cuáles son?</p>
+    <ul class="cl" style="margin-top:7px">
+      <li>La <strong>entidad</strong>: las “cosas” del dominio. Se dibuja con un <strong>rectángulo</strong>.</li>
+      <li>El <strong>atributo</strong>: las propiedades de esas cosas. Se dibuja con un <strong>óvalo</strong>.</li>
+      <li>La <strong>relación</strong>: los vínculos entre las entidades. Se dibuja con un <strong>rombo</strong>.</li>
+    </ul>
+    <p class="body" style="margin-top:11.5px">Un DER combina estos tres símbolos, unidos por líneas. Aprender el modelo es aprender, de cada uno, qué es, qué variantes admite y cómo se anota. Vamos de a uno.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Entidades</div>
+    <h2>Entidad</h2>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>objeto del mundo real</strong> que puede diferenciarse de los demás y tiene existencia propia.</div>
+    <p class="body">Eso es esencial: cada entidad debe poder diferenciarse de las otras por sus datos. Puede ser algo <strong>concreto</strong> —una persona, un libro, un auto— o <strong>abstracto</strong> —una materia, una inscripción, una mesa de examen—: lo abstracto también tiene existencia propia en el dominio.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>El estudiante Andrés López es una entidad. La materia Bases de Datos es otra. La inscripción n.º 4400 a una mesa de examen, también: no se toca, pero existe y se distingue de las demás.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Entidades</div>
+    <h2>Conjunto de entidades vs. instancia</h2>
+    <div class="def"><span class="lbl">Definición</span>Un <strong>conjunto de entidades</strong> es la colección de todas las entidades del mismo tipo.</div>
+    <p class="body">Hay que separar el <strong>tipo</strong> de la <strong>instancia</strong>: ESTUDIANTE es el conjunto; “Andrés López, DNI 44.876.052” es una instancia de ese conjunto. ¿Y qué se dibuja en un DER? Siempre el <em>conjunto</em> (el tipo), nunca las instancias concretas.</p>
+    <div class="example"><span class="lbl amber">Notación</span>Rectángulo con el nombre del conjunto, por convención en singular y mayúscula:<svg viewBox="0 0 720 80" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="65" y="11" width="170" height="58" rx="4" fill="#123534"></rect><text x="150.0" y="46.0" text-anchor="middle" font-size="19" fill="#ffffff">ESTUDIANTE</text><rect x="275" y="11" width="170" height="58" rx="4" fill="#123534"></rect><text x="360.0" y="46.0" text-anchor="middle" font-size="19" fill="#ffffff">MATERIA</text><rect x="485" y="11" width="170" height="58" rx="4" fill="#123534"></rect><text x="570.0" y="46.0" text-anchor="middle" font-size="19" fill="#ffffff">CARGO</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos</div>
+    <h2>Atributo</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>propiedad descriptiva</strong> que poseen todas las instancias de un conjunto de entidades.</div>
+    <p class="body">Cada instancia asigna un <strong>valor</strong> a cada atributo. El conjunto ESTUDIANTE tiene atributos como dni, nombre y fecha de nacimiento; la instancia de Andrés López toma los valores 44876052, “López, Andrés” y 12/03/2003. Los atributos son lo que efectivamente se guarda de cada entidad.</p>
+    <div class="example"><span class="lbl amber">Notación</span>Óvalo unido por una línea al rectángulo de la entidad. Un rectángulo con sus óvalos alrededor es la descripción completa de una entidad:<svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="275" y="12" width="170" height="58" rx="4" fill="#123534"></rect><text x="360.0" y="47.0" text-anchor="middle" font-size="19" fill="#ffffff">ESTUDIANTE</text><line x1="320" y1="70" x2="155" y2="122" stroke="#5c6a67"></line><line x1="360" y1="70" x2="360" y2="120" stroke="#5c6a67"></line><line x1="400" y1="70" x2="560" y2="122" stroke="#5c6a67"></line><ellipse cx="150" cy="152" rx="58" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="150" y="158" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">dni</text><ellipse cx="360" cy="152" rx="70" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="158" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">nombre</text><ellipse cx="570" cy="152" rx="100" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="570" y="158" text-anchor="middle" font-size="16" font-family="Georgia" fill="#123534">fecha_nacimiento</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos</div>
+    <h2>Dominio de un atributo</h2>
+    <div class="def"><span class="lbl">Definición</span>El <strong>dominio</strong> es el conjunto de valores permitidos para un atributo.</div>
+    <p class="body">Cada atributo tiene asociado un dominio que restringe qué valores puede tomar: es la primera forma de integridad. Al pasar a tablas, el dominio se materializa como el <em>tipo de dato</em> de la columna.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span><span class="mono">dni</span>: lo que fije el tipo de dato que se defina — por ejemplo, enteros de siete u ocho cifras.<br><span class="mono">calificación</span>: enteros entre 0 y 10.<br><span class="mono">categoría</span> de un cargo: {Ayudante de 2.ª, Ayudante de 1.ª, JTP, Adjunto, Asociado, Titular}.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos · variante 1</div>
+    <h2>Atributo simple vs. compuesto</h2>
+    <p class="body" style="color:var(--muted)">Primera variante: ¿el valor de un atributo es una unidad, o tiene partes?</p>
+    <div class="def" style="margin-top:4.5px"><span class="lbl">Definición</span>Un atributo <strong>simple</strong> (o atómico) no se descompone en partes con significado propio. Un atributo <strong>compuesto</strong> se puede dividir en sub-atributos que tienen sentido por separado, y permite acceder al todo o a cada parte.</div>
+    <p class="body">Que <span class="mono">dni</span> o <span class="mono">edad</span> sean simples es claro. Una <span class="mono">dirección</span>, en cambio, tiene calle, número, ciudad y código postal, y a veces interesa consultar sólo la ciudad: conviene modelarla como compuesta.</p>
+    <div class="example"><span class="lbl amber">Notación</span>Los componentes cuelgan como óvalos del óvalo principal:<svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><ellipse cx="360" cy="38" rx="82" ry="32" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="44" text-anchor="middle" font-size="19" font-family="Georgia" fill="#123534">dirección</text><line x1="300" y1="62" x2="115" y2="120" stroke="#5c6a67"></line><line x1="340" y1="70" x2="280" y2="118" stroke="#5c6a67"></line><line x1="385" y1="70" x2="445" y2="118" stroke="#5c6a67"></line><line x1="425" y1="60" x2="610" y2="120" stroke="#5c6a67"></line><ellipse cx="105" cy="148" rx="62" ry="32" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="105" y="154" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">calle</text><ellipse cx="275" cy="148" rx="66" ry="32" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="275" y="154" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">número</text><ellipse cx="445" cy="148" rx="64" ry="32" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="445" y="154" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">ciudad</text><ellipse cx="618" cy="148" rx="86" ry="32" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="618" y="154" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">código postal</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos · variante 2</div>
+    <h2>Monovaluado vs. multivaluado</h2>
+    <p class="body" style="color:var(--muted)">Segunda variante: ¿cuántos valores puede tomar el atributo para una misma instancia?</p>
+    <div class="def" style="margin-top:4.5px"><span class="lbl">Definición</span>Un atributo <strong>monovaluado</strong> tiene un único valor por instancia. Un atributo <strong>multivaluado</strong> admite un conjunto de valores para la misma instancia.</div>
+    <p class="body">La <span class="mono">fecha_nacimiento</span> de una persona es una sola. Sus <span class="mono">teléfonos</span> o sus <span class="mono">títulos</span>, en cambio, pueden ser varios a la vez. La distinción importa para lo que viene: en una tabla, cada celda guarda un solo valor. Por eso, cuando traduzcamos el diagrama, todo atributo multivaluado va a terminar en una <strong>tabla propia</strong>.</p>
+    <div class="example"><span class="lbl amber">Notación</span>El atributo multivaluado se dibuja con <strong>doble óvalo</strong>:<svg viewBox="0 0 720 105" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><line x1="255" y1="52" x2="175" y2="52" stroke="#5c6a67"></line><rect x="20" y="23" width="155" height="58" rx="4" fill="#123534"></rect><text x="97.5" y="58.0" text-anchor="middle" font-size="19" fill="#ffffff">PERSONA</text><ellipse cx="350" cy="52" rx="88" ry="38" fill="#e9ede9" stroke="#5c6a67"></ellipse><ellipse cx="350" cy="52" rx="76" ry="29" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="350" y="58" text-anchor="middle" font-size="19" font-family="Georgia" fill="#123534">teléfonos</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos · variante 3</div>
+    <h2>Atributo almacenado vs. derivado</h2>
+    <div class="def"><span class="lbl">Definición</span>Un atributo <strong>derivado</strong> se calcula a partir de otros atributos o de otras entidades; no se almacena. Uno <strong>almacenado</strong> guarda su valor directamente.</div>
+    <p class="body">Guardar lo que se puede calcular es redundancia, y la redundancia trae inconsistencia. Por eso lo derivado se marca como tal y se recalcula al consultar.</p>
+    <div class="example"><span class="lbl amber">Ejemplo y notación</span><span class="mono">edad</span> no se almacena: se calcula a partir de <span class="mono">fecha_nacimiento</span> y de la fecha del día. Por eso se dibuja con óvalo punteado:<svg viewBox="0 0 720 175" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="275" y="12" width="170" height="58" rx="4" fill="#123534"></rect><text x="360.0" y="47.0" text-anchor="middle" font-size="19" fill="#ffffff">PERSONA</text><line x1="322" y1="70" x2="175" y2="110" stroke="#5c6a67"></line><line x1="398" y1="70" x2="545" y2="110" stroke="#5c6a67"></line><ellipse cx="165" cy="142" rx="100" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="165" y="148" text-anchor="middle" font-size="16" font-family="Georgia" fill="#123534">fecha_nacimiento</text><ellipse cx="555" cy="142" rx="60" ry="30" fill="#fbfaf7" stroke="#5c6a67" stroke-dasharray="7 5"></ellipse><text x="555" y="148" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">edad</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Atributos · variante 4</div>
+    <h2>Valores nulos</h2>
+    <div class="def"><span class="lbl">Definición</span>Un valor <strong>nulo</strong> indica que un atributo no tiene valor para cierta instancia.</div>
+    <p class="body">El nulo cubre dos situaciones que conviene no confundir: el valor <strong>no aplica</strong> (un soltero no tiene cónyuge) o es <strong>desconocido</strong> (el acta no se cerró: la nota aún no existe). Ahora bien, el “Ausente” de un acta <strong>no</strong> es un nulo: es un valor válido, que informa que el estudiante se inscribió y no rindió. El nulo es cómodo, pero hay que usarlo con cuidado; en SQL va a dar lugar a la lógica de tres valores.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Claves</div>
+    <h2>Claves: identificar sin ambigüedad</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>clave</strong> es un conjunto de atributos cuyos valores permiten identificar unívocamente a cada instancia de un conjunto de entidades.</div>
+    <p class="body">Es un requisito del modelo: si dos instancias distintas pudieran tener los mismos valores en todos sus atributos, serían indistinguibles, y eso contradice la definición de entidad. Por eso todo conjunto de entidades necesita al menos una clave. Ahora bien, no cualquier conjunto de atributos identifica igual de bien: vamos a distinguir tres nociones, de la más laxa a la más precisa.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Claves</div>
+    <h2>Superclave</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>superclave</strong> es cualquier conjunto de atributos que identifica unívocamente a cada instancia — aunque contenga atributos de más.</div>
+    <p class="body">Es el concepto más laxo: basta con que no haya dos instancias con los mismos valores en esos atributos. Puede tener atributos innecesarios para identificar.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>En PERSONA, <span class="mono">{dni}</span> es superclave; <span class="mono">{dni, nombre}</span> también, pero le sobra <span class="mono">nombre</span>: el dni solo ya alcanzaba.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Claves</div>
+    <h2>Clave candidata</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>clave candidata</strong> es una superclave <strong>mínima</strong>: ninguno de sus atributos puede quitarse sin que pierda la capacidad de identificar.</div>
+    <div class="example"><span class="lbl amber">Ejemplo</span>En PERSONA, tanto <span class="mono">{dni}</span> como <span class="mono">{cuil}</span> son candidatas: cada una identifica y ninguna tiene atributos de sobra.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Claves</div>
+    <h2>Clave primaria</h2>
+    <div class="def"><span class="lbl">Definición</span>La <strong>clave primaria</strong> es la clave candidata que el diseñador elige para identificar oficialmente a las instancias.</div>
+    <p class="body">Es una <strong>decisión de diseño</strong>: entre las candidatas se elige, en general, la más estable, corta y que nunca sea nula. Las candidatas no elegidas quedan como <em>claves alternativas</em>.</p>
+    <div class="example"><span class="lbl amber">Notación</span>Se <u>subraya</u> en el diagrama. En PERSONA se elige <span class="mono">dni</span> como primaria; <span class="mono">cuil</span> queda como alternativa: es el documento lo que identifica a la persona en el Guaraní.<svg viewBox="0 0 720 175" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="275" y="12" width="170" height="58" rx="4" fill="#123534"></rect><text x="360.0" y="47.0" text-anchor="middle" font-size="19" fill="#ffffff">PERSONA</text><line x1="322" y1="70" x2="175" y2="112" stroke="#5c6a67"></line><line x1="398" y1="70" x2="545" y2="112" stroke="#5c6a67"></line><ellipse cx="165" cy="142" rx="58" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="165" y="148" text-anchor="middle" font-size="18" font-family="Georgia" text-decoration="underline" fill="#123534">dni</text><ellipse cx="555" cy="142" rx="58" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="555" y="148" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">cuil</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Relaciones</div>
+    <h2>Relación</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>relación</strong> (o vínculo) es una asociación entre instancias de dos o más conjuntos de entidades.</div>
+    <p class="body">Un <strong>conjunto de relaciones</strong> es la colección de todas las asociaciones del mismo tipo. Modela los <em>hechos</em> que vinculan las entidades: qué estudiante cursa qué materia, qué docente tiene qué cargo. Suele nombrarse con un verbo.</p>
+    <div class="example"><span class="lbl amber">Notación</span>Rombo con el nombre de la relación, unido por líneas a las entidades que participan de ella:<svg viewBox="0 0 720 120" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="40" y="31" width="170" height="58" rx="4" fill="#123534"></rect><text x="125.0" y="66.0" text-anchor="middle" font-size="19" fill="#ffffff">ESTUDIANTE</text><line x1="210" y1="60" x2="275" y2="60" stroke="#5c6a67"></line><polygon points="360,18 445,60 360,102 275,60" fill="#d98a2b"></polygon><text x="360" y="66" text-anchor="middle" font-size="19" fill="#ffffff">cursa</text><line x1="445" y1="60" x2="510" y2="60" stroke="#5c6a67"></line><rect x="510" y="31" width="170" height="58" rx="4" fill="#123534"></rect><text x="595.0" y="66.0" text-anchor="middle" font-size="19" fill="#ffffff">MATERIA</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Relaciones</div>
+    <h2>Grado de una relación</h2>
+    <div class="def"><span class="lbl">Definición</span>El <strong>grado</strong> es la cantidad de conjuntos de entidades que participan en la relación.</div>
+    <p class="body">La relación <strong>binaria</strong> (grado 2) es la más común: <span class="mono">ESTUDIANTE — cursa — MATERIA</span>. Existen también las <strong>ternarias</strong> (grado 3), donde el hecho involucra a tres entidades a la vez: un <span class="mono">DOCENTE</span> dicta una <span class="mono">MATERIA</span> en un <span class="mono">AULA</span>. Y hay un caso especial, la relación <strong>recursiva</strong>, en la que una entidad se relaciona consigo misma: la vemos en la diapositiva siguiente.</p>
+    <p class="body">En la práctica, la gran mayoría de los diseños se resuelve con relaciones binarias.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Relaciones</div>
+    <h2>Roles y relaciones recursivas</h2>
+    <div class="def"><span class="lbl">Definición</span>El <strong>rol</strong> es la función que cumple una entidad dentro de una relación. Se vuelve indispensable en las <strong>relaciones recursivas</strong>, donde un conjunto de entidades se relaciona consigo mismo.</div>
+    <p class="body">Cuando los dos extremos de la relación son la misma entidad, hay que etiquetar cada línea con un rol para saber quién es quién.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Estructuras de Datos es <em>requerida</em>; Bases de Datos, <em>habilitada</em>. Sin los roles, no se distingue qué materia exige a cuál. Además es N:M: una materia puede requerir varias y ser requerida por varias.<svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="50" y="57" width="170" height="56" rx="4" fill="#123534"></rect><text x="135.0" y="91.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="220" y1="70" x2="476" y2="64" stroke="#5c6a67"></line><line x1="220" y1="102" x2="476" y2="106" stroke="#5c6a67"></line><text x="315" y="54" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">requerida</text><text x="315" y="126" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">habilitada</text><text x="412" y="40" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><text x="412" y="142" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><polygon points="535,43 653,85 535,127 417,85" fill="#d98a2b"></polygon><text x="535" y="91" text-anchor="middle" font-size="15" fill="#ffffff">es_correlativa_de</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad</div>
+    <h2>Cardinalidad de mapeo</h2>
+    <div class="def"><span class="lbl">Definición</span>La <strong>cardinalidad de mapeo</strong> expresa a cuántas instancias de una entidad puede asociarse una instancia de la otra, a través de la relación.</div>
+    <p class="body">Es la restricción más importante del diseño: determina cómo se traducirá la relación a tablas. Siempre se lee en <strong>los dos sentidos</strong>. Para relaciones binarias hay cuatro casos: 1:1, 1:N, N:1 y N:M.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad · caso 1</div>
+    <h2>Uno a uno (1:1)</h2>
+    <div class="def"><span class="lbl">Definición</span>Una instancia de A se asocia con <strong>a lo sumo una</strong> de B, y viceversa.</div>
+    <p class="body">Es el caso menos frecuente, y a veces es una señal de diseño: cuando dos entidades van siempre de a una, conviene preguntarse si no deberían ser una sola.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Una <span class="mono">PERSONA</span> tiene un <span class="mono">DNI</span> y un DNI pertenece a una sola persona:<svg viewBox="0 0 720 115" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">PERSONA</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">tiene</text><line x1="440" y1="57" x2="490" y2="57" stroke="#5c6a67"></line><text x="465" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">DNI</text></svg>También <span class="mono">MATERIA</span>–<span class="mono">PROGRAMA</span>: una materia tiene un programa vigente, y ese programa corresponde a una sola materia.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad · caso 2</div>
+    <h2>Uno a muchos (1:N)</h2>
+    <div class="def"><span class="lbl">Definición</span>Una instancia de A se asocia con <strong>muchas</strong> de B, pero cada instancia de B se asocia con <strong>una sola</strong> de A.</div>
+    <p class="body">Es la cardinalidad más habitual. Al pasar a tablas no necesita una tabla nueva: alcanza con que el lado “muchos” guarde una referencia al lado “uno” — la <em>clave foránea</em>, que vamos a definir en la próxima unidad.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Un <span class="mono">DOCENTE</span> dicta muchas <span class="mono">MATERIA</span>s, y cada materia la dicta un solo docente:<svg viewBox="0 0 720 115" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">DOCENTE</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">dicta</text><line x1="440" y1="57" x2="490" y2="57" stroke="#5c6a67"></line><text x="465" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg>Lo mismo <span class="mono">DOCENTE</span>–<span class="mono">CARGO</span>: un docente tiene varios cargos, y cada cargo pertenece a un solo docente.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad · caso 3</div>
+    <h2>Muchos a uno (N:1)</h2>
+    <div class="def"><span class="lbl">Definición</span>Es la misma relación 1:N, leída en sentido inverso.</div>
+    <p class="body">No es un caso distinto, sino un recordatorio de que la cardinalidad siempre se enuncia respecto de un sentido de lectura. “Muchas materias a cargo de un docente” (N:1) y “un docente dicta muchas materias” (1:N) describen el mismo vínculo.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad · caso 4</div>
+    <h2>Muchos a muchos (N:M)</h2>
+    <div class="def"><span class="lbl">Definición</span>Una instancia de A se asocia con <strong>muchas</strong> de B, y una instancia de B con <strong>muchas</strong> de A.</div>
+    <p class="body">Es el caso clave del diseño: al pasar a tablas <strong>siempre</strong> genera una tabla propia, y suele ser donde viven los atributos de la relación.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Un <span class="mono">ESTUDIANTE</span> cursa muchas <span class="mono">MATERIA</span>s, y una materia la cursan muchos estudiantes:<svg viewBox="0 0 720 115" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><line x1="230" y1="57" x2="280" y2="57" stroke="#5c6a67"></line><text x="255" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">cursa</text><line x1="440" y1="57" x2="490" y2="57" stroke="#5c6a67"></line><text x="465" y="47" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg>Otro clásico: un <span class="mono">AUTOR</span> escribe muchos <span class="mono">LIBRO</span>s, y un libro puede tener varios autores.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cardinalidad</div>
+    <h2>Cómo se anota la cardinalidad</h2>
+    <p class="body">En la notación de <strong>Chen</strong> se escribe <span class="sym">1</span> o <span class="sym">N</span> sobre cada línea que une la entidad con el rombo. Existe una notación más expresiva, la de pares <strong>(mín, máx)</strong>: en cada línea se anota el mínimo y el máximo de veces que una instancia participa de la relación. Con un solo par quedan dichas la cardinalidad y la participación a la vez.</p>
+    <div class="example" style="margin-top:10px"><span class="lbl amber">Ejemplo (mín,máx)</span>Según su dedicación, con un cargo se dictan 1, 2 o 3 materias; una materia se dicta con al menos un cargo. El “entre 1 y 3” es algo que la notación de Chen no puede expresar:<svg viewBox="0 0 720 112" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="50" y="30" width="150" height="52" rx="4" fill="#123534"></rect><text x="125.0" y="62.0" text-anchor="middle" font-size="17" fill="#ffffff">CARGO</text><line x1="200" y1="56" x2="265" y2="56" stroke="#5c6a67"></line><text x="232" y="46" text-anchor="middle" font-size="17" font-family="Georgia" fill="#18211f">(1,3)</text><polygon points="360,20 455,56 360,92 265,56" fill="#d98a2b"></polygon><text x="360" y="61" text-anchor="middle" font-size="15" fill="#ffffff">dicta_con</text><line x1="455" y1="56" x2="520" y2="56" stroke="#5c6a67"></line><text x="488" y="46" text-anchor="middle" font-size="17" font-family="Georgia" fill="#18211f">(1,N)</text><rect x="520" y="30" width="150" height="52" rx="4" fill="#123534"></rect><text x="595.0" y="62.0" text-anchor="middle" font-size="17" fill="#ffffff">MATERIA</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Restricciones</div>
+    <h2>Restricción de participación</h2>
+    <div class="def"><span class="lbl">Definición</span>La <strong>participación</strong> indica si <em>toda</em> instancia de una entidad debe participar en la relación (<strong>total</strong>) o si puede no hacerlo (<strong>parcial</strong>).</div>
+    <p class="body">Es una restricción independiente de la cardinalidad: la cardinalidad dice <em>con cuántos</em>, la participación dice <em>si es obligatorio</em>. La participación total se dibuja con <strong>línea doble</strong>; la parcial, con línea simple.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Todo <span class="mono">DOCENTE</span> tiene al menos un cargo, y todo <span class="mono">CARGO</span> es de un docente → participación <strong>total</strong> de ambos, con línea doble:<svg viewBox="0 0 720 115" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="60" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">DOCENTE</text><line x1="230.0" y1="60.5" x2="280.0" y2="60.5" stroke="#5c6a67"></line><line x1="230.0" y1="53.5" x2="280.0" y2="53.5" stroke="#5c6a67"></line><text x="255" y="42" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">1</text><polygon points="360,17 440,57 360,97 280,57" fill="#d98a2b"></polygon><text x="360" y="63" text-anchor="middle" font-size="18" fill="#ffffff">tiene</text><line x1="440.0" y1="60.5" x2="490.0" y2="60.5" stroke="#5c6a67"></line><line x1="440.0" y1="53.5" x2="490.0" y2="53.5" stroke="#5c6a67"></line><text x="465" y="42" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><rect x="490" y="29" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="63.0" text-anchor="middle" font-size="18" fill="#ffffff">CARGO</text></svg>Un <span class="mono">ESTUDIANTE</span>, en cambio, puede no cursar nada este cuatrimestre (sólo debe finales) → participación <strong>parcial</strong> de ESTUDIANTE en <em>cursa</em>: línea simple.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Relaciones</div>
+    <h2>Atributos de una relación</h2>
+    <div class="def"><span class="lbl">Definición</span>Un atributo de relación describe una propiedad del <strong>vínculo</strong> en sí, no de las entidades que asocia.</div>
+    <p class="body">Si un dato depende de la combinación de ambas entidades —y no de una sola— pertenece a la relación. Es típico de las relaciones N:M. Se dibuja como un óvalo unido al rombo.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>La <span class="mono">nota</span> de López en Bases de Datos no es de López (tiene notas distintas en cada materia) ni de la materia (cada estudiante saca la suya): es del hecho de <em>cursar</em>. También <span class="mono">fecha_inscripción</span> y <span class="mono">año</span>.<svg viewBox="0 0 720 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><ellipse cx="360" cy="35" rx="56" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="41" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">nota</text><line x1="360" y1="65" x2="360" y2="88" stroke="#5c6a67"></line><rect x="60" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><line x1="230" y1="127" x2="280" y2="127" stroke="#5c6a67"></line><polygon points="360,87 440,127 360,167 280,127" fill="#d98a2b"></polygon><text x="360" y="133" text-anchor="middle" font-size="18" fill="#ffffff">cursa</text><line x1="440" y1="127" x2="490" y2="127" stroke="#5c6a67"></line><rect x="490" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Entidades débiles</div>
+    <h2>Entidad débil</h2>
+    <div class="def"><span class="lbl">Definición</span>Una <strong>entidad débil</strong> es aquella que no tiene atributos suficientes para formar una clave propia: depende de otra entidad (la <strong>fuerte</strong>) para identificarse.</div>
+    <p class="body">La entidad débil existe en función de la fuerte, a la que se vincula mediante una <strong>relación identificante</strong>. Su participación en esa relación es siempre total: sin la entidad fuerte, la débil no tiene sentido.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Una <span class="mono">MATERIA</span> tiene varias comisiones. “La comisión 2” no identifica nada por sí sola: hay una comisión 2 por cada materia.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Entidades débiles</div>
+    <h2>Clave parcial y clave completa</h2>
+    <div class="def"><span class="lbl">Definición</span>La <strong>clave parcial</strong> es el conjunto de atributos que distingue a las instancias débiles asociadas a una <em>misma</em> entidad fuerte.</div>
+    <p class="body">Bases de Datos tiene comisión 1 y comisión 2; Estructuras de Datos también tiene su comisión 2. “La comisión 2”, sola, ¿cuál es? No se sabe: el 2 sólo distingue <em>dentro de cada materia</em>. Por eso la <strong>clave completa</strong> de la entidad débil es la clave de la fuerte más la clave parcial: (Bases de Datos, 2) y (Estructuras, 2) son comisiones distintas.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Clave completa = <span class="mono">codigo_materia + nro_comision</span>. Esto importa en la próxima unidad: cuando COMISIÓN se convierta en tabla, su clave primaria va a ser exactamente esa clave completa.</div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Entidades débiles</div>
+    <h2>Notación de la entidad débil</h2>
+    <div class="example"><span class="lbl amber">Notación</span>La entidad débil se dibuja con <strong>rectángulo doble</strong> y la clave parcial con subrayado punteado; la línea doble marca su participación total.<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="50" y="41" width="170" height="56" rx="4" fill="#123534"></rect><text x="135.0" y="75.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="220" y1="69" x2="285" y2="69" stroke="#5c6a67"></line><polygon points="365,29 445,69 365,109 285,69" fill="#d98a2b"></polygon><text x="365" y="75" text-anchor="middle" font-size="18" fill="#ffffff">tiene</text><line x1="445.0" y1="72.5" x2="510.0" y2="72.5" stroke="#5c6a67"></line><line x1="445.0" y1="65.5" x2="510.0" y2="65.5" stroke="#5c6a67"></line><rect x="510" y="41" width="170" height="56" rx="4" fill="#123534"></rect><rect x="515" y="46" width="160" height="46" rx="2" fill="none" stroke="#fbfaf7"></rect><text x="595.0" y="75.0" text-anchor="middle" font-size="18" fill="#ffffff">COMISIÓN</text><line x1="595" y1="97" x2="595" y2="140" stroke="#5c6a67"></line><ellipse cx="595" cy="168" rx="92" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="595" y="174" text-anchor="middle" font-size="17" font-family="Georgia" fill="#123534">nro_comision</text><line x1="543" y1="181" x2="647" y2="181" stroke="#123534" stroke-dasharray="5 4"></line></svg></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Jerarquías (IS-A)</div>
+    <h2>Especialización y generalización</h2>
+    <div class="def"><span class="lbl">Definición</span><strong>Especialización:</strong> a partir de una entidad general se definen subtipos más específicos — de lo general a lo particular. <strong>Generalización:</strong> el camino inverso: a partir de entidades con atributos comunes se define un supertipo — de lo particular a lo general.</div>
+    <p class="body">Son las dos caras del mismo vínculo <em>IS-A</em> (“es un/a”). Los subtipos <strong>heredan</strong> todos los atributos y relaciones del supertipo, y agregan los propios. Se dibuja con un triángulo etiquetado <em>es un</em>.</p>
+    </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Jerarquías (IS-A)</div>
+    <h2>La jerarquía del Guaraní</h2>
+    <p class="lead">El caso que nos acompaña toda la materia, dibujado completo.</p>
+    <div class="example"><span class="lbl amber">Ejemplo</span><span class="mono">PERSONA</span> (dni, nombre) se especializa en <span class="mono">ESTUDIANTE</span> (carrera), <span class="mono">DOCENTE</span> (categoría) y <span class="mono">ADMINISTRATIVO</span> (sector). Los tres heredan dni y nombre: al Guaraní se entra como persona, con el documento, y desde ahí se cambia el perfil.<svg viewBox="0 0 720 255" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="275" y="20" width="170" height="56" rx="4" fill="#123534"></rect><text x="360.0" y="54.0" text-anchor="middle" font-size="18" fill="#ffffff">PERSONA</text><line x1="360" y1="76" x2="360" y2="96" stroke="#5c6a67"></line><polygon points="360,96 322,146 398,146" fill="#e9ede9" stroke="#5c6a67"></polygon><text x="360" y="132" text-anchor="middle" font-size="15" font-family="Georgia" font-style="italic" fill="#123534">es un</text><line x1="360" y1="146" x2="120" y2="185" stroke="#5c6a67"></line><line x1="360" y1="146" x2="360" y2="185" stroke="#5c6a67"></line><line x1="360" y1="146" x2="600" y2="185" stroke="#5c6a67"></line><rect x="35" y="185" width="170" height="56" rx="4" fill="#123534"></rect><text x="120.0" y="219.0" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><rect x="275" y="185" width="170" height="56" rx="4" fill="#123534"></rect><text x="360.0" y="219.0" text-anchor="middle" font-size="18" fill="#ffffff">DOCENTE</text><rect x="515" y="185" width="170" height="56" rx="4" fill="#123534"></rect><text x="600.0" y="219.0" text-anchor="middle" font-size="15" fill="#ffffff">ADMINISTRATIVO</text></svg></div>
+  
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Jerarquías (IS-A)</div>
+    <h2>Restricciones de una jerarquía</h2>
+    <p class="body" style="color:var(--muted)">Definida una jerarquía, quedan dos preguntas por responder.</p>
+    <div class="def" style="margin-top:4.5px"><span class="lbl">Disjunta o solapada</span>¿Una instancia puede pertenecer a varios subtipos a la vez? <strong>Disjunta:</strong> no — o estudiante o docente. <strong>Solapada:</strong> sí — alguien puede ser ambas cosas.</div>
+    <div class="def"><span class="lbl">Total o parcial</span>¿Toda instancia del supertipo debe estar en algún subtipo? <strong>Total:</strong> sí, obligatoriamente. <strong>Parcial:</strong> puede no estar en ninguno.</div>
+    <p class="body" style="margin-top:7px">Las dos restricciones se combinan. La jerarquía de PERSONA en el Guaraní es <strong>solapada y total</strong>: toda persona es al menos una de las tres, y una misma persona puede ser estudiante y docente a la vez.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Construcción avanzada</div>
+    <h2>Agregación</h2>
+    <p class="body" style="color:var(--muted)">El modelo no permite vincular una relación con otra relación. ¿Y si hace falta?</p>
+    <div class="def" style="margin-top:4.5px"><span class="lbl">Definición</span>La <strong>agregación</strong> permite tratar una relación —junto con las entidades que asocia— como si fuera una entidad, para que pueda participar de otra relación.</div>
+    <p class="body">Cuando un hecho depende del vínculo entero, y no de una de sus partes, se “encapsula” el conjunto entidades + relación y se lo trata como una unidad.</p>
+    </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Construcción avanzada</div>
+    <h2>La encuesta califica el dictado</h2>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Un <span class="mono">DOCENTE</span> <em>dicta</em> una <span class="mono">MATERIA</span>; al final del cuatrimestre, los estudiantes completan una <span class="mono">ENCUESTA</span> sobre ese dictado. La encuesta no califica al docente en abstracto ni a la materia en abstracto: califica el hecho de que <em>ese</em> docente dicte <em>esa</em> materia. Se encapsula la relación <em>dicta</em> con sus entidades (el recuadro punteado) y se la vincula con ENCUESTA:<svg viewBox="0 0 720 215" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="30" y="20" width="450" height="175" rx="10" fill="none" stroke="#5c6a67" stroke-dasharray="8 6"></rect><rect x="48" y="81" width="140" height="52" rx="4" fill="#123534"></rect><text x="118.0" y="113.0" text-anchor="middle" font-size="16" fill="#ffffff">DOCENTE</text><line x1="188" y1="107" x2="222" y2="107" stroke="#5c6a67"></line><polygon points="274,75 326,107 274,139 222,107" fill="#d98a2b"></polygon><text x="274" y="112" text-anchor="middle" font-size="15" fill="#ffffff">dicta</text><line x1="326" y1="107" x2="352" y2="107" stroke="#5c6a67"></line><rect x="352" y="81" width="110" height="52" rx="4" fill="#123534"></rect><text x="407.0" y="113.0" text-anchor="middle" font-size="16" fill="#ffffff">MATERIA</text><line x1="480" y1="107" x2="522" y2="107" stroke="#5c6a67"></line><polygon points="570,77 618,107 570,137 522,107" fill="#d98a2b"></polygon><text x="570" y="112" text-anchor="middle" font-size="15" fill="#ffffff">califica</text><line x1="570" y1="137" x2="570" y2="158" stroke="#5c6a67"></line><rect x="500" y="158" width="140" height="46" rx="4" fill="#123534"></rect><text x="570.0" y="187.0" text-anchor="middle" font-size="15" fill="#ffffff">ENCUESTA</text></svg></div>
+  
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Notación</div>
+    <h2>Chen vs. crow’s foot</h2>
+    <p class="body" style="color:var(--muted)">Hasta acá dibujamos todo con la notación original. ¿Es la única?</p>
+    <p class="body">La notación de <strong>Chen</strong> (1976) —rectángulos, óvalos y rombos separados— es muy clara para <em>enseñar</em>, porque cada elemento tiene su propio símbolo, pero ocupa mucho espacio. En la industria y en las herramientas de diseño domina la notación <strong>crow's foot</strong>: los atributos van adentro de la caja de la entidad, y la cardinalidad se marca con símbolos en los extremos de las líneas.</p>
+    <p class="body">En la materia enseñamos con Chen por su claridad conceptual; conviene saber leer también la crow's foot, porque es la que se van a cruzar en las herramientas.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Notación</div>
+    <h2>El mismo diagrama en las dos notaciones</h2>
+    <p class="lead">ESTUDIANTE cursa MATERIA, N:M, dibujado dos veces.</p>
+    <svg viewBox="0 0 664 275" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:660px;margin:10px auto 0"><text x="40" y="18" font-size="13.5" letter-spacing="2" font-weight="bold" fill="#2a6f6b">CHEN</text><rect x="40" y="32" width="150" height="50" rx="4" fill="#123534"></rect><text x="115.0" y="63.0" text-anchor="middle" font-size="17" fill="#ffffff">ESTUDIANTE</text><line x1="190" y1="57" x2="260" y2="57" stroke="#5c6a67" stroke-width="1"></line><text x="225" y="48" text-anchor="middle" font-size="17" font-family="Georgia" fill="#18211f">N</text><polygon points="322,25 384,57 322,89 260,57" fill="#d98a2b"></polygon><text x="322" y="62" text-anchor="middle" font-size="16" fill="#ffffff">cursa</text><line x1="384" y1="57" x2="454" y2="57" stroke="#5c6a67" stroke-width="1"></line><text x="419" y="48" text-anchor="middle" font-size="17" font-family="Georgia" fill="#18211f">M</text><rect x="454" y="32" width="150" height="50" rx="4" fill="#123534"></rect><text x="529.0" y="63.0" text-anchor="middle" font-size="17" fill="#ffffff">MATERIA</text><text x="40" y="158" font-size="13.5" letter-spacing="2" font-weight="bold" fill="#2a6f6b">CROW'S FOOT</text><rect x="40" y="170" width="170" height="92" rx="6" fill="#ffffff" stroke="#5c6a67"></rect><rect x="40" y="170" width="170" height="30" rx="6" fill="#123534"></rect><rect x="40" y="192" width="170" height="8" fill="#123534"></rect><text x="125" y="191" text-anchor="middle" font-size="16" fill="#ffffff">ESTUDIANTE</text><text x="54" y="222" font-size="15" font-family="Georgia" text-decoration="underline" fill="#18211f">dni</text><text x="54" y="246" font-size="15" font-family="Georgia" fill="#18211f">nombre</text><rect x="454" y="170" width="170" height="92" rx="6" fill="#ffffff" stroke="#5c6a67"></rect><rect x="454" y="170" width="170" height="30" rx="6" fill="#123534"></rect><rect x="454" y="192" width="170" height="8" fill="#123534"></rect><text x="539" y="191" text-anchor="middle" font-size="16" fill="#ffffff">MATERIA</text><text x="468" y="222" font-size="15" font-family="Georgia" text-decoration="underline" fill="#18211f">código</text><text x="468" y="246" font-size="15" font-family="Georgia" fill="#18211f">título</text><line x1="228" y1="216" x2="436" y2="216" stroke="#5c6a67" stroke-width="1"></line><text x="332" y="206" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">cursa</text><line x1="228" y1="216" x2="210" y2="207" stroke="#5c6a67" stroke-width="1"></line><line x1="228" y1="216" x2="210" y2="216" stroke="#5c6a67" stroke-width="1"></line><line x1="228" y1="216" x2="210" y2="225" stroke="#5c6a67" stroke-width="1"></line><line x1="436" y1="216" x2="454" y2="207" stroke="#5c6a67" stroke-width="1"></line><line x1="436" y1="216" x2="454" y2="216" stroke="#5c6a67" stroke-width="1"></line><line x1="436" y1="216" x2="454" y2="225" stroke="#5c6a67" stroke-width="1"></line></svg>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Cómo diseñar</div>
+    <h2>Construir un diagrama, paso a paso</h2>
+    <p class="body" style="color:var(--muted)">Tenemos todas las piezas. ¿Cómo se usan frente a un enunciado real? La receta:</p>
+    <ul class="cl" style="margin-top:7px">
+      <li>Identificar las <strong>entidades</strong>: los sustantivos importantes del enunciado.</li>
+      <li>Asignar <strong>atributos</strong> a cada entidad y elegir su <strong>clave primaria</strong>.</li>
+      <li>Identificar las <strong>relaciones</strong>: los verbos que vinculan entidades.</li>
+      <li>Determinar la <strong>cardinalidad</strong> y la <strong>participación</strong> de cada relación, leyéndola en ambos sentidos.</li>
+      <li>Detectar <strong>entidades débiles</strong>, <strong>jerarquías</strong> y <strong>atributos de relación</strong>.</li>
+      <li>Revisar: ¿el diagrama responde todas las preguntas que la base de datos debe contestar?</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Ejemplo integrador</div>
+    <h2>El diagrama completo</h2>
+    <div style="display:flex;justify-content:center;margin-top:14px">
+      <svg viewBox="0 0 720 335" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:710px;margin:0 auto"><rect x="280" y="8" width="160" height="48" rx="4" fill="#123534"></rect><text x="360" y="38" text-anchor="middle" font-size="17" fill="#fff">PERSONA</text><line x1="360" y1="56" x2="360" y2="74" stroke="#5c6a67"></line><polygon points="360,74 330,114 390,114" fill="#e9ede9" stroke="#5c6a67"></polygon><text x="360" y="104" text-anchor="middle" font-size="14" font-family="Georgia" font-style="italic" fill="#123534">es un</text><line x1="338" y1="114" x2="180" y2="150" stroke="#5c6a67"></line><line x1="382" y1="114" x2="540" y2="150" stroke="#5c6a67"></line><rect x="60" y="150" width="160" height="48" rx="4" fill="#123534"></rect><text x="140" y="180" text-anchor="middle" font-size="16" fill="#fff">ESTUDIANTE</text><rect x="500" y="150" width="160" height="48" rx="4" fill="#123534"></rect><text x="580" y="180" text-anchor="middle" font-size="16" fill="#fff">DOCENTE</text><rect x="280" y="278" width="160" height="48" rx="4" fill="#123534"></rect><text x="360" y="308" text-anchor="middle" font-size="17" fill="#fff">MATERIA</text><line x1="150" y1="198" x2="192" y2="236" stroke="#5c6a67"></line><text x="156" y="222" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">N</text><polygon points="232,214 276,238 232,262 188,238" fill="#d98a2b"></polygon><text x="232" y="244" text-anchor="middle" font-size="15" fill="#fff">cursa</text><line x1="276" y1="240" x2="312" y2="278" stroke="#5c6a67"></line><text x="306" y="262" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">M</text><line x1="570" y1="198" x2="528" y2="236" stroke="#5c6a67"></line><text x="564" y="222" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">1</text><polygon points="488,214 532,238 488,262 444,238" fill="#d98a2b"></polygon><text x="488" y="244" text-anchor="middle" font-size="15" fill="#fff">dicta</text><line x1="444" y1="240" x2="408" y2="278" stroke="#5c6a67"></line><text x="414" y="262" text-anchor="middle" font-size="16" font-family="Georgia" fill="#18211f">N</text></svg>
+    </div>
+    <p class="body" style="text-align:left;font-size:16.5px;color:var(--muted);margin-top:26px">La jerarquía <span class="mono">PERSONA → ESTUDIANTE / DOCENTE</span>, la relación 1:N (<span class="mono">dicta</span>) y la N:M (<span class="mono">cursa</span>).</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Errores frecuentes</div>
+    <h2>Errores comunes de diseño</h2>
+    <p class="body" style="color:var(--muted)">Para cerrar, los tropiezos que más aparecen al corregir. Cada uno es un concepto de la unidad aplicado al revés:</p>
+    <ul class="cl" style="margin-top:7px">
+      <li>Usar un atributo cuando hacía falta una entidad (o al revés).</li>
+      <li>Olvidar la cardinalidad o la participación de una relación.</li>
+      <li>Poner un atributo de relación dentro de una entidad (la <span class="mono">nota</span> dentro de ESTUDIANTE).</li>
+      <li>No detectar una entidad débil y darle una clave propia inventada.</li>
+      <li>Guardar atributos derivados como si fueran almacenados.</li>
+      <li>Modelar una relación N:M como si fuera 1:N, perdiendo información.</li>
+    </ul>
+  </section>
+
+  <section class="slide dark">
+    <div class="kicker">Del diseño a la implementación</div>
+    <div class="push"></div>
+    <h1 style="font-size:43.5px">Vimos las bases del <span class="accentbar">diseño</span>.<br>Falta bajarlo a tierra.</h1>
+    <p class="lead" style="margin-top:17.5px">En la próxima unidad, cada elemento de este modelo se traduce a tablas del modelo relacional.</p>
+    <div class="push"></div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Unidad 2 · Referencias</div>
+    <h2>Referencias</h2>
+    <ul class="cl">
+      <li><strong>Chen, P. P.</strong> (1976). The Entity-Relationship Model — Toward a Unified View of Data. <em>ACM TODS</em> 1(1), 9–36. <a href="https://dl.acm.org/doi/10.1145/320434.320440" target="_blank" rel="noopener">enlace ↗</a></li>
+      <li><strong>Elmasri &amp; Navathe</strong> — <em>Fundamentals of Database Systems</em>: el modelo Entidad-Relación y su extensión (jerarquías, agregación) en detalle.</li>
+      <li><strong>Silberschatz, Korth &amp; Sudarshan</strong> — <em>Database System Concepts</em>: modelo Entidad-Relación y su reducción a tablas.</li>
+    </ul>
+  </section>
+
+<div class="foot" id="foot">1 / 42</div>
+<div class="hint">← →  navegar &nbsp;·&nbsp; F  pantalla completa</div>
+</div>
+<div class="pbar" id="pbar" style="width: 2.38095%;"></div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const foot=document.getElementById('foot'),pbar=document.getElementById('pbar');
+  let i=0;
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    foot.textContent=(i+1)+' / '+slides.length;pbar.style.width=((i+1)/slides.length*100)+'%';}
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){show(i+1);e.preventDefault();}
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){show(i-1);e.preventDefault();}
+    else if(e.key==='Home'){show(0);}else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}}
+  });
+  document.addEventListener('click',e=>{if(e.target.closest('a'))return;
+    const x=e.clientX/window.innerWidth;show(x<0.25?i-1:i+1);});
+  const deck=document.getElementById('deck');
+  function fit(){const s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+    deck.style.transform='translate(-50%,-50%) scale('+s+')';}
+  window.addEventListener('resize',fit);fit();
+  show(0);
+</script>
+
+
+</body></html>
