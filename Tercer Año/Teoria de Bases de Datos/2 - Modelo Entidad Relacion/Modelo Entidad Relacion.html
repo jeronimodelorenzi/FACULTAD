@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- saved from url=(0104)https://comunidades.campusvirtualunr.edu.ar/pluginfile.php/2633960/mod_resource/content/1/Unidad-02.html -->
+<!-- saved from url=(0104)https://comunidades.campusvirtualunr.edu.ar/pluginfile.php/2633960/mod_resource/content/3/Unidad-02.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bases de Datos · Unidad 2 · Modelo Entidad-Relación</title>
+<title>Teoría de Bases de Datos · Unidad 2 · Modelo Entidad-Relación</title>
 <style>
   :root{
     --pine:#123534;--teal:#1f5f5b;--teal2:#2a6f6b;--amber:#d98a2b;--amber-soft:#e7b871;
@@ -56,8 +56,8 @@
 <body>
 <div class="deck" id="deck" style="transform: translate(-50%, -50%) scale(1.3375);">
 
-  <section class="slide dark active">
-    <div class="kicker">Bases de Datos · UNR</div>
+  <section class="slide dark">
+    <div class="kicker">Teoría de Bases de Datos · UNR</div>
     <div class="push"></div>
     <h1>Unidad 2<br>Modelo Entidad-Relación</h1>
     <p class="lead" style="margin-top:21.5px">El lenguaje para <span class="accentbar">diseñar</span> una base de datos antes de construirla.</p>
@@ -78,7 +78,7 @@
     <p class="body" style="margin-top:14px">La meta es concreta: al final de la unidad, frente a un enunciado en prosa, tienen que poder producir un diagrama entidad-relación —un <strong>DER</strong>— correcto.</p>
   </section>
 
-  <section class="slide">
+  <section class="slide active">
     <div class="kicker">Unidad 2 · Marco</div>
     <h2>Qué es el modelo Entidad-Relación</h2>
     <p class="body" style="color:var(--muted)">¿Por dónde se empieza una base de datos? No por el código: por el diseño. Y para diseñar hace falta un lenguaje.</p>
@@ -104,7 +104,7 @@
     <h2>Entidad</h2>
     <div class="def"><span class="lbl">Definición</span>Un <strong>objeto del mundo real</strong> que puede diferenciarse de los demás y tiene existencia propia.</div>
     <p class="body">Eso es esencial: cada entidad debe poder diferenciarse de las otras por sus datos. Puede ser algo <strong>concreto</strong> —una persona, un libro, un auto— o <strong>abstracto</strong> —una materia, una inscripción, una mesa de examen—: lo abstracto también tiene existencia propia en el dominio.</p>
-    <div class="example"><span class="lbl amber">Ejemplo</span>El estudiante Andrés López es una entidad. La materia Bases de Datos es otra. La inscripción n.º 4400 a una mesa de examen, también: no se toca, pero existe y se distingue de las demás.</div>
+    <div class="example"><span class="lbl amber">Ejemplo</span>El estudiante Andrés López es una entidad. La materia Teoría de Bases de Datos es otra. La inscripción n.º 4400 a una mesa de examen, también: no se toca, pero existe y se distingue de las demás.</div>
   </section>
 
   <section class="slide">
@@ -215,7 +215,7 @@
     <h2>Roles y relaciones recursivas</h2>
     <div class="def"><span class="lbl">Definición</span>El <strong>rol</strong> es la función que cumple una entidad dentro de una relación. Se vuelve indispensable en las <strong>relaciones recursivas</strong>, donde un conjunto de entidades se relaciona consigo mismo.</div>
     <p class="body">Cuando los dos extremos de la relación son la misma entidad, hay que etiquetar cada línea con un rol para saber quién es quién.</p>
-    <div class="example"><span class="lbl amber">Ejemplo</span>Estructuras de Datos es <em>requerida</em>; Bases de Datos, <em>habilitada</em>. Sin los roles, no se distingue qué materia exige a cuál. Además es N:M: una materia puede requerir varias y ser requerida por varias.<svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="50" y="57" width="170" height="56" rx="4" fill="#123534"></rect><text x="135.0" y="91.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="220" y1="70" x2="476" y2="64" stroke="#5c6a67"></line><line x1="220" y1="102" x2="476" y2="106" stroke="#5c6a67"></line><text x="315" y="54" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">requerida</text><text x="315" y="126" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">habilitada</text><text x="412" y="40" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><text x="412" y="142" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><polygon points="535,43 653,85 535,127 417,85" fill="#d98a2b"></polygon><text x="535" y="91" text-anchor="middle" font-size="15" fill="#ffffff">es_correlativa_de</text></svg></div>
+    <div class="example"><span class="lbl amber">Ejemplo</span>Estructuras de Datos es <em>requerida</em>; Teoría de Bases de Datos, <em>habilitada</em>. Sin los roles, no se distingue qué materia exige a cuál. Además es N:M: una materia puede requerir varias y ser requerida por varias.<svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><rect x="50" y="57" width="170" height="56" rx="4" fill="#123534"></rect><text x="135.0" y="91.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text><line x1="220" y1="70" x2="476" y2="64" stroke="#5c6a67"></line><line x1="220" y1="102" x2="476" y2="106" stroke="#5c6a67"></line><text x="315" y="54" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">requerida</text><text x="315" y="126" text-anchor="middle" font-size="15" font-style="italic" fill="#5c6a67">habilitada</text><text x="412" y="40" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">N</text><text x="412" y="142" text-anchor="middle" font-size="18" font-family="Georgia" fill="#18211f">M</text><polygon points="535,43 653,85 535,127 417,85" fill="#d98a2b"></polygon><text x="535" y="91" text-anchor="middle" font-size="15" fill="#ffffff">es_correlativa_de</text></svg></div>
   </section>
 
   <section class="slide">
@@ -276,7 +276,7 @@
     <h2>Atributos de una relación</h2>
     <div class="def"><span class="lbl">Definición</span>Un atributo de relación describe una propiedad del <strong>vínculo</strong> en sí, no de las entidades que asocia.</div>
     <p class="body">Si un dato depende de la combinación de ambas entidades —y no de una sola— pertenece a la relación. Es típico de las relaciones N:M. Se dibuja como un óvalo unido al rombo.</p>
-    <div class="example"><span class="lbl amber">Ejemplo</span>La <span class="mono">nota</span> de López en Bases de Datos no es de López (tiene notas distintas en cada materia) ni de la materia (cada estudiante saca la suya): es del hecho de <em>cursar</em>. También <span class="mono">fecha_inscripción</span> y <span class="mono">año</span>.<svg viewBox="0 0 720 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><ellipse cx="360" cy="35" rx="56" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="41" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">nota</text><line x1="360" y1="65" x2="360" y2="88" stroke="#5c6a67"></line><rect x="60" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><line x1="230" y1="127" x2="280" y2="127" stroke="#5c6a67"></line><polygon points="360,87 440,127 360,167 280,127" fill="#d98a2b"></polygon><text x="360" y="133" text-anchor="middle" font-size="18" fill="#ffffff">cursa</text><line x1="440" y1="127" x2="490" y2="127" stroke="#5c6a67"></line><rect x="490" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg></div>
+    <div class="example"><span class="lbl amber">Ejemplo</span>La <span class="mono">nota</span> de López en Teoría de Bases de Datos no es de López (tiene notas distintas en cada materia) ni de la materia (cada estudiante saca la suya): es del hecho de <em>cursar</em>. También <span class="mono">fecha_inscripción</span> y <span class="mono">año</span>.<svg viewBox="0 0 720 185" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;max-width:700px;margin:8px auto 0"><ellipse cx="360" cy="35" rx="56" ry="30" fill="#e9ede9" stroke="#5c6a67"></ellipse><text x="360" y="41" text-anchor="middle" font-size="18" font-family="Georgia" fill="#123534">nota</text><line x1="360" y1="65" x2="360" y2="88" stroke="#5c6a67"></line><rect x="60" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="145.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">ESTUDIANTE</text><line x1="230" y1="127" x2="280" y2="127" stroke="#5c6a67"></line><polygon points="360,87 440,127 360,167 280,127" fill="#d98a2b"></polygon><text x="360" y="133" text-anchor="middle" font-size="18" fill="#ffffff">cursa</text><line x1="440" y1="127" x2="490" y2="127" stroke="#5c6a67"></line><rect x="490" y="99" width="170" height="56" rx="4" fill="#123534"></rect><text x="575.0" y="133.0" text-anchor="middle" font-size="18" fill="#ffffff">MATERIA</text></svg></div>
   </section>
 
   <section class="slide">
@@ -291,7 +291,7 @@
     <div class="kicker">Unidad 2 · Entidades débiles</div>
     <h2>Clave parcial y clave completa</h2>
     <div class="def"><span class="lbl">Definición</span>La <strong>clave parcial</strong> es el conjunto de atributos que distingue a las instancias débiles asociadas a una <em>misma</em> entidad fuerte.</div>
-    <p class="body">Bases de Datos tiene comisión 1 y comisión 2; Estructuras de Datos también tiene su comisión 2. “La comisión 2”, sola, ¿cuál es? No se sabe: el 2 sólo distingue <em>dentro de cada materia</em>. Por eso la <strong>clave completa</strong> de la entidad débil es la clave de la fuerte más la clave parcial: (Bases de Datos, 2) y (Estructuras, 2) son comisiones distintas.</p>
+    <p class="body">Teoría de Bases de Datos tiene comisión 1 y comisión 2; Estructuras de Datos también tiene su comisión 2. “La comisión 2”, sola, ¿cuál es? No se sabe: el 2 sólo distingue <em>dentro de cada materia</em>. Por eso la <strong>clave completa</strong> de la entidad débil es la clave de la fuerte más la clave parcial: (Teoría de Bases de Datos, 2) y (Estructuras, 2) son comisiones distintas.</p>
     <div class="example"><span class="lbl amber">Ejemplo</span>Clave completa = <span class="mono">codigo_materia + nro_comision</span>. Esto importa en la próxima unidad: cuando COMISIÓN se convierta en tabla, su clave primaria va a ser exactamente esa clave completa.</div>
   </section>
 
@@ -400,20 +400,12 @@
     <div class="push"></div>
   </section>
 
-  <section class="slide">
-    <div class="kicker">Unidad 2 · Referencias</div>
-    <h2>Referencias</h2>
-    <ul class="cl">
-      <li><strong>Chen, P. P.</strong> (1976). The Entity-Relationship Model — Toward a Unified View of Data. <em>ACM TODS</em> 1(1), 9–36. <a href="https://dl.acm.org/doi/10.1145/320434.320440" target="_blank" rel="noopener">enlace ↗</a></li>
-      <li><strong>Elmasri &amp; Navathe</strong> — <em>Fundamentals of Database Systems</em>: el modelo Entidad-Relación y su extensión (jerarquías, agregación) en detalle.</li>
-      <li><strong>Silberschatz, Korth &amp; Sudarshan</strong> — <em>Database System Concepts</em>: modelo Entidad-Relación y su reducción a tablas.</li>
-    </ul>
-  </section>
 
-<div class="foot" id="foot">1 / 42</div>
+
+<div class="foot" id="foot">3 / 41</div>
 <div class="hint">← →  navegar &nbsp;·&nbsp; F  pantalla completa</div>
 </div>
-<div class="pbar" id="pbar" style="width: 2.38095%;"></div>
+<div class="pbar" id="pbar" style="width: 7.31707%;"></div>
 <script>
   const slides=[...document.querySelectorAll('.slide')];
   const foot=document.getElementById('foot'),pbar=document.getElementById('pbar');
