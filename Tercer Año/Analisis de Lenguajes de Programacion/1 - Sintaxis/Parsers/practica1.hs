@@ -193,3 +193,17 @@ Construir un parser para esta gramática y dar los tipos de datos adecuados para
 data Specificer = CInt | CChar | CFloat deriving Show
 --data Declarator = Ptr Declarator | Di Direct
 
+parserList :: Parser [Int]
+parserList = do
+    l1 <- (do symbol "["
+              x <- sepBy integer (symbol ",")
+              symbol "]"
+              return x)
+          <|> 
+          (do x <- integer
+              symbol ":"
+              l <- parserList
+              return (x : l))
+    (do symbol "++"
+        l2 <- parserList
+        return (l1 ++ l2)) <|> return l1
