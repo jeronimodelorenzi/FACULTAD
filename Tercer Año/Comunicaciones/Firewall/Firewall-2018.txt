@@ -1,0 +1,91 @@
+#Definiciones
+I=/sbin/iptables
+LAN=10.23.0.0/16
+SRV=10.10.0.0
+DMZ=10.1.1.0
+DBSRV=10.10.1.2
+MAILSRV=10.10.1.3
+DMZ=10.1.1.0
+WEBSRV=10.1.1.2
+MAILREL=10.1.1.3
+IPNET=200.123.131.112
+ADMIN=10.23.23.5
+INET=eth0
+ISRV=eth1
+ILAN=eth2
+IDMZ=eth3
+
+#Reglas por omisión
+$I -P INPUT DROP
+$I -P OUTPUT DROP
+$I -P FORDWARD DROP
+$I -F -t nat
+$I -F -t filter
+
+#Descartamos conexiones invalidad y aceptamos conexiones
+#establecidas
+for C in FORDWAR INPUT OUTPUT; do
+  $I -A $C -m state --state INVALID -j DROP
+  $I -A $C -m state --state RELATED,ESTABLISHED -j ACCEPT
+done
+
+#Regla 1.
+$I -A FORDWARD -s $LAN -i $ILAN -d $MAILSRV -o $ISRV -p tcp \
+-m multiport --dports imap, imaps, pop, pop3s, smtp, smtp-ssl -j ACCEPT
+$I -A FORDWARD -s $LAN -i $ILAN -d $DBSRV -o $ISRV -p tcp --dport https \
+-j ACCEPT
+$I -A FORDWARD -s $LAN -i $ILAN -d $MAILREL -o $IDMZ -p tcp --dport 53 \
+-j ACCEPT
+$I -A FORDWARD -s $LAN -i $ILAN -d $MAILREL -o $IDMZ -p udp --dport 53 \
+-j ACCEPT
+
+#Regla 2.
+$I -A FORDWARD -s $MAILSRV -i $ISRV -d $MAILREL -o $IDMZ -p tcp \
+-m multiport --dports 53, 465 -j ACCEPT
+$I -A FORDWARD -s $MAILSRV -i $ISRV -d $MAILREL -o $IDMZ -p udp \
+--dport 53 -j ACCEPT
+
+#Regla 3.
+$I -A FORDWARD -s $MAILREL -i $IDMZ -d $MAILSRV -o $ISRV -p tcp \
+--dport 465 -j ACCEPT
+
+#Regla 4.
+$I -A FORDWARD -s $WEBSRV -i $IDMZ -d $DBSRV -o $ISRV -p tcp \
+--dport 3306 -j ACCEPT
+
+#Regla 5.
+$I -A FORDWARD -s $LAN -i $ILAN -o $INET -j ACCEPT
+$I -t nat -A POSTROUTING -s $LAN -o $INET -j SNAT -to--source $IPNET
+
+#Regla 6.
+$I -A FORDWARD -i $INET -d $MAILREL -o $IDMZ -p tcp -m multiport \
+--dports 53, 25 -j ACCEPT
+$I -A FORDWARD -i $INET -d $MAILREL -o $IDMZ -p udp -m multiport \
+--dports 53 -j ACCEPT
+$I -A FORDWARD -i $INET -d $WEBSRV -o $IDMZ -p tcp -m multiport \
+--dports 80, 443 -j ACCEPT
+
+#Neteamos debido a que tenemos que acceder a través de dirección
+#pública y tenemos privada.
+$I -t nat -A PREROUTING -i $INET -d $IPNET -p tcp -m multiport \
+--dports 53, 25 -j DNAT -to--destination $MAILREL
+$I -t nat -A PREROUTING -i $INET -d $IPNET -p udp \
+--dport 53 -j DNAT -to--destination $MAILREL
+$I -t nat -A PREROUTING -i $INET -d $IPNET -p tcp -m multiport \
+--dports 80, 443 -j DNAT -to--destination $WEBSRV
+
+#Regla 7.
+$I -A FORDWARD -s $WEBSRV -i $IDMZ -o $INET -p tcp --dport 53 -j ACCEPT
+$I -A FORDWARD -s $WEBSRV -i $IDMZ -o $INET -p udp --dport 53 -j ACCEPT
+$I -A FORDWARD -s $MAILREL -i $IDMZ -o $INET -p tcp -m multiport \
+--dports 25, 53 -j ACCEPT
+$I -A FORDWARD -s $MAILREL -i $IDMZ -o $INET -p udp --dport 53 -j ACCEPT
+
+$I -t nat -A POSTROUTING -s $WEBSRV -o $INET -j SNAT to--source $IPNET
+$I -t nat -A POSTROUTING -s $MAILREL -o $INET -j SNAT to--source $IPNET
+
+#Regla 8.
+$I -A INPUT -s $ADMIN -i $ILAN -p tcp --dport ssh -j ACCEPT
+$I -A OUTPUT -d $MAILREL -o $IDMZ -p tcp --dport 53 -j ACCEPT
+$I -A OUTPUT -d $MAILREL -o $IDMZ -p udp --dport 53 -j ACCEPT
+
